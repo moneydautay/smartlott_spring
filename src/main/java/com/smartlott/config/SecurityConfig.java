@@ -3,6 +3,7 @@ package com.smartlott.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,10 +25,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
      */
     private static final String SALT = "wjfaj9*($*#_$)#($)#$#$";
 
-    #@Bean
+    @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
     }
+
+    @Autowired
+    private Environment env;
 
     /** PUBLIC URLS */
     private static final String[] PUBLIC_MATCHES={
@@ -36,15 +40,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/js/**",
             "images/**",
             "/",
-            "console/**",
-            "error/**"
+            "/console/**",
+            "/error/**",
+            "/administras"
     };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
 
-        List<String> activeProflies = Arrays.asList(en)
+        List<String> activeProflies = Arrays.asList(env.getActiveProfiles());
+        if(activeProflies.contains("dev")){
+            http.csrf().disable();
+            http.headers().frameOptions().disable();
+        }
 
+        http
+                .authorizeRequests()
+                .antMatchers(PUBLIC_MATCHES).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/login").defaultSuccessUrl("/")
+                .failureUrl("/login?error=true").permitAll()
+                .and()
+                .logout().permitAll();
     }
 
 
