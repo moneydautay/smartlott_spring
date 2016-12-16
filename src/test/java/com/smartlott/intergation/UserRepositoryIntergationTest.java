@@ -1,10 +1,14 @@
 package com.smartlott.intergation;
 
 import com.smartlott.SmartlottApplication;
+import com.smartlott.backend.persistence.domain.backend.Address;
 import com.smartlott.backend.persistence.domain.backend.Password;
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.domain.backend.UserRole;
+import com.smartlott.backend.persistence.repositories.AddressRepository;
 import com.smartlott.backend.persistence.repositories.PasswordRepository;
 import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.smartlott.backend.persistence.repositories.UserRoleRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,6 +36,12 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     @Autowired
     private PasswordRepository passwordRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
     @Rule public TestName testName = new TestName();
 
     @Before
@@ -39,16 +51,34 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
     @Test
     public void testFindUserByEmail() throws Exception{
+
+        Address address = createAddress(testName);
+
+        Assert.assertNotNull(address);
+
+
         String email = testName.getMethodName()+"@gmail.com";
         createCustUser(testName);
 
         User user = userRepository.findByEmail(email);
-        System.out.print(user.toString());
+        System.out.println(user.toString());
 
         List<Password> passwords = passwordRepository.findByUserAndEnabled(user,true);
 
-        System.out.println(passwords);
+
+        List<UserRole> userRoles = userRoleRepository.findAll();
+
+        address.setUser(user);
+
+        addressRepository.save(address);
+
+        System.out.println(address);
 
         Assert.assertNotNull(user);
+
+        Assert.assertNotNull(passwords);
+
+        Assert.assertNotNull(userRoles);
     }
+
 }

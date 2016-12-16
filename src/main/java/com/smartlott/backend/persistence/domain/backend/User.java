@@ -69,7 +69,7 @@ public class User {
     private Set<UserRole> userRoles = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Password> passwords = new HashSet<>();
 
     @OneToMany(
@@ -78,6 +78,7 @@ public class User {
             mappedBy = "user"
     )
     private Set<SecurityToken> securityTokens = new HashSet<>();
+
 
     public User() {
     }

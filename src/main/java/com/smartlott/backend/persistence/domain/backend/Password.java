@@ -24,7 +24,7 @@ public class Password {
     private String password;
 
     @Value("true")
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
