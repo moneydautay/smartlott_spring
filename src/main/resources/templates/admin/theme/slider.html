@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta name="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/theme-management}">Theme management</a>
+            </li>
+            <li class="active">
+                <strong>Slider</strong>
+            </li>
+        </ol>
+
+        <h2>Slider Management</h2>
+
+        <div class="row">
+            <table class="table responsive" id="featured-slider">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Slider items</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var url= "/data/featured-slider";
+
+        console.log(url);
+
+        //get data
+        getDatas(url);
+
+    });
+
+    function appendData(data) {
+        var area = $('#featured-slider tbody');
+        area.html('');
+        $.each(data, function (i, item) {
+            var _str = '<tr>';
+            _str+='<td>';
+            _str+= item.id;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= item.name;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= '<a href="/stl-admin/theme-management/slider/slider-images" alt="">Slider Images</a>';
+            _str+='</td>';
+            _str+='</tr>';
+            area.append(_str);
+        });
+    }
+
+    function getDatas(url) {
+       /* var token = $('#_csrf').attr('content');
+        var header = $('#_csrf_header').attr('content');*/
+
+        $.ajax({
+            type : 'GET',
+            contentType : "application/json",
+            url : url,
+            dataType : 'json',
+            timeout : 10000,
+            beforeSend: function(xhr){
+               // xhr.setRequestHeader(header, token);
+            },
+            success : function(data) {
+                console.log(data);
+                appendData(data);
+
+            },
+            error : function(e) {
+                console.log(e);
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    }
+</script>
+</body>
+</html>

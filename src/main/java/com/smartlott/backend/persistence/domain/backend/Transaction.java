@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ public class Transaction implements Serializable{
     @JoinColumn(name = "handle_by")
     private User handleBy;
 
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime handleDate;
 
     public Transaction() {

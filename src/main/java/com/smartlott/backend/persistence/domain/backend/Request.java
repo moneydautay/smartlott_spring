@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,6 +32,7 @@ public class Request implements Serializable{
     @JoinColumn(name = "handle_by_user")
     private User handleByUser;
 
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime handleDate;
 
     @ManyToOne(fetch = FetchType.EAGER)

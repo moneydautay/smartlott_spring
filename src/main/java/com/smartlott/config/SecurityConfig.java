@@ -1,9 +1,11 @@
 package com.smartlott.config;
 
+import com.smartlott.backend.service.UserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -30,6 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
     }
 
+
+    @Autowired
+    private UserSecurityService userSecurityService;
+
     @Autowired
     private Environment env;
 
@@ -43,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/",
             "/console/**",
             "/error/**",
+            "/admin/**",
+            "/data/**",
             "/stl-admin/**"
     };
 
@@ -66,6 +74,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .logout().permitAll();
     }
 
-
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth
+                .userDetailsService(userSecurityService)
+                .passwordEncoder(passwordEncoder());
+    }
 
 }

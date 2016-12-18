@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,9 +21,11 @@ public class LotteryDialing implements Serializable{
     private long id;
 
     @Column(name = "from_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime fromDate;
 
     @Column(name = "to_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime toDate;
 
 

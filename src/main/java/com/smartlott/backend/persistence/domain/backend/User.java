@@ -1,13 +1,18 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.websocket.ClientEndpoint;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +21,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable, UserDetails{
 
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
@@ -33,6 +38,8 @@ public class User {
 
     @NotNull
     private String username;
+
+    private String password;
 
     private String firstName;
 
@@ -59,6 +66,7 @@ public class User {
     @Value(value = "0")
     private double cash;
 
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -103,8 +111,12 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -210,6 +222,33 @@ public class User {
     public void setPasswords(Set<Password> passwords) {
         this.passwords = passwords;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        userRoles.forEach(ur->authorities.add(new Authority(ur.getRole().getName())));
+        return null;
+    }
+
 
     @Override
     public boolean equals(Object o) {

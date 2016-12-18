@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Password {
     private boolean enabled = true;
 
     @Column(name = "create_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)

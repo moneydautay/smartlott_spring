@@ -1,6 +1,8 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class Bonous {
     @ManyToOne(fetch = FetchType.EAGER)
     private User fromUser;
 
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime receivedDate;
 
     public Bonous() {

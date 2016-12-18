@@ -7,7 +7,7 @@ public enum RolesEnum {
     CUSTOMER(1, "Customer",1),
     SEO(2, "Seo",1),
     STAFF(3, "Staff",2),
-    EDITOR(3, "Editor",1),
+    EDITOR(4, "Editor",1),
     MANAGER(5, "Manager",4),
     ADMIN(6, "Admin",10);
 
