@@ -38,11 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/webjars/**",
             "/css/**",
             "/js/**",
-            "images/**",
+            "/images/**",
+            "/sources/**",
             "/",
             "/console/**",
             "/error/**",
-            "/stl-admin"
+            "/stl-admin/**"
     };
 
     @Override
