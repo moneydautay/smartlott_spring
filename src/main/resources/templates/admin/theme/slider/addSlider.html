@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta name="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/theme-management}">Theme management</a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/theme-management/slider}">Slider management</a>
+            </li>
+            <li class="active">
+                <strong th:if="${sliderId == null }">Add Slider</strong>
+                <strong th:if="${sliderId != null }">Edit Slider</strong>
+            </li>
+
+        </ol>
+
+        <h2>Add Slider Management</h2>
+
+        <div class="col-md-12">
+            <form role="form" id="frmFeaturedSlider" action="/api/featured-slider" class="form-horizontal form-groups-bordered">
+                <div class="form-group">
+                    <label for="name" class="col-sm-3 control-label">Tên Slider</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Tên slider"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="a" class="col-sm-3 control-label"></label>
+                    <div class="col-sm-5">
+                        <button type="submit" class="btn btn-success">Lưu</button>
+                        <button type="button" class="btn btn-primary">Bỏ qua</button>
+                    </div>
+                </div>
+                <input type="hidden" name="id" class="form-control" id="id" th:value="${sliderId}"/>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var id = $('#id').val();
+        var url= "/api/featured-slider/"+id;
+
+        console.log(url);
+
+        //get data
+        getDatas(url);
+
+        //save data
+        var frmId = $('#frmFeaturedSlider');
+        frmId.submit(function (e) {
+            e.preventDefault();
+            saveData(frmId);
+        })
+
+    });
+
+    function appendData(data) {
+        $('#name').val(data.name);
+    }
+
+    function getDatas(url) {
+       /* var token = $('#_csrf').attr('content');
+        var header = $('#_csrf_header').attr('content');*/
+
+        $.ajax({
+            type : 'GET',
+            contentType : "application/json",
+            url : url,
+            dataType : 'json',
+            timeout : 10000,
+            beforeSend: function(xhr){
+               // xhr.setRequestHeader(header, token);
+            },
+            success : function(data) {
+                console.log(data);
+                appendData(data);
+
+            },
+            error : function(e) {
+                console.log(e);
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    }
+
+    function saveData(frmId) {
+
+        var url = frmId.attr('action');
+        var data = {};
+        data['name'] = $('#name').val();
+        data['id'] = $('#id').val();
+        console.log(data);
+        $.ajax({
+            type : 'POST',
+            contentType : "application/json",
+            url : url,
+            data: JSON.stringify(data),
+            dataType : 'json',
+            timeout : 10000,
+            beforeSend: function(xhr){
+                // xhr.setRequestHeader(header, token);
+            },
+            success : function(data) {
+                console.log(data);
+                appendData(data);
+
+            },
+            error : function(e) {
+                console.log(e);
+            },
+            done : function(e) {
+                console.log("DONE");
+            }
+        });
+    }
+</script>
+</body>
+</html>

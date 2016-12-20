@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -19,5 +20,7 @@ public interface FeaturedSliderImageRepository extends CrudRepository<FeaturedSl
      * @return A list of featured slider images
      */
     public List<FeaturedSliderImage> findByFeaturedSlider(FeaturedSlider featuredSlider);
+
+    public Set<FeaturedSliderImage> findAll();
 
 }

@@ -74,6 +74,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		Set<UserRole> userRoles = new HashSet<>();
 		userRoles.add(new UserRole(addRole, user));
+		userRoles.add(new UserRole(custRole, user));
 
 		user.setUserRoles(userRoles);
 

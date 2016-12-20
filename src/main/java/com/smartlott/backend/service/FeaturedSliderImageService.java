@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 /**
  * Created by Mrs Hoang on 18/12/2016.
  */
@@ -18,5 +20,9 @@ public class FeaturedSliderImageService {
 
     public void save(FeaturedSliderImage featuredSliderImage) {
         sliderImageRepository.save(featuredSliderImage);
+    }
+
+    public Set<FeaturedSliderImage> findAll() {
+        return sliderImageRepository.findAll();
     }
 }

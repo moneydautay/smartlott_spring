@@ -36,11 +36,16 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Slider items</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
+            <a href="#" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                Thêm slider
+            </a>
         </div>
 
         <!-- Footer -->
@@ -66,7 +71,7 @@
         var area = $('#featured-slider tbody');
         area.html('');
         $.each(data, function (i, item) {
-            var _str = '<tr>';
+            var _str = '<tr id="row_'+item.id+'">';
             _str+='<td>';
             _str+= item.id;
             _str+='</td>';
@@ -76,7 +81,7 @@
             _str+='</td>';
 
             _str+='<td>';
-            _str+= '<a href="/stl-admin/theme-management/slider/slider-images" alt="">Slider Images</a>';
+            _str+= '<a href="/stl-admin/theme-management/slider/slider-images/'+item.id+'" alt="">Slider Images</a>';
             _str+='</td>';
             _str+='</tr>';
             area.append(_str);

@@ -49,9 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/",
             "/console/**",
             "/error/**",
-            "/admin/**",
-            "/data/**",
-            "/stl-admin/**"
+            "/api/**",
     };
 
     @Override

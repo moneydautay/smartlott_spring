@@ -21,9 +21,6 @@ public class FeaturedSlider implements Serializable{
 
     private String name;
 
-    @OneToMany(mappedBy = "featuredSlider", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<FeaturedSliderImage> featuredSliderImages;
-
     public FeaturedSlider() {
     }
 

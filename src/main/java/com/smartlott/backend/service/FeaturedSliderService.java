@@ -29,4 +29,8 @@ public class FeaturedSliderService {
     public void save(FeaturedSlider featuredSlider) {
         featuredSliderRepository.save(featuredSlider);
     }
+
+    public FeaturedSlider findOne(int sliderId) {
+        return featuredSliderRepository.findOne(sliderId);
+    }
 }

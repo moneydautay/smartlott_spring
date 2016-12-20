@@ -56,4 +56,13 @@ public class RoleService {
     }
 
 
+    /**
+     * Get a role by id
+     * @param id given by user
+     * @return A Role corresponding to id
+     */
+    public Role getRole(int id){
+        return roleRepository.findOne(id);
+    }
+
 }

@@ -28,7 +28,7 @@ public class FeaturedSliderImage implements Serializable{
 
     private String image;
 
-    private String desciption;
+    private String description;
 
     @Column(name = "created_date")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
@@ -72,12 +72,12 @@ public class FeaturedSliderImage implements Serializable{
         this.image = image;
     }
 
-    public String getDesciption() {
-        return desciption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesciption(String desciption) {
-        this.desciption = desciption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -103,8 +103,9 @@ public class FeaturedSliderImage implements Serializable{
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", image='" + image + '\'' +
-                ", desciption='" + desciption + '\'' +
+                ", description='" + description + '\'' +
                 ", createdDate=" + createdDate +
+                ", featuredSlider=" + featuredSlider +
                 '}';
     }
 
@@ -116,23 +117,13 @@ public class FeaturedSliderImage implements Serializable{
         FeaturedSliderImage that = (FeaturedSliderImage) o;
 
         if (id != that.id) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (image != null ? !image.equals(that.image) : that.image != null) return false;
-        if (desciption != null ? !desciption.equals(that.desciption) : that.desciption != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        return featuredSlider != null ? featuredSlider.equals(that.featuredSlider) : that.featuredSlider == null;
+        return createdDate != null ? createdDate.equals(that.createdDate) : that.createdDate == null;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (url != null ? url.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
-        result = 31 * result + (desciption != null ? desciption.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (featuredSlider != null ? featuredSlider.hashCode() : 0);
         return result;
     }
 }

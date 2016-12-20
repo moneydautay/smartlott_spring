@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.repositories;
 
+import com.smartlott.backend.persistence.domain.backend.Role;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.domain.backend.UserRole;
 import org.springframework.data.repository.CrudRepository;
@@ -25,4 +26,11 @@ public interface UserRoleRepository extends CrudRepository<UserRole, Long>{
      * @return
      */
     public List<UserRole> findAll();
+
+    /**
+     * Finy User Role by role
+     * @param role given by user
+     * @return A List of UserRole
+     */
+    public List<UserRole> findByRole(Role role);
 }

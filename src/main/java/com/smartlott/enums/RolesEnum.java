@@ -4,12 +4,12 @@ package com.smartlott.enums;
  * Created by Mr Lam on 12/15/2016.
  */
 public enum RolesEnum {
-    CUSTOMER(1, "Customer",1),
-    SEO(2, "Seo",1),
-    STAFF(3, "Staff",2),
-    EDITOR(4, "Editor",1),
-    MANAGER(5, "Manager",4),
-    ADMIN(6, "Admin",10);
+    CUSTOMER(1, "ROLE_CUSTOMER",1),
+    SEO(2, "ROLE_SEO",1),
+    STAFF(3, "ROLE_STAFF",2),
+    EDITOR(4, "ROLE_EDITOR",1),
+    MANAGER(5, "ROLE_MANAGER",4),
+    ADMIN(6, "ROLE_ADMIN",10);
 
     private int id;
 

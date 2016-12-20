@@ -270,6 +270,26 @@ img.logo {
 }
 
 
+/**
+* LOGIN FORM
+ */
+ul.fgp-tip li {
+    display: inline-block;
+    padding: 7px 2px;
+    font-style: italic;
+}
+ul.fgp-tip {
+    list-style: none;
+}
+ul.fgp-tip li a{
+    color: #555;
+}
+ul.fgp-tip li a:hover{
+    color: #0a6d01;
+}
+ul.fgp-tip li a:active{
+    color: #cb0e20;
+}
 /*
 *-----------------------------------------------------------------
 * @ NEWS

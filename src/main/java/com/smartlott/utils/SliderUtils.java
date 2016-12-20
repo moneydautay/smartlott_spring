@@ -26,7 +26,7 @@ public class SliderUtils {
         featuredSliderImage.setTitle(title);
         featuredSliderImage.setUrl("#");
         featuredSliderImage.setImage("R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==");
-        featuredSliderImage.setDesciption(description);
+        featuredSliderImage.setDescription(description);
         featuredSliderImage.setCreatedDate(LocalDateTime.now(Clock.systemUTC()));
 
         return featuredSliderImage;
