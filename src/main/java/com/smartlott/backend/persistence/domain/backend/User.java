@@ -1,7 +1,9 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,11 @@ import java.util.Set;
  * Created by Mr Lam on 12/14/2016.
  */
 @Entity
-@Table(name = "user")
+@Table(
+        name = "user",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email","phone","username"})
+)
+
 public class User implements Serializable, UserDetails{
 
     /** The Serial Version UID for Serializable classes */
@@ -37,8 +43,11 @@ public class User implements Serializable, UserDetails{
 
 
     @NotNull
+    @Length(max = 50)
     private String username;
 
+    @NotNull
+    @Length(max = 100)
     private String password;
 
     private String firstName;
@@ -46,7 +55,7 @@ public class User implements Serializable, UserDetails{
     private String lastName;
 
     @NotNull
-    @Max(value = 100)
+    @Length(max = 50)
     private String phone;
 
     @Column(name = "profile_image")
@@ -58,8 +67,7 @@ public class User implements Serializable, UserDetails{
     @Column(name="document_2")
     private String documentTwo;
 
-    @Value(value = "true")
-    private boolean enabled;
+    private boolean enabled = true;
 
     private int status;
 
@@ -73,13 +81,15 @@ public class User implements Serializable, UserDetails{
     @JoinColumn(name = "active_by")
     private User activeBy;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserRole> userRoles = new HashSet<>();
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Password> passwords = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

@@ -30,6 +30,7 @@ public class Role implements Serializable{
     }
 
     public Role(RolesEnum rolesEnum) {
+        this.id = rolesEnum.getId();
         this.name = rolesEnum.getName();
         this.priority = rolesEnum.getPriority();
     }

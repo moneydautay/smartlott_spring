@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu"/>
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header"/>
+
+    <!-- Slider image-->
+    <div class="container">
+        <div class="col-md-8 category">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Dashbroad</li>
+            </ol>
+            <div class="row">
+                <div th:if="${param.error}" class="alert alert-danger alert-dismissible" role="alert">
+                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <span>X</span>
+                    </button>
+                    <p th:text="#{login.error.text}"></p>
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success alert-dismissible" role="alert">
+                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <span>X</span>
+                    </button>
+                    <p th:text="#{login.logout.text}"></p>
+                </div>
+            </div>
+            <form id="signupForm" method="post" action="/api/user">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="email" th:text="#{signup.email.text}">Email</label>
+                            <input type="text" id="email" name="email" class="form-control"/>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="phoneNumber" th:text="#{signup.phone.text}">Số điện thoại</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="username" th:text="#{login.username.text}">Tên đăng nhập</label>
+                            <input type="text" id="username" name="username" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="password" th:text="#{login.password.text}">Tên đăng nhập</label>
+                            <input type="text" id="password" name="password" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="confirmPassword" th:text="#{signup.confirm.password.text}">Nhập lại mật
+                                khẩu</label>
+                            <input type="text" id="confirmPassword" name="confirmPassword" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group has-error">
+                        <div class="g-recaptcha" data-sitekey="6Lf6Xg8UAAAAABZq5gVYDUmSrxayh2tVIL4AQpDY"
+                             data-callback="correctCaptcha"></div>
+                        <span id="err-captch" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Đăng ký</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <aside th:replace="common/include :: common-lottery"></aside>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news"/>
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment"/>
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer"/>
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/hashtable.js}"></script>
+<script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/customer-validator.js}"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script th:inline="javascript" type="text/javascript">
+    var captcha = false;
+    var count = 0;
+    $(document).ready(function ($) {
+        $('#signupForm').submit(function (e) {
+            e.preventDefault();
+            var id = $(this);
+            $('#err-captch').html('');
+            if (captcha == false)
+                $('#err-captch').html('Vui lòng lick kiểm tra robot');
+            else if (count == 0) {
+                count++;
+                creatUser(id);
+            }
+        })
+
+
+        function correctCaptcha(response) {
+            $('#err-captch').html('');
+            if ($('#signupForm').find('button[type="submit"]').attr('disabled') == 'disabled') {
+                $('#signupForm').find('button[type="submit"]').attr('disabled', false);
+                $('#signupForm').find('button[type="submit"]').removeClass('disabled');
+            }
+
+            captcha = true;
+        };
+
+        function creatUser(frmId) {
+
+            var url = frmId.attr('action');
+            var data = {};
+            data['email'] = $('#email').val();
+            data['phone'] = $('#phoneNumber').val();
+            data['username'] = $('#username').val();
+            data['password'] = $('#password').val();
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json",
+                url: url,
+                data: JSON.stringify(data),
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function (xhr) {
+                    //xhr.setRequestHeader(header, token);
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (e) {
+                    console.log(e);
+                },
+                done: function (e) {
+                    console.log("DONE");
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

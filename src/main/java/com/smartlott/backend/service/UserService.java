@@ -59,6 +59,7 @@ public class UserService {
             user.setPassword(encryptPassword);
 
             user.setPasswords(passwords);
+            user.setCreateDate(LocalDateTime.now(Clock.systemUTC()));
 
             localUser = userRepository.save(user);
         }
