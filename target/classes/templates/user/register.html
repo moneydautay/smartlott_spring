@@ -173,10 +173,18 @@
             },
             success: function (data) {
                 $('#signupForm').html('');
-                var strSuccess = 'Chúc mừng bạn đã đăng ký thành công. Hệ thống sẽ tự chuyển trong 5s. <a href="/dashboard">Nhấp vào đây nếu hệ thống không tự chuyển</a>';
+                var strSuccess = 'Chúc mừng bạn đã đăng ký thành công. Hệ thống sẽ tự chuyển trong <span id="timeCountDown">5</span>s. <a href="/dashboard">Nhấp vào đây nếu hệ thống không tự chuyển</a>';
                 var messageArea = $('#messageArea');
                 messageArea.html('');
                 messageArea.append(showMessage(strSuccess, 'alert-success', false));
+                //auto direct to dashboard
+                var timeCountDown = 5;
+                setInterval(function () {
+                    $('#timeCountDown').html(timeCountDown);
+                    if(timeCountDown==0)
+                        window.location.href = "/dashboard";
+                    timeCountDown--;
+                },1000);
             },
             error: function (e) {
                 count--;

@@ -34,7 +34,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right" th:if="${#authorization.expression('isAuthenticated()')}">
             <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/stl-admin}" th:text="#{login.admin.text}">Admin Page</a></li>
-            <li sec:authorize="hasRole('CUSTOMER')"><a th:href="@{/dashboard}" th:text="${#authorization.getAuthentication().getPrincipal().firstName}"></a></li>
+            <li sec:authorize="hasRole('CUSTOMER')"><a th:href="@{/dashboard}" th:text="${#authorization.getAuthentication().getPrincipal().username}"></a></li>
             <li><a th:href="@{/logout}" th:text="#{login.button.logout.text}">Đăng xuất</a></li>
         </ul>
     </div>
