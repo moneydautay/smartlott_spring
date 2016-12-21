@@ -32,10 +32,20 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    /**
+     * Findy a user by username
+     * @param username given by user
+     * @return A user or not if not found
+     */
     public User findByUsername(String username){
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * Findy a user by email
+     * @param email given by user
+     * @return A user or not if not found
+     */
     public User findByEmail(String email){
         return userRepository.findByEmail(email);
     }
@@ -47,25 +57,17 @@ public class UserService {
      */
     public User createUser(User user){
 
-        User localUser = userRepository.findByEmail(user.getEmail());
+        String encryptPassword = passwordEncoder.encode(user.getPassword());
 
-        if(localUser != null){
-            LOGGER.error("User with username {} and email {} already exist. Nothing will be done.", localUser.getUsername(), localUser.getEmail());
-        }else{
-            String encryptPassword = passwordEncoder.encode(user.getPassword());
+        Set<Password> passwords = new HashSet<>();
+        passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemUTC()), user));
+        user.setPassword(encryptPassword);
 
-            Set<Password> passwords = new HashSet<>();
-            passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemUTC()), localUser));
-            user.setPassword(encryptPassword);
+        user.setPasswords(passwords);
+        user.setCreateDate(LocalDateTime.now(Clock.systemUTC()));
 
-            user.setPasswords(passwords);
-            user.setCreateDate(LocalDateTime.now(Clock.systemUTC()));
+        user = userRepository.save(user);
 
-            localUser = userRepository.save(user);
-        }
-
-        return localUser;
+        return user;
     }
-
-
 }

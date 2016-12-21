@@ -125,55 +125,56 @@
             var id = $(this);
             $('#err-captch').html('');
             if (captcha == false)
-                $('#err-captch').html('Vui lòng lick kiểm tra robot');
+                $('#err-captch').html('Xác nhận bạn không phải người máy');
             else if (count == 0) {
                 count++;
                 creatUser(id);
             }
         })
-
-
-        function correctCaptcha(response) {
-            $('#err-captch').html('');
-            if ($('#signupForm').find('button[type="submit"]').attr('disabled') == 'disabled') {
-                $('#signupForm').find('button[type="submit"]').attr('disabled', false);
-                $('#signupForm').find('button[type="submit"]').removeClass('disabled');
-            }
-
-            captcha = true;
-        };
-
-        function creatUser(frmId) {
-
-            var url = frmId.attr('action');
-            var data = {};
-            data['email'] = $('#email').val();
-            data['phone'] = $('#phoneNumber').val();
-            data['username'] = $('#username').val();
-            data['password'] = $('#password').val();
-            console.log(data);
-            $.ajax({
-                type: 'POST',
-                contentType: "application/json",
-                url: url,
-                data: JSON.stringify(data),
-                dataType: 'json',
-                timeout: 10000,
-                beforeSend: function (xhr) {
-                    //xhr.setRequestHeader(header, token);
-                },
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-                done: function (e) {
-                    console.log("DONE");
-                }
-            });
-        }
     });
+
+    function creatUser(frmId) {
+
+        var url = frmId.attr('action');
+        var data = {};
+        data['email'] = $('#email').val();
+        data['phone'] = $('#phoneNumber').val();
+        data['username'] = $('#username').val();
+        data['password'] = $('#password').val();
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json",
+            url: url,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            timeout: 10000,
+            beforeSend: function (xhr) {
+                //xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                console.log("SUCCESS");
+                console.log(data);
+            },
+            error: function (e) {
+                count--;
+                console.log("ERROR");
+                console.log(e);
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        });
+    }
+
+    function correctCaptcha(response) {
+        $('#err-captch').html('');
+        if ($('#signupForm').find('button[type="submit"]').attr('disabled') == 'disabled') {
+            $('#signupForm').find('button[type="submit"]').attr('disabled', false);
+            $('#signupForm').find('button[type="submit"]').removeClass('disabled');
+        }
+        captcha = true;
+    }
 </script>
 </body>
 </html>

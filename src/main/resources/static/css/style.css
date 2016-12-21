@@ -62,6 +62,10 @@ a:active{
 #sidebar{
     padding: 0;
 }
+
+button[disabled]{
+    background: #cb0e20!important;
+}
 /*
 *-----------------------------------------------
 * @Top navbar

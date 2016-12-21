@@ -54,6 +54,12 @@ public class UserController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user){
 
+        User userLocal = userService.findByEmail(user.getEmail());
+
+        if(userLocal != null){
+            LOGGER.error("Email {} not valid", user.getEmail());
+            return new ResponseEntity<User>(user, HttpStatus.EXPECTATION_FAILED);
+        }
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(new Role(RolesEnum.CUSTOMER),user));
         user.setUserRoles(userRoles);
@@ -61,4 +67,6 @@ public class UserController {
 
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+
+
 }
