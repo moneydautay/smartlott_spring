@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:fragment="common-head">
+    <meta charset="UTF-8" />
+    <title>Vé số điện tử Smartlott</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+    <link th:href="@{/css/style.css}" rel="stylesheet" media="screen" />
+
+    <link  th:href="@{/css/carousel.css}" rel="stylesheet" media="screen"/>
+
+    <link th:href="@{/sources/font-awesome/css/font-awesome.min.css}" rel="stylesheet" media="screen" />
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+<!-- TOP MENU -->
+<div th:fragment="common-top-menu" class="container">
+    <div id="top-navbar" class="navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a th:href="@{/contact}">Liên hệ</a></li>
+            <li><a th:href="@{/agent}">Đại lý</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" th:if="${#authorization.expression('!isAuthenticated()')}">
+            <li><a th:href="@{/register}">Đăng ký</a></li>
+            <li><a th:href="@{/login}">Đăng nhập</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" th:if="${#authorization.expression('isAuthenticated()')}">
+            <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/stl-admin}" th:text="#{login.admin.text}">Admin Page</a></li>
+            <li sec:authorize="hasRole('CUSTOMER')"><a th:href="@{/dashboard}" th:text="${#authorization.getAuthentication().getPrincipal().firstName}"></a></li>
+            <li><a th:href="@{/logout}" th:text="#{login.button.logout.text}">Đăng xuất</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Header -->
+<header th:fragment="common-header" id="header" class="container">
+    <div class="col-md-3">
+        <img src="images/Perfect_Money.png"  class="logo" alt="logo-Smartlott"/>
+    </div>
+    <div class="col-md-9">
+        <nav class="navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="">Trang chủ</a></li>
+                    <li><a href="">Giải thưởng</a></li>
+                    <li><a href="">Kết quả xổ số</a></li>
+                    <li><a href="">Thể lệ tham gia</a></li>
+                    <li><a href="">Tin tức</a></li>
+                    <li><a href="">FAQs</a></li>
+                    <li><a href="">Tầm nhìn</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+
+<!-- BEFORE SCRIPT FRAGMENT -->
+<div th:fragment="common-before-scripts">
+    <script th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</div>
+</html>

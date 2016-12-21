@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="common-sidebar" class="sidebar-menu">
+    <header class="logo-env">
+
+        <!-- logo -->
+        <div class="logo">
+            <a href="index.html">
+                <img th:src="@{/admin/images/logo@2x.png}" width="120" alt="" />
+            </a>
+        </div>
+
+        <!-- logo collapse icon -->
+
+        <div class="sidebar-collapse">
+            <a href="#" class="sidebar-collapse-icon with-animation"><!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
+                <i class="entypo-menu"></i>
+            </a>
+        </div>
+
+
+
+        <!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
+        <div class="sidebar-mobile-menu visible-xs">
+            <a href="#" class="with-animation"><!-- add class "with-animation" to support animation -->
+                <i class="entypo-menu"></i>
+            </a>
+
+        </div>
+
+    </header>
+
+    <ul id="main-menu" class="">
+        <!-- add class "multiple-expanded" to allow multiple submenus to open -->
+        <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
+        <!-- Search Bar -->
+        <li id="search">
+            <form method="get" action="">
+                <input type="text" name="q" class="search-input" placeholder="Search something..."/>
+                <button type="submit">
+                    <i class="entypo-search"></i>
+                </button>
+            </form>
+        </li>
+        <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin'?'active':''}">
+            <a th:href="@{/stl-admin}">
+                <i class="entypo-gauge"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin/theme-management/?*'?'active opened':''}">
+            <a th:href="@{/stl-admin/theme-management}">
+                <i class="entypo-gauge"></i>
+                <span>Giao diện</span>
+            </a>
+            <ul>
+                <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin/theme-management/slider'?'active':''}">
+                    <a th:href="@{/stl-admin/theme-management/slider}">
+                        <i class="entypo-flow-parallel"></i>
+                        <span>Slider management</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

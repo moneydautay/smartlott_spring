@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.websocket.ClientEndpoint;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -37,25 +39,23 @@ public class User implements Serializable, UserDetails{
     @Column(name = "user_id")
     private long id;
 
-    @NotNull
-    @Email
+    @Email(message = "Email.user.email")
+    @Size(min = 5, max = 50, message = "Size.user.email")
     private String email;
 
 
-    @NotNull
-    @Length(max = 50)
+    @Size(min=4, max=50, message = "Size.user.username")
     private String username;
 
-    @NotNull
-    @Length(max = 100)
+    @Size(min=6, max = 100, message = "Size.user.password")
     private String password;
 
     private String firstName;
 
     private String lastName;
 
-    @NotNull
-    @Length(max = 50)
+    @NotEmpty(message = "NotEmpty.user.phone")
+    @Size(max = 50, message = "Size.user.phone")
     private String phone;
 
     @Column(name = "profile_image")

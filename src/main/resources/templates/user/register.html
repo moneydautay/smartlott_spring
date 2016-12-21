@@ -22,77 +22,68 @@
                 <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
                 <li class="breadcrumb-item active">Dashbroad</li>
             </ol>
-            <div class="row">
-                <div th:if="${param.error}" class="alert alert-danger alert-dismissible" role="alert">
-                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
-                        <span>X</span>
-                    </button>
-                    <p th:text="#{login.error.text}"></p>
+            <div class="sigupArea">
+                <div class="row" id="messageArea">
+
                 </div>
-                <div th:if="${param.logout}" class="alert alert-success alert-dismissible" role="alert">
-                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
-                        <span>X</span>
-                    </button>
-                    <p th:text="#{login.logout.text}"></p>
-                </div>
+                <form id="signupForm" method="post" action="/api/user">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="email" th:text="#{signup.email.text}">Email</label>
+                                <input type="text" id="email" name="email" class="form-control"/>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="phoneNumber" th:text="#{signup.phone.text}">Số điện thoại</label>
+                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="username" th:text="#{login.username.text}">Tên đăng nhập</label>
+                                <input type="text" id="username" name="username" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="password" th:text="#{login.password.text}">Tên đăng nhập</label>
+                                <input type="text" id="password" name="password" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="confirmPassword" th:text="#{signup.confirm.password.text}">Nhập lại mật
+                                    khẩu</label>
+                                <input type="text" id="confirmPassword" name="confirmPassword" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group has-error">
+                            <div class="g-recaptcha" data-sitekey="6Lf6Xg8UAAAAABZq5gVYDUmSrxayh2tVIL4AQpDY"
+                                 data-callback="correctCaptcha"></div>
+                            <span id="err-captch" class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control">Đăng ký</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <form id="signupForm" method="post" action="/api/user">
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="email" th:text="#{signup.email.text}">Email</label>
-                            <input type="text" id="email" name="email" class="form-control"/>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="phoneNumber" th:text="#{signup.phone.text}">Số điện thoại</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="username" th:text="#{login.username.text}">Tên đăng nhập</label>
-                            <input type="text" id="username" name="username" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="password" th:text="#{login.password.text}">Tên đăng nhập</label>
-                            <input type="text" id="password" name="password" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="confirmPassword" th:text="#{signup.confirm.password.text}">Nhập lại mật
-                                khẩu</label>
-                            <input type="text" id="confirmPassword" name="confirmPassword" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group has-error">
-                        <div class="g-recaptcha" data-sitekey="6Lf6Xg8UAAAAABZq5gVYDUmSrxayh2tVIL4AQpDY"
-                             data-callback="correctCaptcha"></div>
-                        <span id="err-captch" class="help-block"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-3">
-                        <button type="submit" class="btn btn-primary form-control">Đăng ký</button>
-                    </div>
-                </div>
-            </form>
         </div>
         <aside th:replace="common/include :: common-lottery"></aside>
     </div>
@@ -133,10 +124,38 @@
         })
     });
 
+    function showMessage(message, type, xButton=true) {
+        var strError = '';
+        strError += '<div class="alert '+type+'" role="alert">';
+        if(xButton) {
+            strError += ' <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">';
+            strError += ' <span>X</span>';
+            strError += '</button>';
+        }
+        strError += '<p>';
+        strError += message;
+        strError += '</p>';
+        strError += '</div>';
+
+        return strError;
+    }
+
+    function showErrors(errors) {
+
+       var messageArea = $('#messageArea');
+           $.each(errors, function (index, error) {
+               messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+           });
+    }
+
     function creatUser(frmId) {
+
+        //clear errorArea
+        $('#errorArea').html('');
 
         var url = frmId.attr('action');
         var data = {};
+
         data['email'] = $('#email').val();
         data['phone'] = $('#phoneNumber').val();
         data['username'] = $('#username').val();
@@ -153,13 +172,26 @@
                 //xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                console.log("SUCCESS");
-                console.log(data);
+                $('#signupForm').html('');
+                var strSuccess = 'Chúc mừng bạn đã đăng ký thành công. Hệ thống sẽ tự chuyển trong <span id="timeCountDown">5</span>s. <a href="/dashboard">Nhấp vào đây nếu hệ thống không tự chuyển</a>';
+                var messageArea = $('#messageArea');
+                messageArea.html('');
+                messageArea.append(showMessage(strSuccess, 'alert-success', false));
+                //auto direct to dashboard
+                var timeCountDown = 5;
+                setInterval(function () {
+                    $('#timeCountDown').html(timeCountDown);
+                    if(timeCountDown==0)
+                        window.location.href = "/dashboard";
+                    timeCountDown--;
+                },1000);
             },
             error: function (e) {
                 count--;
-                console.log("ERROR");
-                console.log(e);
+                showErrors(JSON.parse(e.responseText));
+                console.log(JSON.parse(e.responseText));
+                $('#signupForm').find('button[type="submit"]').attr('disabled', false);
+                $('#signupForm').find('button[type="submit"]').removeClass('disabled');
             },
             done: function (e) {
                 console.log("DONE");

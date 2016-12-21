@@ -32,7 +32,11 @@ public class I18NService {
      * @param locale
      * @return A message corresponding to messageId and locale
      */
-    private String getMessage(String messageId, Locale locale) {
+    public String getMessage(String messageId, Locale locale) {
         return messageSource.getMessage(messageId, null, locale);
+    }
+
+    public String getMessage(String messageId, String variable,Locale locale) {
+        return messageSource.getMessage(messageId, new Object[]{variable}, locale);
     }
 }

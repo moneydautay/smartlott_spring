@@ -11,6 +11,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories(basePackages =  "com.smartlott.backend.persistence.repositories")
 @EnableTransactionManagement
-@PropertySource("file:///${user.home}/.glucks/smartlott/application-common.properties")
+@PropertySource("file:///${user.home}/.gluck/smartlott/application-common.properties")
 public class ApplicationConfig {
 }
