@@ -3,6 +3,7 @@ package com.smartlott.utils;
 import com.smartlott.backend.persistence.domain.backend.User;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -24,7 +25,8 @@ public class UserUtils {
         user.setEmail(email);
         user.setFirstName("First Name");
         user.setLastName("Last Name");
-        user.setPhone("0000000000000");
+        user.setBirthday(LocalDate.of(1986,05,20));
+        user.setPhoneNumber("0000000000000");
         user.setEnabled(true);
         user.setStatus(1);
 

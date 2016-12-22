@@ -5,6 +5,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 /**
  * Created by Mrs Hoang on 12/14/2016.
  */
@@ -13,4 +15,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @PropertySource("file:///${user.home}/.gluck/smartlott/application-common.properties")
 public class ApplicationConfig {
+
+
 }

@@ -17,145 +17,60 @@
 
     <!-- Slider image-->
     <div class="container">
-        <div class="col-md-8 category">
+        <div class=" category">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
-                <li class="breadcrumb-item active">Dashbroad</li>
+                <li class="breadcrumb-item active">Login</li>
             </ol>
-            <div class="row">
-                <div th:if="${param.error}" class="alert alert-danger alert-dismissible" role="alert">
-                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
-                        <span>X</span>
-                    </button>
-                    <p th:text="#{login.error.text}"></p>
-                </div>
-                <div th:if="${param.logout}" class="alert alert-success alert-dismissible" role="alert">
-                    <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
-                        <span>X</span>
-                    </button>
-                    <p th:text="#{login.logout.text}"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <form th:action="@{/login}" method="post">
-                        <div class="form-group">
-                            <label for="username" th:text="#{login.username.text}"></label>
-                            <input type="text" id="username" name="username" class="form-control"/>
+            <div class="col-md-4 col-sm-offset-4">
+                <div id="formLogin">
+                    <div class="row">
+                        <div th:if="${param.error}" class="alert alert-danger alert-dismissible" role="alert">
+                            <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                                <span>X</span>
+                            </button>
+                            <p th:text="#{login.error.text}"></p>
                         </div>
-                        <div class="form-group">
-                            <label for="password" th:text="#{login.password.text}"></label>
-                            <input type="password" id="password" name="password" class="form-control"/>
+                        <div th:if="${param.logout}" class="alert alert-success alert-dismissible" role="alert">
+                            <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                                <span>X</span>
+                            </button>
+                            <p th:text="#{login.logout.text}"></p>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" th:text="#{login.button.submit.text}">Đăng nhập</button>
+                    </div>
+                    <div class="row">
+
+                        <form th:action="@{/login}" method="post">
+                            <div class="form-group">
+                                <label for="username" th:text="#{login.username.text}"></label>
+                                <input type="text" id="username" name="username" class="form-control"/>
                             </div>
-                            <div class="col-md-12">
-                                <ul class="fgp-tip">
-                                    <li><a th:href="@{/forgot-password}" th:text="#{login.forget.password.text}">Quên mật khẩu?</a></li>
-                                    <li><a th:href="@{/register}" th:text="#{login.no.have.account.text}">Bạn chưa có tài khoản</a></li>
-                                </ul>
+                            <div class="form-group">
+                                <label for="password" th:text="#{login.password.text}"></label>
+                                <input type="password" id="password" name="password" class="form-control"/>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <label for="remember-me">Remember me</label>
+                                <input type="checkbox" name="remember-me" id="remember-me" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary form-control"
+                                        th:text="#{login.button.submit.text}">Đăng nhập
+                                </button>
+                                <div class="col-md-12">
+                                    <ul class="fgp-tip">
+                                        <li><a th:href="@{/forgot-password}" th:text="#{login.forget.password.text}">Quên
+                                            mật khẩu?</a></li>
+                                        <li><a th:href="@{/register}" th:text="#{login.no.have.account.text}">Bạn chưa
+                                            có tài khoản</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Box sell lottery -->
-        <aside class="col-md-4 selling-lottery">
-            <div class="row">
-                <h3>Mua vé số</h3>
-                <div class="form-group">
-                    <div class="row" id="numeric-needed-lottery">
-                        <label>Số lượng vé số</label>
-                        <select class="form-control numeric-buying-lottery">conf
-                            <option value="-1">Số lượng vé số cần mua</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                    </div>
-                    <form id="frm-sell-lottery">
-                        <div class="box-numeric-lottery">
-                            <!--<div class="row" id="lot-1">
-                                <label>Vé số #1:</label>
-                                <ul class="box-memeric choosing-lot">
-                                    <li><input type="text" id="lot-1-0" name="lot[][0]" class="form-control" value="&#45;&#45;"></li>
-                                    <li><input type="text" id="lot-1-1" name="lot[][1]" class="form-control" value="&#45;&#45;"></li>
-                                    <li><input type="text" id="lot-1-2" name="lot[][2]" class="form-control" value="&#45;&#45;"></li>
-                                    <li><input type="text" id="lot-1-3" name="lot[][3]" class="form-control" value="&#45;&#45;"></li>
-                                    <li><input type="text" id="lot-1-4" name="lot[][3]" class="form-control" value="&#45;&#45;"></li>
-                                    <li><input type="text" id="lot-1-5" name="lot[][5]" class="form-control" value="&#45;&#45;"></li>
-                                </ul>
-                            </div>-->
-                        </div>
-                    </form>
-                    <div class="box-choosing-number">
-                        <ul>
-                            <li>01</li>
-                            <li>02</li>
-                            <li>03</li>
-                            <li>04</li>
-                            <li>05</li>
-                            <li>06</li>
-                            <li>07</li>
-                            <li>08</li>
-                            <li>09</li>
-                            <li>10</li>
-                            <li>11</li>
-                            <li>12</li>
-                            <li>13</li>
-                            <li>14</li>
-                            <li>15</li>
-                            <li>16</li>
-                            <li>16</li>
-                            <li>17</li>
-                            <li>18</li>
-                            <li>19</li>
-                            <li>20</li>
-                            <li>21</li>
-                            <li>22</li>
-                            <li>23</li>
-                            <li>24</li>
-                            <li>25</li>
-                            <li>26</li>
-                            <li>26</li>
-                            <li>27</li>
-                            <li>28</li>
-                            <li>29</li>
-                            <li>30</li>
-                            <li>31</li>
-                            <li>32</li>
-                            <li>33</li>
-                            <li>34</li>
-                            <li>35</li>
-                            <li>36</li>
-                            <li>37</li>
-                            <li>38</li>
-                            <li>39</li>
-                            <li>40</li>
-                            <li>41</li>
-                            <li>42</li>
-                            <li>43</li>
-                            <li>44</li>
-                            <li>45</li>
-                        </ul>
-                    </div>
-                    <div class="row box-btn-control-buying-lot">
-                        <button class="btn btn-primary" id="btn-buying-lottery">Mua</button>
-                        <button class="btn btn-warning" id="btn-cancel">Huỷ</button>
-                    </div>
-                </div>
-            </div>
-        </aside>
     </div>
 
     <!--FEATURED NEWS-->

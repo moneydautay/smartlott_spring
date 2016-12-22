@@ -79,6 +79,20 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         Assert.assertNotNull(passwords);
 
         Assert.assertNotNull(userRoles);
+
+        System.out.println("Before update: "+user.toString());
+        //update user
+        User userNew = new User();
+        userNew.setId(2);
+        userNew.setEmail(user.getEmail());
+        userNew.setUsername(user.getUsername());
+        userNew.setPhoneNumber("01682153164");
+        userNew.setFirstName("Lam");
+        userNew.setLastName("Nguyen");
+
+        user = userRepository.save(userNew);
+        System.out.println("After update: "+user.toString());
+
     }
 
 }

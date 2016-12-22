@@ -1,7 +1,12 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -15,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.websocket.ClientEndpoint;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,9 +32,11 @@ import java.util.Set;
 @Entity
 @Table(
         name = "user",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"email","phone","username"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email","phone_number","username"})
 )
-
+@DynamicInsert(value = true)
+@DynamicUpdate(value = true)
+@SelectBeforeUpdate
 public class User implements Serializable, UserDetails{
 
     /** The Serial Version UID for Serializable classes */
@@ -44,6 +52,7 @@ public class User implements Serializable, UserDetails{
     private String email;
 
 
+    @NotEmpty(message = "NotEmpty.user.username")
     @Size(min=4, max=50, message = "Size.user.username")
     private String username;
 
@@ -54,9 +63,13 @@ public class User implements Serializable, UserDetails{
 
     private String lastName;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate birthday;
+
     @NotEmpty(message = "NotEmpty.user.phone")
     @Size(max = 50, message = "Size.user.phone")
-    private String phone;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Column(name = "profile_image")
     private String profileImage;
@@ -66,6 +79,8 @@ public class User implements Serializable, UserDetails{
 
     @Column(name="document_2")
     private String documentTwo;
+
+    private int sex;
 
     private boolean enabled = true;
 
@@ -145,12 +160,20 @@ public class User implements Serializable, UserDetails{
         this.lastName = lastName;
     }
 
-    public String getPhone() {
-        return phone;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
     }
 
     public String getProfileImage() {
@@ -183,6 +206,14 @@ public class User implements Serializable, UserDetails{
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 
     public int getStatus() {
@@ -284,12 +315,14 @@ public class User implements Serializable, UserDetails{
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", profileImage='" + profileImage + '\'' +
                 ", documentOne='" + documentOne + '\'' +
                 ", documentTwo='" + documentTwo + '\'' +
+                ", sex=" + sex +
                 ", enabled=" + enabled +
                 ", status=" + status +
                 ", cash=" + cash +

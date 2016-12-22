@@ -53,7 +53,7 @@ public class Province {
 
     @Override
     public String toString() {
-        return "Province{" +
+        return "ProvinceController{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", country=" + country +

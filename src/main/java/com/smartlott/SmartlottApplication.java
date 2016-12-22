@@ -1,11 +1,10 @@
 package com.smartlott;
 
 import com.smartlott.backend.persistence.domain.backend.*;
-import com.smartlott.backend.service.FeaturedSliderImageService;
-import com.smartlott.backend.service.FeaturedSliderService;
-import com.smartlott.backend.service.RoleService;
-import com.smartlott.backend.service.UserService;
+import com.smartlott.backend.service.*;
 import com.smartlott.enums.RolesEnum;
+import com.smartlott.utils.CountryUtils;
+import com.smartlott.utils.ProvinceUtils;
 import com.smartlott.utils.SliderUtils;
 import com.smartlott.utils.UserUtils;
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import javax.xml.stream.events.ProcessingInstruction;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +40,12 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private FeaturedSliderImageService sliderImageService;
 
+
+	@Autowired
+	private CountryService countryService;
+
+	@Autowired
+	private ProvinceService provinceService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -84,6 +90,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//create slider
 		createFeaturedSlider();
+
+		//Create country and province
+		createCountry();
 	}
 
 	public void createFeaturedSlider(){
@@ -106,5 +115,29 @@ public class SmartlottApplication implements CommandLineRunner{
 		sliderImageService.save(featuredSliderImage3);
 		LOGGER.info("Created Featured Slider Images");
 
+
+
+	}
+
+
+	public void createCountry(){
+
+		//Create country
+		Country country1 = CountryUtils.createCountry("United State","");
+		countryService.createCountry(country1);
+		LOGGER.info("Create a new country {}", country1);
+
+		Country country2 = CountryUtils.createCountry("Vietnam","84");
+		countryService.createCountry(country2);
+		LOGGER.info("Create a new country {}", country2);
+
+		//Create province
+		Province province1 = ProvinceUtils.createProvice("Hồ Chí Minh", country2);
+		provinceService.createProvince(province1);
+		LOGGER.info("Create a new province {}", province1);
+
+		Province province2 = ProvinceUtils.createProvice("Hà Nội", country2);
+		provinceService.createProvince(province2);
+		LOGGER.info("Create a new province {}", province2);
 	}
 }

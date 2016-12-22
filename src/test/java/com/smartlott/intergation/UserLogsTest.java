@@ -62,8 +62,5 @@ public class UserLogsTest extends AbstractIntegrationTest {
         List<UserLogs> userLogss2 = userLogsRepository.findByCreatedDate(localDateTime);
 
         Assert.assertEquals("Userlogs must be equal 1", 1, userLogss2.size());
-
-
-
     }
 }

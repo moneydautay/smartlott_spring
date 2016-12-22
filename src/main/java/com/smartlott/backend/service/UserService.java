@@ -55,6 +55,7 @@ public class UserService {
      * Create a user
      * @param user
      */
+    @Transactional
     public User createUser(User user){
 
         String encryptPassword = passwordEncoder.encode(user.getPassword());
@@ -69,5 +70,25 @@ public class UserService {
         user = userRepository.save(user);
 
         return user;
+    }
+
+
+    /**
+     * Find user by id
+     * @param id given by user
+     * @return a user if null if not found
+     */
+    public User findOne(long id) {
+        return userRepository.findOne(id);
+    }
+
+    /**
+     *Update user
+     * @param user
+     * @return user after update
+     */
+    @Transactional
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 }

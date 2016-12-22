@@ -291,8 +291,12 @@ ul.fgp-tip li a{
 ul.fgp-tip li a:hover{
     color: #0a6d01;
 }
-ul.fgp-tip li a:active{
+ul.fgp-tip li a:active {
     color: #cb0e20;
+}
+
+#formLogin{
+    margin: 20px auto;
 }
 /*
 *-----------------------------------------------------------------
