@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Box sell lottery -->
+<aside th:fragment="dashboard-siderbar" class="col-md-4" id="sidebar">
+    <div class="row">
+        <div id="nav-dashboard">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('/dashboard')?'active':''}"><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/profile')?'active':''}"><a th:href="@{/dashboard/profile}">Profile</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/mycash')?'active':''}"><a th:href="@{/dashboard/mycash}">My Cash</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/mybonous')?'active':''}"><a th:href="@{/dashboard/mybonous}">My Bonous</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/mylottery')?'active':''}"><a th:href="@{/dashboard/mylottery}">My Lottery</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/mytransaction')?'active':''}"><a th:href="@{/dashboard/mytransaction}">My Transaction</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().startsWith('dashboard/mynetword')?'active':''}"><a th:href="@{/dashboard/mynetword}">My Netword</a></li>
+            </ul>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

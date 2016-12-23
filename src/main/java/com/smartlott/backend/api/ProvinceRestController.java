@@ -19,11 +19,11 @@ import java.util.List;
  * Created by greenlucky on 12/22/16.
  */
 @RestController
-@RequestMapping(ProvinceController.API_PROVINCE_URL)
-public class ProvinceController {
+@RequestMapping(ProvinceRestController.API_PROVINCE_URL)
+public class ProvinceRestController {
 
     /** The application logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProvinceController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProvinceRestController.class);
 
 
     public static final String API_PROVINCE_URL = "/api/province";

@@ -47,6 +47,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private ProvinceService provinceService;
 
+	@Autowired
+	private AddressService addressService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
 	}
@@ -54,6 +57,21 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Override
 	public void run(String...args) throws Exception{
 		LOGGER.info("Creating user with role admin into database...");
+
+
+		//Create country and province
+		createCountry();
+
+		Country country = countryService.findOne(2);
+		Province province = provinceService.findOne(1);
+
+		Set<Address> addresses = new HashSet<>();
+		Address address = new Address();
+		address.setAddress("521/64 Binh Duong 1");
+		address.setCity("Di An");
+		address.setState("");
+		address.setProvince(province);
+
 
 
 		List<Role> roles = new ArrayList<>();
@@ -84,15 +102,19 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		user.setUserRoles(userRoles);
 
+
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
 
+		address.setUser(user);
+
+		addressService.createAddress(address);
+
 		//create slider
 		createFeaturedSlider();
 
-		//Create country and province
-		createCountry();
+
 	}
 
 	public void createFeaturedSlider(){

@@ -106,6 +106,7 @@
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/customer-validator.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script th:inline="javascript" type="text/javascript">
     var captcha = false;
@@ -124,29 +125,6 @@
         })
     });
 
-    function showMessage(message, type, xButton=true) {
-        var strError = '';
-        strError += '<div class="alert '+type+'" role="alert">';
-        if(xButton) {
-            strError += ' <button aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">';
-            strError += ' <span>X</span>';
-            strError += '</button>';
-        }
-        strError += '<p>';
-        strError += message;
-        strError += '</p>';
-        strError += '</div>';
-
-        return strError;
-    }
-
-    function showErrors(errors) {
-
-       var messageArea = $('#messageArea');
-           $.each(errors, function (index, error) {
-               messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
-           });
-    }
 
     function creatUser(frmId) {
 

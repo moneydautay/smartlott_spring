@@ -29,4 +29,12 @@ public interface AddressRepository extends CrudRepository<Address, Long>{
      * @return Reuturns a list address or null if not found
      */
     public List<Address> findByProvince(Province province);
+
+
+    /**
+     * Find List addresses by user id
+     * @param userId
+     * @return A list addresses or null if not found
+     */
+    public List<Address> findByUserId(long userId);
 }

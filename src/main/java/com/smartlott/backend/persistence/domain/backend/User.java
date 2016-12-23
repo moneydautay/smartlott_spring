@@ -89,6 +89,7 @@ public class User implements Serializable, UserDetails{
     @Value(value = "0")
     private double cash;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createDate;
 
@@ -112,6 +113,9 @@ public class User implements Serializable, UserDetails{
     )
     private Set<SecurityToken> securityTokens = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Address> addresses = new HashSet<>();
 
     public User() {
     }
@@ -262,6 +266,14 @@ public class User implements Serializable, UserDetails{
 
     public void setPasswords(Set<Password> passwords) {
         this.passwords = passwords;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override

@@ -21,7 +21,8 @@
     <div class="container category">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
-            <li class="breadcrumb-item active">Dashbroad</li>
+            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashbroad</a></li>
+            <li class="breadcrumb-item active">Thông tin cá nhân</li>
         </ol>
         <div class="container" id="dashboard">
             <div class="col-md-8 category">
@@ -156,6 +157,7 @@
             <!-- INCLUDE RIGHT SIDEBAR-->
             <aside th:replace="dashboard/include :: dashboard-siderbar"/>
         </div>
+
 
     </div>
 

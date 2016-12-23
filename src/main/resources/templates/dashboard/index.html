@@ -25,10 +25,9 @@
         </ol>
         <div class="container" id="dashboard">
             <div class="col-md-8 category">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                    <li class="breadcrumb-item active">Dashbroad</li>
-                </ol>
+                <div class="row" id="messageArea">
+
+                </div>
                 <div class="content profile">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
@@ -45,7 +44,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="general">
-                            <form id="frmProfile" th:action="@{/api/user}" th:method="PUT">
+                            <form id="frmProfile" th:action="@{/api/user}" method="PUT">
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
                                         <div class="form-group">
@@ -55,25 +54,25 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-12 col-md-6 has-right-icon">
                                         <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <div class="col-lg-11 col-md-10">
+                                            <label for="email" class="col-xs-12 col-md-12">Email</label>
+                                            <div class="col-xs-11 col-md-11">
                                                 <input type="text" id="email" name="email" class="form-control" readonly="readonly"/>
                                             </div>
-                                            <div class="col-lg-1 col-md-2 edit-icon">
+                                            <div class="col-xs-1 col-md-1 edit-icon">
                                                 <a href="#"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-12 col-md-6 has-right-icon">
                                         <div class="form-group">
                                             <label for="phoneNumber">Số điện thoại</label>
-                                            <div class="col-lg-11 col-md-10">
+                                            <div class="col-xs-11 col-md-11">
                                                 <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" readonly="readonly"/>
                                             </div>
-                                            <div class="col-lg-1 col-md-2 edit-icon">
+                                            <div class="col-xs-1 col-md-1 edit-icon">
                                                 <a href="#"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
                                             </div>
                                             <div class="clearfix"></div>
@@ -99,17 +98,17 @@
                                         <div class="form-group">
                                             <label for="sex">Giới tính</label>
                                             <div class="radio">
-                                                <label><input id="sex" type="radio" name="sex" th:value="1" checked="checked"/> Nam</label>
+                                                <label><input id="sex" type="radio" name="sex" th:value="0" checked="checked"/> Nam</label>
                                                 &nbsp; &nbsp;
                                                 <label><input id="sex" type="radio" th:value="1" name="sex"/> Nữ</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-12 col-md-6 birthday-has-right-icon">
                                         <div class="form-group">
                                             <label for="birthday">Ngày sinh</label>
-                                            <div class="input-group date" data-provide="datepicker" id="birthday">
-                                                <input type="text" name="birthday" class="form-control"/>
+                                            <div class="input-group date" data-provide="datepicker" id="birthdayFormat">
+                                                <input type="text" id="birthday" name="birthday" class="form-control"/>
                                                 <div class="input-group-addon">
                                                     <span class="glyphicon glyphicon-th"></span>
                                                 </div>
@@ -122,17 +121,18 @@
                                         <div class="form-group">
                                             <label for="address">Địa chỉ</label>
                                             <input type="text" id="address" name="address" class="form-control"/>
+                                            <input type="hidden" id="addressId" name="addressId" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="ward">Quận/Huyện</label>
-                                            <input type="text" id="ward" name="ward" class="form-control"/>
+                                            <label for="city">Quận/Huyện</label>
+                                            <input type="text" id="city" name="city" class="form-control"/>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-12 col-md-6 de-has-right-icon">
                                         <div class="form-group">
                                             <label for="province">Tỉnh/Thành Phố</label>
                                             <select name="province" id="province" class="form-control">
@@ -142,16 +142,21 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-12">
-                                        <button class="btn btn-primary">Lưu</button>
+                                    <div class="col-xs-12 col-md-2">
+                                        <button class="btn btn-primary form-control" type="submit">Lưu</button>
                                     </div>
                                 </div>
+                                <input type="hidden" id="id" name="id" />
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- INCLUDE RIGHT SIDEBAR-->
+            <aside th:replace="dashboard/include :: dashboard-siderbar"/>
         </div>
+
     </div>
 
     <!--FEATURED NEWS-->
@@ -172,13 +177,21 @@
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/customer-validator.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
 <script th:src="@{/js/gluck.js}"></script>
 <script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
 
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function ($) {
 
-        $('#birthday').datepicker({
+        //Submit
+        $('#frmProfile').submit(function (e) {
+            e.preventDefault();
+            updateUser();
+        });
+
+
+        $('#birthdayFormat').datepicker({
             format: 'dd/mm/yyyy',
             startDate: '-80y',
             endDate:'-18y',
@@ -191,7 +204,108 @@
         var username = /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/;
         //get user
         getUser(username);
+
+
+        setTimeout(function () {
+            var userId = $('#id').val();
+            if (userId != '')
+            //get address
+                getAddress(userId);
+        }, 1000);
     });
+
+    function updateUser() {
+
+        var data = {};
+        var address = {};
+        var province = {};
+        var id = $('#id').val();
+
+        data['id'] = id;
+        data['username']    = $('#username').val();
+        data['email']       = $('#email').val();
+        data['phoneNumber'] = $('#phoneNumber').val();
+        data['firstName']   = $('#firstName').val();
+        data['lastName']    = $('#lastName').val();
+        data['birthday']    = $('#birthday').val();
+        data['sex']         = $('#sex:checked').val();
+
+        //Province
+        province['id'] = $('#province').val();
+        province['name'] = $('#province option:selected').text();
+
+        //Address
+        address['id']       = $('#addressId').val();
+        address['address']  = $('#address').val();
+        address['city']     = $('#city').val();
+        address['province'] = province;
+
+        data['addresses']   = address;
+
+        console.log(JSON.stringify(data));
+
+        var url = $('#frmProfile').attr('action')+'/'+id;
+
+        $.ajax({
+            type: 'PUT',
+            contentType: 'application/json',
+            url: url,
+            dataType: 'json',
+            data: JSON.stringify(data),
+            timeout: 10000,
+                beforeSend: function (xhr) {
+            },
+            success: function(data) {
+                console.log(data);
+                var messageArea = $('#messageArea');
+                messageArea.html('');
+                messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
+            },
+            error: function(e) {
+                showErrors(e);
+                console.log(e);
+            },
+            done: function(e) {
+                console.log("DONE");
+            }
+        });
+    }
+
+    function showAddress(data) {
+        if(data != null){
+            $('#addressId').val(data[0].id);
+            $('#address').val(data[0].address);
+            $('#city').val(data[0].city);
+            $('#state').val(data[0].state);
+            $('#province').val(data[0].province.id);
+        }
+    }
+
+    function getAddress(userId) {
+
+        var url = '/api/address/'+userId;
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            url: url,
+            dataType: 'json',
+        timeout: 10000,
+            beforeSend: function (xhr) {
+
+        },
+        success: function(data) {
+            console.log(data);
+            showAddress(data);
+        },
+        error: function(e) {
+            console.log(e);
+        },
+        done: function(e) {
+            console.log("DONE");
+        }
+    });
+    }
 </script>
 </body>
 </html>

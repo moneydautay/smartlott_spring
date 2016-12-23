@@ -35,4 +35,13 @@ public class ProvinceService {
     public Province createProvince(Province province){
         return provinceRepository.save(province);
     }
+
+    /**
+     * Find a province by id
+     * @param id
+     * @return A province or null if not found
+     */
+    public Province findOne(int id) {
+       return provinceRepository.findOne(id);
+    }
 }

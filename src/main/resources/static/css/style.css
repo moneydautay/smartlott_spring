@@ -21,7 +21,7 @@ header{
 .row{
     margin:0;
 }
-div[class*="col-md-"]{
+[class*="col-md-"]{
     padding-left: 0;
 }
 
@@ -66,6 +66,7 @@ a:active{
 button[disabled]{
     background: #cb0e20!important;
 }
+
 /*
 *-----------------------------------------------
 * @Top navbar
@@ -555,7 +556,7 @@ ul.fgp-tip li a:active {
 
 
 @media (max-width: 768px){
-    div[class*="col-md-"]{
+    [class*="col-md-"]{
         padding-right: 0;
     }
     #top-navbar .navbar-nav>li>a{

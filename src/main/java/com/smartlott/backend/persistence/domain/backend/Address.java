@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -15,7 +17,7 @@ public class Address implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "address_id")
+    @Column(name = "id")
     private long id;
 
     private String address;
@@ -24,7 +26,8 @@ public class Address implements Serializable{
 
     private String state;
 
-    @ManyToOne(fetch =  FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch =  FetchType.LAZY)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -86,25 +89,14 @@ public class Address implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Address address1 = (Address) o;
+        Address address = (Address) o;
 
-        if (id != address1.id) return false;
-        if (address != null ? !address.equals(address1.address) : address1.address != null) return false;
-        if (city != null ? !city.equals(address1.city) : address1.city != null) return false;
-        if (state != null ? !state.equals(address1.state) : address1.state != null) return false;
-        if (user != null ? !user.equals(address1.user) : address1.user != null) return false;
-        return province != null ? province.equals(address1.province) : address1.province == null;
+        return id == address.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (province != null ? province.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 
     @Override
@@ -114,8 +106,7 @@ public class Address implements Serializable{
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
-                ", user=" + user +
-                ", province=" + province +
+                ", province='"+ province.getId() +'\''+
                 '}';
     }
 }

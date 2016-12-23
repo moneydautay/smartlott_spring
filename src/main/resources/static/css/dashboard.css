@@ -60,3 +60,18 @@
 #dashboard .form-group .col-md-2 label{
     padding: 10px 0;
 }
+
+.edit-icon{
+    text-align: right;
+}
+.birthday-has-right-icon .form-control-feedback {
+    right: 40px;
+}
+.de-has-right-icon .form-control-feedback {
+    right: 10px;
+}
+@media (min-width: 768px) {
+    .has-right-icon .form-control-feedback {
+        right: 16px;
+    }
+}

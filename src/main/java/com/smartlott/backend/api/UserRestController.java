@@ -11,19 +11,13 @@ import com.smartlott.backend.service.UserService;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.RoleNotFoundException;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,13 +29,13 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserRestController {
 
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
     
     /** The application logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRestController.class);
 
 
     @Autowired

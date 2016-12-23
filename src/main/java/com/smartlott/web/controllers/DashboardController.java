@@ -10,10 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    public static final String DASHBOARD_VIEW_NAME = "/dashboard/index";
+    public static final String DASHBOARD_VIEW_NAME = "/dashboard";
 
     @RequestMapping("")
     public String dashboard(){
-        return DASHBOARD_VIEW_NAME;
+        return DASHBOARD_VIEW_NAME+"/index";
+    }
+
+    @RequestMapping("/profile")
+    public String profileGeneral(){
+        return DASHBOARD_VIEW_NAME+"/profileGeneral";
     }
 }

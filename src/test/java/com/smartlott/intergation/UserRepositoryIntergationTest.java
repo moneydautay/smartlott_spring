@@ -93,6 +93,11 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         user = userRepository.save(userNew);
         System.out.println("After update: "+user.toString());
 
+        //find address by userId
+        List<Address> addresses = addressRepository.findByUserId(user.getId());
+
+        System.out.println(addresses);
+
     }
 
 }
