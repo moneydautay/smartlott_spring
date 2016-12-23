@@ -134,3 +134,47 @@ function getUser(userName) {
 }
 
 
+function changePassword(username,frmId=null) {
+
+    var url = '/api/user/change-password';
+    if(frmId!=null)
+        url = $('#'+frmId).attr('action');
+    var data = {};
+    data['username']=username;
+    data['currentPassword']=$('#currentPassword').val();
+    data['newPassword']=$('#newPassword').val();
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        data: JSON.stringify(data),
+        timeout: 10000,
+        beforeSend: function (xhr) {
+
+        },
+        success: function (data) {
+            console.log(data);
+            var messageArea = $('#messageArea');
+            messageArea.html('');
+            messageArea.append(showMessage('Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại <span id="timeCountDown">1</span>s', 'alert-success', true));
+            //auto direct to dashboard
+            var timeCountDown = 1;
+            setInterval(function () {
+                $('#timeCountDown').html(timeCountDown);
+                if(timeCountDown==0)
+                    window.location.href = "/logout";
+                timeCountDown--;
+            },1000);
+        },
+        error: function (e) {
+            console.log(e);
+            showErrors(JSON.parse(e.responseText));
+        },
+        done: function (e) {
+            console.log("DONE");
+        }
+    });
+}
+
+

@@ -37,4 +37,11 @@ public interface PasswordRepository extends CrudRepository<Password, Long>{
     @Query("update Password p set p.enabled = :enabled where p.user.id= :userId")
     public void changePasswordByUserIdAndEnabled(@Param("userId") long userId, @Param("enabled") boolean enabled);
 
+    /**
+     * Find list password by user
+     * @param user
+     * @return A list password or null if not exist
+     */
+    public List<Password> findByUser(User user);
+
 }

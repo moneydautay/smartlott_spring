@@ -91,4 +91,11 @@ public class UserService {
     public User updateUser(User user) {
         return userRepository.save(user);
     }
+
+    public User checkingPassword(String username, String currentPassword) {
+        User localUser = userRepository.findByUsername(username);
+        if(passwordEncoder.matches(currentPassword, localUser.getPassword()))
+            return localUser;
+        return null;
+    }
 }

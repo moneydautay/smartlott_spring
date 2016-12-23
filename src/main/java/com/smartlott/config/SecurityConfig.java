@@ -32,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
     }
 
-
     @Autowired
     private UserSecurityService userSecurityService;
 

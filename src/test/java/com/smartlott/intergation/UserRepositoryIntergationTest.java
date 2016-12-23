@@ -17,6 +17,7 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.Clock;
@@ -42,6 +43,10 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     @Autowired
     private AddressRepository addressRepository;
 
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Rule public TestName testName = new TestName();
 
     @Before
@@ -61,7 +66,6 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         createCustUser(testName);
 
         User user = userRepository.findByEmail(email);
-        System.out.println(user.toString());
 
         List<Password> passwords = passwordRepository.findByUserAndEnabled(user,true);
 
@@ -80,23 +84,16 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
         Assert.assertNotNull(userRoles);
 
-        System.out.println("Before update: "+user.toString());
-        //update user
-        User userNew = new User();
-        userNew.setId(2);
-        userNew.setEmail(user.getEmail());
-        userNew.setUsername(user.getUsername());
-        userNew.setPhoneNumber("01682153164");
-        userNew.setFirstName("Lam");
-        userNew.setLastName("Nguyen");
-
-        user = userRepository.save(userNew);
-        System.out.println("After update: "+user.toString());
-
         //find address by userId
         List<Address> addresses = addressRepository.findByUserId(user.getId());
 
         System.out.println(addresses);
+
+        System.out.println(user);
+        //find user by usename and password
+        String encodedPassword = "$2a$12$2amqGuI0WhE4DC3uqvTvV..ezmwpPzAYlR4YvS13EwzwhHN05FHF2";
+        User user1 = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        Assert.assertNotNull(user1);
 
     }
 

@@ -31,16 +31,7 @@
                 </div>
                 <div class="content profile">
                     <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">Thông
-                            tin chung</a></li>
-                        <li role="presentation"><a href="#password" aria-controls="password" role="tab"
-                                                   data-toggle="tab">Mật khẩu</a></li>
-                        <li role="presentation"><a href="#doc" aria-controls="doc" role="tab" data-toggle="tab">Tài
-                            liệu</a></li>
-                        <li role="presentation"><a href="#account" aria-controls="account" role="tab"
-                                                                  data-toggle="tab">Tài khoản</a></li>
-                    </ul>
+                    <ul th:replace="dashboard/include :: profile-nav-tabs" />
 
                     <!-- Tab panes -->
                     <div class="tab-content">

@@ -21,4 +21,19 @@ public class DashboardController {
     public String profileGeneral(){
         return DASHBOARD_VIEW_NAME+"/profileGeneral";
     }
+
+    @RequestMapping("/profile/password")
+    public String profilePassword(){
+        return DASHBOARD_VIEW_NAME+"/profilePassword";
+    }
+
+    @RequestMapping("/profile/doc")
+    public String profileDoc(){
+        return DASHBOARD_VIEW_NAME+"/profileDoc";
+    }
+
+    @RequestMapping("/profile/account")
+    public String profileAccount(){
+        return DASHBOARD_VIEW_NAME+"/profileAccount";
+    }
 }

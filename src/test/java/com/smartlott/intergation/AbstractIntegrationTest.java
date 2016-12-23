@@ -9,6 +9,7 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.Clock;
@@ -42,6 +43,9 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected AddressRepository addressRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     protected Role createCusRole(RolesEnum rolesEnum) {
         return new Role(rolesEnum);
     }
@@ -55,14 +59,16 @@ public abstract class AbstractIntegrationTest {
         Set<UserRole> userRoles = new HashSet<>();
         UserRole userRole = new UserRole(role, user);
 
-
-        Password password = new Password("0123456789", LocalDateTime.now(Clock.systemUTC()), user);
+        String encodedPassword = passwordEncoder.encode("0123456789");
+        Password password = new Password(encodedPassword, LocalDateTime.now(Clock.systemUTC()), user);
         Set<Password> passwords = new HashSet<>();
         passwords.add(password);
 
         user.getUserRoles().add(userRole);
+        user.setPassword(encodedPassword);
         user.setPasswords(passwords);
         user = userRepository.save(user);
+
 
         return user;
     }

@@ -28,4 +28,13 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @return A user given by a email and null if not found
      */
     public User findByEmail(String email);
+
+
+    /**
+     * Find user by username and password
+     * @param username
+     * @param password
+     * @return A user or null if not exist
+     */
+    public User findByUsernameAndPassword(String username, String password);
 }

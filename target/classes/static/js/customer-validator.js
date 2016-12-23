@@ -200,4 +200,59 @@ function main() {
             }
         }
     });
+
+
+    /* Change password form validation */
+    $('#frmPassword').formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'Mật khẩu không được bỏ trống'
+                    },
+                    stringLength: {
+                        message: 'Mật khẩu hiện tại phải có độ dài ít nhất 6 ký tự',
+                        min: function (value, validator, $field) {
+                            return 6 - (value.match(/\r/g) || []).length;
+                        }
+                    }
+                }
+            },
+            newPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'Mật khẩu mới không được bỏ trống'
+                    },
+                    identical: {
+                        field: 'confirmNewPassword',
+                        message: 'Nhập lại mật khẩu mới không chính xác'
+                    },
+                    stringLength: {
+                        message: 'Mật khẩu mới phải có độ dài ít nhất 6 ký tự',
+                        min: function (value, validator, $field) {
+                            return 6 - (value.match(/\r/g) || []).length;
+                        }
+                    }
+                }
+            },
+            confirmNewPassword: {
+                validators: {
+                    notEmpty:{
+                        field: 'confirmNewPassword',
+                        message: 'Nhập lại mật khẩu mới không được bỏ trống'
+                    },
+                    identical: {
+                        field: 'newPassword',
+                        message: 'Nhập lại mật khẩu mới không chính xác'
+                    }
+                }
+            },
+        }
+    });
 }

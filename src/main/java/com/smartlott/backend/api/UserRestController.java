@@ -1,13 +1,7 @@
 package com.smartlott.backend.api;
 
-import com.smartlott.backend.persistence.domain.backend.MessageDTO;
-import com.smartlott.backend.persistence.domain.backend.Role;
-import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.domain.backend.UserRole;
-import com.smartlott.backend.service.I18NService;
-import com.smartlott.backend.service.RoleService;
-import com.smartlott.backend.service.UserRoleService;
-import com.smartlott.backend.service.UserService;
+import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.RoleNotFoundException;
@@ -18,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,8 +43,10 @@ public class UserRestController {
     private RoleService roleService;
 
     @Autowired
-    private I18NService i18NService;
+    private PasswordService passwordService;
 
+    @Autowired
+    private I18NService i18NService;
 
     /**
      * Get numeric members in system has role given by roleId
@@ -141,4 +138,44 @@ public class UserRestController {
     }
 
 
+    /**
+     * Change password
+     * @param userPassword
+     * @param locale
+     * @return
+     */
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    public ResponseEntity<Object> changePassword(@RequestBody UserPassword userPassword, Locale locale){
+
+        List<MessageDTO> messages = new ArrayList<>();
+        LOGGER.info("User Password {}", userPassword);
+
+        User localUser =  userService.checkingPassword(userPassword.getUsername(), userPassword.getCurrentPassword());
+
+        //Checking valid username and password
+        if(localUser == null){
+            LOGGER.error("Username {} and Password {} is not valid", userPassword.getUsername(), userPassword.getCurrentPassword());
+            messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.not.valid", locale)));
+            return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        //Checking used password
+        if(passwordService.existedPassword(localUser, userPassword.getNewPassword())){
+            LOGGER.error("Password {} was used", userPassword.getNewPassword());
+            messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.exist", locale)));
+            return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        //change all old password to false
+        passwordService.changeStatusOldPassword(localUser, false);
+
+        //insert new password to password with enabled is true
+       Password password = passwordService.createNewPassword(localUser ,userPassword.getNewPassword());
+
+        localUser.setPassword(password.getPassword());
+
+        localUser = userService.updateUser(localUser);
+
+        return new ResponseEntity<Object>(localUser, HttpStatus.OK);
+    }
 }
