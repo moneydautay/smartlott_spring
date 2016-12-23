@@ -170,12 +170,10 @@ public class UserRestController {
         passwordService.changeStatusOldPassword(localUser, false);
 
         //insert new password to password with enabled is true
-       Password password = passwordService.createNewPassword(localUser ,userPassword.getNewPassword());
+        Password password = passwordService.createNewPassword(localUser ,userPassword.getNewPassword());
 
-        localUser.setPassword(password.getPassword());
+        userService.changePassword(userPassword.getUsername(), password.getPassword());
 
-        localUser = userService.updateUser(localUser);
-
-        return new ResponseEntity<Object>(localUser, HttpStatus.OK);
+        return new ResponseEntity<Object>(new Object[]{new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.change.succed", locale))}, HttpStatus.OK);
     }
 }

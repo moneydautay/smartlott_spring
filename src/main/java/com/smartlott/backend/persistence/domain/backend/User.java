@@ -56,7 +56,9 @@ public class User implements Serializable, UserDetails{
     @Size(min=4, max=50, message = "Size.user.username")
     private String username;
 
+    @JsonIgnore
     @Size(min=6, max = 100, message = "Size.user.password")
+    @Column(updatable = false)
     private String password;
 
     private String firstName;
@@ -87,14 +89,16 @@ public class User implements Serializable, UserDetails{
     private int status;
 
     @Value(value = "0")
+    @Column(updatable = false)
     private double cash;
 
     @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @Column(updatable = false)
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "active_by")
+    @JoinColumn(name = "active_by", updatable = false)
     private User activeBy;
 
     @JsonIgnore

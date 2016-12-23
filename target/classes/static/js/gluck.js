@@ -157,9 +157,11 @@ function changePassword(username,frmId=null) {
             console.log(data);
             var messageArea = $('#messageArea');
             messageArea.html('');
-            messageArea.append(showMessage('Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại <span id="timeCountDown">3</span>s', 'alert-success', true));
+            messageArea.append(showMessage('Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại <span id="timeCountDown">1</span>s', 'alert-success', true));
+            //clear all notified message
+            $('#frmPassword').data('formValidation').resetForm();
             //auto direct to dashboard
-            var timeCountDown = 3;
+            var timeCountDown = 1;
             setInterval(function () {
                 $('#timeCountDown').html(timeCountDown);
                 if(timeCountDown==0)
@@ -169,9 +171,73 @@ function changePassword(username,frmId=null) {
         },
         error: function (e) {
             console.log(e);
-            showErrors(JSON.parse(e));
+            showErrors(JSON.parse(e.responseText));
+            $('#frmPassword')
+                .data('formValidation')
+                .updateStatus('currentPassword','INVALID');
         },
         done: function (e) {
+            console.log("DONE");
+        }
+    });
+}
+
+
+/**
+ * Update user in dashboard
+ */
+function updateUser() {
+
+    var data = {};
+    var address = {};
+    var province = {};
+    var id = $('#id').val();
+
+    data['id'] = id;
+    data['username']    = $('#username').val();
+    data['email']       = $('#email').val();
+    data['phoneNumber'] = $('#phoneNumber').val();
+    data['firstName']   = $('#firstName').val();
+    data['lastName']    = $('#lastName').val();
+    data['birthday']    = $('#birthday').val();
+    data['sex']         = $('#sex:checked').val();
+
+    //Province
+    province['id'] = $('#province').val();
+    province['name'] = $('#province option:selected').text();
+
+    //Address
+    address['id']       = $('#addressId').val();
+    address['address']  = $('#address').val();
+    address['city']     = $('#city').val();
+    address['province'] = province;
+
+    data['addresses']   = address;
+
+    console.log(JSON.stringify(data));
+
+    var url = $('#frmProfile').attr('action')+'/'+id;
+
+    $.ajax({
+        type: 'PUT',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        data: JSON.stringify(data),
+        timeout: 10000,
+        beforeSend: function (xhr) {
+        },
+        success: function(data) {
+            var messageArea = $('#messageArea');
+            messageArea.html('');
+            messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
+            //clear all notified message
+            $('#frmProfile').data('formValidation').resetForm();
+        },
+        error: function(e) {
+            showErrors(JSON.parse(e.responseText));
+        },
+        done: function(e) {
             console.log("DONE");
         }
     });

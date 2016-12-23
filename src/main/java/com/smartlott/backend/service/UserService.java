@@ -98,4 +98,9 @@ public class UserService {
             return localUser;
         return null;
     }
+
+    @Transactional
+    public void changePassword(String username, String newPassword){
+        userRepository.changePassword(username, newPassword);
+    }
 }

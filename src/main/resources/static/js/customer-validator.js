@@ -199,8 +199,8 @@ function main() {
                 }
             }
         }
+    }).on('success.form.fv',function (e) {
+        e.preventDefault();
+        updateUser();
     });
-
-
-
 }

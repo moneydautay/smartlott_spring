@@ -36,7 +36,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="general">
-                            <form id="frmProfile" th:action="@{/api/user}" method="PUT">
+                            <form id="frmProfile" th:action="@{/api/user/}" method="PUT">
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
                                         <div class="form-group">
@@ -177,13 +177,6 @@
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function ($) {
 
-        //Submit
-        $('#frmProfile').submit(function (e) {
-            e.preventDefault();
-            updateUser();
-        });
-
-
         $('#birthdayFormat').datepicker({
             format: 'dd/mm/yyyy',
             startDate: '-80y',
@@ -198,71 +191,15 @@
         //get user
         getUser(username);
 
-
         setTimeout(function () {
             var userId = $('#id').val();
             if (userId != '')
             //get address
                 getAddress(userId);
-        }, 1000);
+        }, 500);
     });
 
-    function updateUser() {
 
-        var data = {};
-        var address = {};
-        var province = {};
-        var id = $('#id').val();
-
-        data['id'] = id;
-        data['username']    = $('#username').val();
-        data['email']       = $('#email').val();
-        data['phoneNumber'] = $('#phoneNumber').val();
-        data['firstName']   = $('#firstName').val();
-        data['lastName']    = $('#lastName').val();
-        data['birthday']    = $('#birthday').val();
-        data['sex']         = $('#sex:checked').val();
-
-        //Province
-        province['id'] = $('#province').val();
-        province['name'] = $('#province option:selected').text();
-
-        //Address
-        address['id']       = $('#addressId').val();
-        address['address']  = $('#address').val();
-        address['city']     = $('#city').val();
-        address['province'] = province;
-
-        data['addresses']   = address;
-
-        console.log(JSON.stringify(data));
-
-        var url = $('#frmProfile').attr('action')+'/'+id;
-
-        $.ajax({
-            type: 'PUT',
-            contentType: 'application/json',
-            url: url,
-            dataType: 'json',
-            data: JSON.stringify(data),
-            timeout: 10000,
-                beforeSend: function (xhr) {
-            },
-            success: function(data) {
-                console.log(data);
-                var messageArea = $('#messageArea');
-                messageArea.html('');
-                messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
-            },
-            error: function(e) {
-                showErrors(e);
-                console.log(e);
-            },
-            done: function(e) {
-                console.log("DONE");
-            }
-        });
-    }
 
     function showAddress(data) {
         if(data != null){
