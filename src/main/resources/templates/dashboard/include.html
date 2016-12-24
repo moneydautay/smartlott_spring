@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <body>
 <!-- Box sell lottery -->
 <aside th:fragment="dashboard-siderbar" class="col-md-4" id="sidebar">
@@ -23,8 +23,8 @@
 <ul th:fragment="profile-nav-tabs" class="nav nav-tabs">
     <li th:class="${#httpServletRequest.getRequestURI().equals('/dashboard/profile')?'active':''}"><a th:href="@{/dashboard/profile}" aria-controls="general">Thông tin chung</a></li>
     <li th:class="${#httpServletRequest.getRequestURI().contains('password')?'active':''}"><a th:href="@{/dashboard/profile/password}" aria-controls="password">Mật khẩu</a></li>
-    <li th:class="${#httpServletRequest.getRequestURI().contains('doc')}"><a th:href="@{/dashboard/profile/doc}" aria-controls="doc">Tài liệu</a></li>
-    <li th:class="${#httpServletRequest.getRequestURI().contains('account')}"><a th:href="@{/dashboard/profile/account}" aria-controls="account">Tài khoản</a></li>
+    <li th:class="${#httpServletRequest.getRequestURI().contains('doc')?'active':''}"><a th:href="@{/dashboard/profile/doc}" aria-controls="doc">Tài liệu</a></li>
+    <li th:class="${#httpServletRequest.getRequestURI().contains('account')?'active':''}"><a th:href="@{/dashboard/profile/account}" aria-controls="account">Tài khoản</a></li>
 </ul>
 </body>
 </html>

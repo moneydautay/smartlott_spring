@@ -5,6 +5,7 @@ import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.RoleNotFoundException;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -47,6 +49,9 @@ public class UserRestController {
 
     @Autowired
     private I18NService i18NService;
+
+    @Autowired
+    private S3Service s3Service;
 
     /**
      * Get numeric members in system has role given by roleId
@@ -175,5 +180,40 @@ public class UserRestController {
         userService.changePassword(userPassword.getUsername(), password.getPassword());
 
         return new ResponseEntity<Object>(new Object[]{new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.change.succed", locale))}, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/uploaddoc", method = RequestMethod.POST)
+    public ResponseEntity<Object> uploadDoc(@RequestParam("username") String username,
+                                            @RequestParam("docType") int docType,
+                                            @RequestParam("tempFile") MultipartFile tempFile, Locale locale){
+        List<MessageDTO> messages = new ArrayList<>();
+        LOGGER.info("Username: {}",username);
+        LOGGER.info("DocType: {}",docType);
+
+        User localUser = userService.findByUsername(username);
+
+        if(localUser == null){
+            LOGGER.error("Username {} was not found", username);
+            messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("Username.not.found", username ,locale)));
+            return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if(tempFile != null && !tempFile.isEmpty()){
+            String profileImageUrl = s3Service.storeProfileImage(tempFile,"doc"+docType,username);
+            if(profileImageUrl != null){
+                if(docType==1)
+                    localUser.setDocumentOne(profileImageUrl);
+                if(docType==2)
+                    localUser.setDocumentTwo(profileImageUrl);
+            }else{
+                LOGGER.error("There are a problem uploading the profile image to S3 server. "
+                        +"The user's profile will be created without the image profile");
+            }
+        }
+
+        userService.updateUser(localUser);
+        return new ResponseEntity<Object>(localUser, HttpStatus.OK);
+
     }
 }

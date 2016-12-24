@@ -26,7 +26,7 @@
                 <div class="row" id="messageArea">
 
                 </div>
-                <form id="signupForm" method="post" action="/api/user">
+                <form id="signupForm" method="post" action="/api/user" >
                     <div class="row">
                         <div class="col-xs-12 col-md-12">
                             <div class="form-group">
@@ -127,7 +127,8 @@
 
 
     function creatUser(frmId) {
-
+        var header = $('meta[name="_csrf_header"]').attr('content');
+        var token = $('meta[name="_csrf"]').attr('content');
         //clear errorArea
         $('#errorArea').html('');
 
@@ -147,7 +148,7 @@
             dataType: 'json',
             timeout: 10000,
             beforeSend: function (xhr) {
-                //xhr.setRequestHeader(header, token);
+                xhr.setRequestHeader(header, token);
             },
             success: function (data) {
                 $('#signupForm').html('');

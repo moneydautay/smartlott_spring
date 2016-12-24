@@ -107,7 +107,7 @@ function objHandle(name, value) {
  * @param userName
  * @param frmId form id will be using to bind data
  */
-function getUser(userName) {
+function getUser(userName, nameFunction=null) {
 
     var url = '/api/user/'+userName;
 
@@ -121,7 +121,9 @@ function getUser(userName) {
 
         },
         success: function (data) {
-            console.log(data);
+            if(nameFunction!=null)
+                nameFunction(data);
+            else
             showDataToForm(data);
         },
         error: function (e) {
@@ -135,6 +137,9 @@ function getUser(userName) {
 
 
 function changePassword(username,frmId=null) {
+
+    var header = $('meta[name="_csrf_header"]').attr('content');
+    var token = $('meta[name="_csrf"]').attr('content');
 
     var url = '/api/user/change-password';
     if(frmId!=null)
@@ -151,13 +156,13 @@ function changePassword(username,frmId=null) {
         data: JSON.stringify(data),
         timeout: 10000,
         beforeSend: function (xhr) {
-
+            xhr.setRequestHeader(header, token);
         },
         success: function (data) {
             console.log(data);
             var messageArea = $('#messageArea');
             messageArea.html('');
-            messageArea.append(showMessage('Thay đổi mật khẩu thành công. Vui lòng đăng nhập lại <span id="timeCountDown">1</span>s', 'alert-success', true));
+            messageArea.append(showMessage(data[0].message+' <span id="timeCountDown">1</span>s', 'alert-success', true));
             //clear all notified message
             $('#frmPassword').data('formValidation').resetForm();
             //auto direct to dashboard
@@ -187,6 +192,9 @@ function changePassword(username,frmId=null) {
  * Update user in dashboard
  */
 function updateUser() {
+
+    var header = $('meta[name="_csrf_header"]').attr('content');
+    var token = $('meta[name="_csrf"]').attr('content');
 
     var data = {};
     var address = {};
@@ -226,6 +234,7 @@ function updateUser() {
         data: JSON.stringify(data),
         timeout: 10000,
         beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
         },
         success: function(data) {
             var messageArea = $('#messageArea');
@@ -233,6 +242,48 @@ function updateUser() {
             messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
             //clear all notified message
             $('#frmProfile').data('formValidation').resetForm();
+        },
+        error: function(e) {
+            showErrors(JSON.parse(e.responseText));
+        },
+        done: function(e) {
+            console.log("DONE");
+        }
+    });
+}
+
+
+function uploadDoc(frmId, nameFunction=null){
+    var header = $('meta[name="_csrf_header"]').attr('content');
+    var token = $('meta[name="_csrf"]').attr('content');
+    var url = $(frmId).attr('action');
+    var data = new FormData();
+    data.append("tempFile", frmId[1].files[0]);
+    data.append("docType", frmId[4].value);
+    data.append("username", frmId[5].value);
+
+    $.ajax({
+        type: 'POST',
+        contentType: false,
+        url: url,
+        data: data,
+        enctype : 'multipart/form-data',
+        dataType : false,
+        cache : false,
+        processData : false,
+        timeout : 15000,
+        beforeSend: function (xhr) {
+            //xhr.setRequestHeader(header, token);
+        },
+        success: function(data) {
+
+            var messageArea = $('#messageArea');
+            messageArea.html('');
+            messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
+            //clear all notified message
+            $('.frmDoc').data('formValidation').resetForm();
+            if(nameFunction != null)
+                nameFunction(data);
         },
         error: function(e) {
             showErrors(JSON.parse(e.responseText));

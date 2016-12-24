@@ -1,0 +1,1 @@
+ var username = /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/;

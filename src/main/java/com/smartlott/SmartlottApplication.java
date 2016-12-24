@@ -101,7 +101,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		userRoles.add(new UserRole(custRole, user));
 
 		user.setUserRoles(userRoles);
-
+		user.setDocumentOne("https://develops-spring-boot.s3-ap-southeast-1.amazonaws.com/admin/profileImage.jpg");
+		user.setDocumentTwo("https://develops-spring-boot.s3-ap-southeast-1.amazonaws.com/admin/profileImage.jpg");
 
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);

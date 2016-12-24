@@ -2,6 +2,14 @@
  * Created by greenlucky on 12/23/16.
  */
 
+/**
+ * Create message given by message, type and xButton
+ * @param message notification
+ * @param type [alert-danger, alert-success,...]
+ * @param xButton: boolean [true, false]; to control button close message; default is true
+ * @returns {string}
+ */
+
 function showMessage(message, type, xButton=true) {
     var strError = '';
     strError += '<div class="alert '+type+'" role="alert">';
@@ -18,6 +26,11 @@ function showMessage(message, type, xButton=true) {
     return strError;
 }
 
+
+/**
+ * Show all errors html tag has id messageArea
+ * @param errors
+ */
 function showErrors(errors) {
 
     var messageArea = $('#messageArea');
@@ -25,3 +38,4 @@ function showErrors(errors) {
         messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
     });
 }
+
