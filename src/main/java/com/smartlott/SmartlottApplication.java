@@ -3,10 +3,7 @@ package com.smartlott;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.RolesEnum;
-import com.smartlott.utils.CountryUtils;
-import com.smartlott.utils.ProvinceUtils;
-import com.smartlott.utils.SliderUtils;
-import com.smartlott.utils.UserUtils;
+import com.smartlott.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,12 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private AddressService addressService;
 
+	@Autowired
+	private NumberAccountTypeService numberAccountTypeService;
+
+	@Autowired
+	private NumberAccountService numberAccountService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
 	}
@@ -72,7 +75,11 @@ public class SmartlottApplication implements CommandLineRunner{
 		address.setState("");
 		address.setProvince(province);
 
+		//Create number account type
+		CreateNumberAccountType();
 
+		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
+		NumberAccountType pm = numberAccountTypeService.getOne(1);
 
 		List<Role> roles = new ArrayList<>();
 		//create role
@@ -110,7 +117,15 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		address.setUser(user);
 
+		//Add address to user
 		addressService.createAddress(address);
+
+		//add account number to user
+		NumberAccount accBigCoin = NumberAccountUtils.createNewNumberAccount("greenlucky", user, bigCoin);
+		NumberAccount accPerfectMoney = NumberAccountUtils.createNewNumberAccount("U38274738", user, pm);
+
+		numberAccountService.create(accBigCoin);
+		numberAccountService.create(accPerfectMoney);
 
 		//create slider
 		createFeaturedSlider();
@@ -162,5 +177,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		Province province2 = ProvinceUtils.createProvice("Hà Nội", country2);
 		provinceService.createProvince(province2);
 		LOGGER.info("Create a new province {}", province2);
+	}
+
+	public void CreateNumberAccountType(){
+		//Create new account for BigCoin
+		NumberAccountType bigCoin = NumberAccountUtils.createNewNumberAccountType("BigCoin","This is account of BigCoin");
+		NumberAccountType pm = NumberAccountUtils.createNewNumberAccountType("Perfect Money","This is account of Perfect Money");
+
+		numberAccountTypeService.create(bigCoin);
+		numberAccountTypeService.create(pm);
 	}
 }

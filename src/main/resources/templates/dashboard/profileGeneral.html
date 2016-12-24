@@ -195,11 +195,9 @@
             var userId = $('#id').val();
             if (userId != '')
             //get address
-                getAddress(userId);
+                getAddress(userId, showAddress);
         }, 500);
     });
-
-
 
     function showAddress(data) {
         if(data != null){
@@ -211,31 +209,6 @@
         }
     }
 
-    function getAddress(userId) {
-
-        var url = '/api/address/'+userId;
-
-        $.ajax({
-            type: 'GET',
-            contentType: 'application/json',
-            url: url,
-            dataType: 'json',
-        timeout: 10000,
-            beforeSend: function (xhr) {
-
-        },
-        success: function(data) {
-            console.log(data);
-            showAddress(data);
-        },
-        error: function(e) {
-            console.log(e);
-        },
-        done: function(e) {
-            console.log("DONE");
-        }
-    });
-    }
 </script>
 </body>
 </html>

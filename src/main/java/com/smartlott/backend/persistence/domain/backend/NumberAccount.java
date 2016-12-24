@@ -1,5 +1,8 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 
 /**
@@ -13,10 +16,12 @@ public class NumberAccount {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotEmpty(message = "NotEmpty.numberAccount.number")
     @Column(unique = true)
     private String number;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -81,7 +86,6 @@ public class NumberAccount {
         NumberAccount that = (NumberAccount) o;
 
         if (id != that.id) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
         if (user != null ? !user.equals(that.user) : that.user != null) return false;
         return numberAccountType != null ? numberAccountType.equals(that.numberAccountType) : that.numberAccountType == null;
     }
@@ -89,7 +93,6 @@ public class NumberAccount {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (numberAccountType != null ? numberAccountType.hashCode() : 0);
         return result;

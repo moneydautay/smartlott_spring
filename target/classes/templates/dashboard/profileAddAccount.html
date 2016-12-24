@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen" />
+<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen" />
+
+<body>
+<!-- main container-->
+<div class="container">
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu" />
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header" />
+
+    <!-- Slider image-->
+    <div class="container category">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashbroad</a></li>
+            <li class="breadcrumb-item active">Thông tin cá nhân</li>
+        </ol>
+        <div class="container" id="dashboard">
+            <div class="col-md-8 category">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="content profile">
+                    <!-- Nav tabs -->
+                    <ul th:replace="dashboard/include :: profile-nav-tabs" />
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="accountNumber">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INCLUDE RIGHT SIDEBAR-->
+            <aside th:replace="dashboard/include :: dashboard-siderbar"/>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news" />
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment" />
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer" />
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/hashtable.js}"></script>
+<script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/customer-validator.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function($) {
+
+    });
+</script>
+</body>
+</html>

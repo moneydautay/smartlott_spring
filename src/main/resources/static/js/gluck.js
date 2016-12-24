@@ -44,7 +44,6 @@ function getProvinces(selectId, defaultCountryId, selectCountryId=null) {
 
         },
         success: function (data) {
-            console.log(data);
             showProvinceToSelect(data, selectId);
         },
         error: function (e) {
@@ -101,6 +100,34 @@ function objHandle(name, value) {
         $('#' + name).val(val);
 }
 
+
+/**
+ * Get address given by userid
+ * @param userId
+ * @param callBack function will be called after retrieved data successfully
+ */
+function getAddress(userId, callBack = null) {
+
+    var url = '/api/address/'+userId;
+
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        timeout: 10000,
+        success: function(data) {
+            if(callBack != null)
+                showAddress(data);
+        },
+        error: function(e) {
+            console.log(e);
+        },
+        done: function(e) {
+            console.log("DONE");
+        }
+    });
+}
 
 /**
  * Get user by using ajax/json and username given by user
@@ -222,8 +249,6 @@ function updateUser() {
 
     data['addresses']   = address;
 
-    console.log(JSON.stringify(data));
-
     var url = $('#frmProfile').attr('action')+'/'+id;
 
     $.ajax({
@@ -234,7 +259,8 @@ function updateUser() {
         data: JSON.stringify(data),
         timeout: 10000,
         beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
+            if(typeof($.trim(header)) === 'undefined')
+                xhr.setRequestHeader(header, token);
         },
         success: function(data) {
             var messageArea = $('#messageArea');
@@ -289,6 +315,34 @@ function uploadDoc(frmId, nameFunction=null){
             showErrors(JSON.parse(e.responseText));
         },
         done: function(e) {
+            console.log("DONE");
+        }
+    });
+}
+
+/**
+ * Get number accounts of user
+ * @param userId
+ * @param callBack number will be call after data was retrieved successfully
+ */
+function getNumberAccountsOfUser(userId, callBack = null) {
+
+    var url = '/api/number-account/'+userId;
+
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        timeout: 10000,
+        success: function (data) {
+            if(callBack!=null)
+                callBack(data);
+        },
+        error: function (e) {
+            console.log(e);
+        },
+        done: function (e) {
             console.log("DONE");
         }
     });
