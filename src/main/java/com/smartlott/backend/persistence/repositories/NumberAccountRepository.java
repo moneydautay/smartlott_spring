@@ -39,4 +39,11 @@ public interface NumberAccountRepository extends CrudRepository<NumberAccount, L
      * @return A list of number account or null if not found
      */
     List<NumberAccount> findByUserId(long userId);
+
+    /**
+     * Find number account by number account
+     * @param number
+     * @return a number account or null if not found
+     */
+    NumberAccount findByNumber(String number);
 }

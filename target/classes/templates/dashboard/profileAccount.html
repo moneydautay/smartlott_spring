@@ -110,22 +110,24 @@
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function($) {
         var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var url = /*[[@{/api/number-account/by-user}]]*/;
+        url+="/"+userId;
         //get all number accounts given by userid
-        getNumberAccountsOfUser(userId, showNumberAccountToTable);
+        getData(url, showNumberAccountToTable);
         
         function showNumberAccountToTable(data) {
-            console.log(data);
             var accountNumber = $('#accountNumber tbody');
             accountNumber.html('');
+            var urlEdit = /*[[@{/dashboard/profile/account/edit}]]*/;
+            var urlDelete = /*[[@{/dashboard/profile/account/delete}]]*/;
             $.each(data, function (index, numAcc) {
                 var strRow = '';
-
               strRow+='<tr>';
               strRow+='<td>'+ numAcc.number+'</td>';
               strRow+='<td>'+numAcc.numberAccountType.name+'</td>';
               strRow+='<td>';
-              strRow+='<a href=""><i class="fa fa-pencil-square" aria-hidden="true"></i></a>';
-              strRow+=' <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>';
+              strRow+='<a href="'+urlEdit+'/'+numAcc.id+'"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>';
+              strRow+=' <a href="'+urlDelete+'/'+numAcc.id+'"><i class="fa fa-trash" aria-hidden="true"></i></a>';
               strRow+='</td>';
               strRow+='</tr>';
               accountNumber.append(strRow);

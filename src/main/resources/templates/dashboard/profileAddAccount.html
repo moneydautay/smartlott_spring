@@ -34,8 +34,29 @@
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="accountNumber">
-
+                        <div role="tabpanel" class="tab-pane active" id="addAccountNumber">
+                            <!--Edit new account-->
+                            <h3 th:if="${accountNumberId == null}" th:text="#{profile.add.account.text}">Thêm tài khoản</h3>
+                            <h3 th:if="${accountNumberId != null}" th:text="#{profile.edit.account.text}">TThay đổi tài khoản</h3>
+                            <div class="row box-new-account">
+                                <div class="col-md-6">
+                                    <form id="frmNumberAccount" th:action="@{/api/number-account}" method="post">
+                                        <div class="form-group">
+                                            <label for="numberAccountType">Loại tài khoản</label>
+                                            <select class="form-control" name="numberAccountType" id="numberAccountType">
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="numberAccount">Số tài khoản</label>
+                                            <input type="text" id="numberAccount" name="numberAccount" class="form-control"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Lưu</button>
+                                            <button type="button" class="btn btn-danger">Huỷ</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,7 +91,116 @@
 
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function($) {
+        var accountNumberId = /*[[${accountNumberId}]]*/;
+        var url = /*[[@{/api/number-account-type}]]*/;
+        //get data number account type
+        getData(url, showNumberAccountType);
 
+        if(accountNumberId != null){
+            $('#numberAccountType').attr('disabled','disabled');
+            $('#numberAccountType').addClass('disabled');
+
+            var url = /*[[@{/api/number-account/}]]*/;
+            url+='/'+accountNumberId;
+                //get data number account type
+                getData(url, showNumberAccount);
+        }
+
+        function showNumberAccountType(data) {
+            var numberAccountType = $('#numberAccountType');
+            numberAccountType.html('');
+            numberAccountType.append('<option value="-1">Chọn loại tài khoản</option>');
+            $.each(data, function (index, item) {
+                var strNbAccType = '';
+                strNbAccType += '<option value="'+item.id+'">';
+                strNbAccType += item.name;
+                strNbAccType += '</option>';
+                numberAccountType.append(strNbAccType);
+            });
+        }
+
+        function showNumberAccount(data) {
+            var numberAccountType = $('#numberAccountType');
+            var numberAccount = $('#numberAccount');
+            numberAccountType.val(data.numberAccountType.id);
+            numberAccount.val(data.number);
+        }
+
+        //validator
+        /* Signup form validation */
+        $('#frmNumberAccount').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                numberAccountType: {
+                    validators: {
+                        greaterThan: {
+                            value: 0,
+                            message: 'Loại tài khoản không được bỏ trống'
+                        }
+                    }
+                },
+                numberAccount: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Số tài khoản không được bỏ trống'
+                        }
+                    }
+                },
+            }
+        }).on('success.form.fv',function (e) {
+            e.preventDefault();
+            var id = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+            var url = /*[[@{/api/number-account}]]*/;
+            var data = {};
+            var type = 'POST';
+            data['numberAccountType'] = {'id':$('#numberAccountType').val()};
+            data['number'] = $('#numberAccount').val();
+            data['user'] = {};
+            if(accountNumberId == null)
+                url+='/'+id;
+            else{
+                url+='/'+accountNumberId;
+                type='PUT';
+            }
+
+
+            saveOrupdateData(url, type, data ,createSuccess,showLocalError);
+        });
+
+        function createSuccess(data) {
+            var msg  = 'Đã thêm mới thành công số tài khoản: ';
+            if(accountNumberId!=null)
+                msg  = 'Cập nhật thành công số tài khoản: ';
+            var message = showMessage(msg+data.number, 'alert-success', true);
+            var messageArea = $('#messageArea');
+            messageArea.html('');
+            messageArea.append(message);
+            //clear all notified message
+            $('#frmNumberAccount').data('formValidation').resetForm();
+
+            //Redirect to profile account after 1s
+            setTimeout(function () {
+                window.location.href=/*[[@{/dashboard/profile/account}]]*/;
+            },1000);
+        }
+
+        function showLocalError(errors) {
+
+            var messageArea = $('#messageArea');
+            $.each(errors, function (index, error) {
+                messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+            });
+
+            $('#frmNumberAccount')
+                .data('formValidation')
+                .updateStatus('numberAccount','INVALID');
+            $('#frmNumberAccount').formValidation('updateMessage', 'numberAccount', 'notEmpty', 'Số tài khoản không hợp lệ');
+        }
     });
 </script>
 </body>

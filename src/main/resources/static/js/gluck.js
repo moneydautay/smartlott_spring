@@ -130,6 +130,34 @@ function getAddress(userId, callBack = null) {
 }
 
 /**
+ * Retrieve data given by url
+ * @param url rest control to retrieve data
+ * @param callBack function will be call after retrieve data successfully
+ * @param errorCallBack function will be call after function has error
+ */
+function getData(url, callBack=null, errorCallBack=null){
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        timeout: 10000,
+        success: function (data) {
+            if(callBack!=null)
+                callBack(data);
+        },
+        error: function (e) {
+            console.log(e);
+            if(errorCallBack!=null)
+                errorCallBack(e.responseText);
+        },
+        done: function (e) {
+            console.log("DONE");
+        }
+    });
+}
+
+/**
  * Get user by using ajax/json and username given by user
  * @param userName
  * @param frmId form id will be using to bind data
@@ -299,7 +327,8 @@ function uploadDoc(frmId, nameFunction=null){
         processData : false,
         timeout : 15000,
         beforeSend: function (xhr) {
-            //xhr.setRequestHeader(header, token);
+            if(typeof($.trim(header)) === 'undefined')
+                xhr.setRequestHeader(header, token);
         },
         success: function(data) {
 
@@ -321,28 +350,39 @@ function uploadDoc(frmId, nameFunction=null){
 }
 
 /**
- * Get number accounts of user
- * @param userId
- * @param callBack number will be call after data was retrieved successfully
+ * Create or Update data given by url and data
+ * @param url will be sent data to
+ * @param data
+ * @param callBack will be call back after save or update successfully
+ * @param errorCallBack will be call back if error
  */
-function getNumberAccountsOfUser(userId, callBack = null) {
+function saveOrupdateData(url, type = 'POSt', data, callBack=null, errorCallBack=null){
 
-    var url = '/api/number-account/'+userId;
+    var header = $('meta[name="_csrf_header"]').attr('content');
+    var token = $('meta[name="_csrf"]').attr('content');
 
     $.ajax({
-        type: 'GET',
+        type: type,
         contentType: 'application/json',
         url: url,
         dataType: 'json',
+        data: JSON.stringify(data),
         timeout: 10000,
-        success: function (data) {
-            if(callBack!=null)
+        beforeSend: function (xhr) {
+            if(typeof($.trim(header)) === 'undefined')
+                xhr.setRequestHeader(header, token);
+        },
+        success: function(data) {
+            if(callBack != null)
                 callBack(data);
         },
-        error: function (e) {
-            console.log(e);
+        error: function(e) {
+            if(errorCallBack!=null)
+                errorCallBack(JSON.parse(e.responseText));
+            else
+                showErrors(JSON.parse(e.responseText));
         },
-        done: function (e) {
+        done: function(e) {
             console.log("DONE");
         }
     });

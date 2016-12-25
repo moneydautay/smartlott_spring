@@ -1,7 +1,10 @@
 package com.smartlott.web.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Created by greenlucky on 12/22/16.
@@ -44,6 +47,18 @@ public class DashboardController {
 
     @RequestMapping(PROFILE_ACCOUNT_URL+"/add")
     public String profileAddCount(){
+        return DASHBOARD_VIEW_NAME+"/profileAddAccount";
+    }
+
+    @RequestMapping(value = PROFILE_ACCOUNT_URL+"/edit/{accountNumberId}", method = RequestMethod.GET)
+    public String profileAddCount(@PathVariable long accountNumberId, Model model){
+        model.addAttribute("accountNumberId");
+        return DASHBOARD_VIEW_NAME+"/profileAddAccount";
+    }
+
+    @RequestMapping(value = PROFILE_ACCOUNT_URL+"/delete/{accountNumberId}", method = RequestMethod.GET)
+    public String profileDeleteAccount(@PathVariable long accountNumberId, Model model){
+        model.addAttribute("accountNumberId");
         return DASHBOARD_VIEW_NAME+"/profileAddAccount";
     }
 }

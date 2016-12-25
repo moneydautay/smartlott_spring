@@ -46,4 +46,26 @@ public class NumberAccountService {
     public NumberAccount update(NumberAccount numberAccount){
         return accountRepository.save(numberAccount);
     }
+
+    public NumberAccount findByNumber(String number) {
+        return accountRepository.findByNumber(number);
+    }
+
+    /**
+     * Get a number account given by number account id
+     * @param numberAccountId
+     * @return A number account or null if not found
+     */
+    public NumberAccount getAccount(long numberAccountId) {
+        return accountRepository.findOne(numberAccountId);
+    }
+
+    /**
+     * Delete number account by number account id
+     * @param numberAccount
+     */
+    @Transactional
+    public void delete(NumberAccount numberAccount) {
+        accountRepository.delete(numberAccount);
+    }
 }
