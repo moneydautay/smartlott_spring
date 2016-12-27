@@ -9,4 +9,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SecurityTokenRepository extends CrudRepository<SecurityToken, Long>{
+
+    /**
+     * Find token by token
+     * @param token
+     * @return A security token or null if not founds
+     */
+    public SecurityToken findByToken(String token);
 }

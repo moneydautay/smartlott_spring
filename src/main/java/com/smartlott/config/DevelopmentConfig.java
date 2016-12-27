@@ -4,6 +4,8 @@ package com.smartlott.config;
  * Created by Mrs Hoang on 12/14/2016.
  */
 
+import com.smartlott.backend.persistence.repositories.EmailService;
+import com.smartlott.backend.service.MockEmailService;
 import org.h2.server.web.WebServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -21,5 +23,10 @@ public class DevelopmentConfig {
         ServletRegistrationBean bean = new ServletRegistrationBean(new WebServlet());
         bean.addUrlMappings("/console/*");
         return bean;
+    }
+
+    @Bean
+    public EmailService emailService(){
+        return new MockEmailService();
     }
 }

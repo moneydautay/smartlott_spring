@@ -1,5 +1,11 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,21 +19,41 @@ public class SecurityToken implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
+    
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityToken.class);
+
+    public static final Integer DEFAULT_TOKEN_SECURITY_IN_MINUTES = 120;
 
     @Id
     @Column(name="security_token_id")
     private long id;
 
+    @Column(unique = true)
     private String token;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @Column(name="expiry_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime expiryDate;
 
 
     public SecurityToken() {
+    }
+
+    public SecurityToken(String token, User user, LocalDateTime createDateTime ,int expirationInMinutes) {
+        if(token == null | user == null | createDateTime == null)
+            throw  new IllegalArgumentException("Token, user and createion time can't be not null.");
+        if(expirationInMinutes == 0){
+            LOGGER.warn("The token expiration in minutes length is zero, Assign the default value {}", DEFAULT_TOKEN_SECURITY_IN_MINUTES);
+            expirationInMinutes = DEFAULT_TOKEN_SECURITY_IN_MINUTES;
+        }
+
+        this.token = token;
+        this.user = user;
+        this.expiryDate = createDateTime.plusMinutes(expirationInMinutes);
     }
 
     public long getId() {
@@ -69,18 +95,22 @@ public class SecurityToken implements Serializable{
 
         SecurityToken that = (SecurityToken) o;
 
-        if (id != that.id) return false;
-        if (token != null ? !token.equals(that.token) : that.token != null) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
-        return expiryDate != null ? expiryDate.equals(that.expiryDate) : that.expiryDate == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (expiryDate != null ? expiryDate.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return "SecurityToken{" +
+                "defaultTokenSecurityInMinutes=" + DEFAULT_TOKEN_SECURITY_IN_MINUTES +
+                ", id=" + id +
+                ", token='" + token + '\'' +
+                ", user=" + user +
+                ", expiryDate=" + expiryDate +
+                '}';
     }
 }

@@ -199,7 +199,10 @@ public class NumberAccountRestController {
      * @return username of or null if not found
      */
     public String verifyAccountPerfectMoney(String account){
-        return perfectMoneyService.verifyAccount(id, passPhrase, account);
+        String result = null;
+        result = perfectMoneyService.verifyAccount(id, passPhrase, account);
+        LOGGER.info("Checking account perfect money: {}", result);
+        return result;
     }
 
 }
