@@ -53,9 +53,7 @@
                                             <label for="numberAccount" th:text="#{profile.number.account.text}">Số tài khoản</label>
                                             <input type="text" id="numberAccount" name="numberAccount" class="form-control"/>
                                         </div>
-                                        <div th:if="${param.token}" class="form-group">
-                                            <label for="securityToken" th:text="#{security.token.text}"></label>
-                                            <input type="text" id="securityToken" name="securityToken" class="form-control"/>
+                                        <div class="form-group" id="securityToken-area">
                                         </div>
                                         <div class="form-group">
                                             <button th:if="${!(#httpServletRequest.getRequestURI().contains('delete'))}" type="submit" class="btn btn-primary" th:text="#{profile.submit.account.text}">Lưu</button>
@@ -99,27 +97,29 @@
 
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function($) {
+
         var accountNumberId = /*[[${accountNumberId}]]*/;
-        var token = /*[[${param.token}]]*/;
+        var token = false;
         var url = /*[[@{/api/number-account-type}]]*/;
+
+
         //get data number account type
         getData(url, showNumberAccountType);
-
-
         $('.cancel').click(function () {
             window.location.href=/*[[@{/dashboard/profile/account}]]*/;
         })
 
-        if(accountNumberId != null){
-            $('#numberAccountType').attr('disabled','disabled').addClass('disabled');
+        if (accountNumberId != null) {
+            $('#numberAccountType').attr('disabled', 'disabled').addClass('disabled');
 
-            if(/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/){
-                $('#numberAccount').attr('disabled','disabled').addClass('disabled');
+            if (/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/) {
+                $('#numberAccount').attr('disabled', 'disabled').addClass('disabled');
             }
             var url = /*[[@{/api/number-account/}]]*/;
-            url+='/'+accountNumberId;
-                //get data number account type
-                getData(url, showNumberAccount);
+            url += '/' + accountNumberId;
+
+            //get data number account type
+            getData(url, showNumberAccount);
         }
 
         function showNumberAccountType(data) {
@@ -151,6 +151,7 @@
                 invalid: 'glyphicon glyphicon-remove',
                 validating: 'glyphicon glyphicon-refresh'
             },
+            live: 'enabled',
             fields: {
                 numberAccountType: {
                     validators: {
@@ -178,18 +179,22 @@
         }).on('success.form.fv',function (e) {
             e.preventDefault();
             var id = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+            var email = /*[[${#authorization.getAuthentication().getPrincipal().email}]]*/;
             var url = /*[[@{/api/number-account}]]*/;
             var data = {};
             var type = 'POST';
             data['numberAccountType'] = {'id': $('#numberAccountType').val()};
             data['number'] = $('#numberAccount').val();
-            data['user'] = {};
-            if (token == null) {
-                url = /*[[@{/api/security-token}]]*/;
+            data['user'] = {'id':id, 'email':email};
+            data['securityToken'] = $('#securityToken').val();
+            if (token == false) {
+                url = /*[[@{/api/number-account/verify}]]*/;
                 type='POST';
+                if (/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/) {
+                    url = /*[[@{/api/number-account/verify-delete}]]*/;
+                }
 
-                //set email
-                data = /*[[${#authorization.getAuthentication().getPrincipal().email}]]*/;
+                //verify account number
                 saveOrupdateData(url, type, data, sentTokenSuccessfully, showLocalError);
             } else {
                 if (accountNumberId == null)
@@ -198,6 +203,7 @@
                     url += '/' + accountNumberId;
                     type = 'PUT';
                     if (/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/) {
+                        url += '/'+$('#securityToken').val();
                         type = 'DELETE';
                     }
                 }
@@ -206,8 +212,7 @@
                         $(this).find('button[type="submit"]').removeAttr('disabled').removeClass('disabled');
                         return;
                     }
-
-                saveOrupdateData(url, type, data, createSuccess, showLocalError);
+                saveOrupdateData(url, type, data, createSuccess, showInvalidSecurityToken);
             }
         });
 
@@ -235,30 +240,55 @@
         function showLocalError(errors) {
 
             var messageArea = $('#messageArea');
+            messageArea.html('');
+            $.each(errors, function (index, error) {
+                messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+            });
+
+
+            $('#frmNumberAccount')
+                .data('formValidation')
+                .updateStatus('numberAccount','INVALID');
+            $('#frmNumberAccount').formValidation('updateMessage', 'numberAccount', 'notEmpty', 'Số tài khoản không hợp lệ');
+
+        }
+
+        function showInvalidSecurityToken(errors) {
+
+            var messageArea = $('#messageArea');
+            messageArea.html('');
             $.each(errors, function (index, error) {
                 messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
             });
 
             $('#frmNumberAccount')
                 .data('formValidation')
-                .updateStatus('numberAccount','INVALID');
-            $('#frmNumberAccount').formValidation('updateMessage', 'numberAccount', 'notEmpty', 'Số tài khoản không hợp lệ');
+                .updateStatus('securityNumber','INVALID');
+            $('#frmNumberAccount').formValidation('updateMessage', 'securityNumber', 'notEmpty', 'Mã xác thực không hợp lệ');
+            $('#frmNumberAccount').find('button[type="submit"]').removeAttr('disabled').removeClass('disabled');
         }
 
         function sentTokenSuccessfully(data){
             var msg  = 'Vui lòng kiểm tra email nhập mã xác nhận vào ô Mã xác nhận bên dưới ';
 
-            var message = showMessage(msg, 'alert-warn', true);
+            var message = showMessage(msg, 'alert-warning', false);
             var messageArea = $('#messageArea');
             messageArea.html('');
             messageArea.append(message);
             //clear all notified message
             $('#frmNumberAccount').data('formValidation').resetForm();
 
-            //Redirect to profile account after 1s
-            setTimeout(function () {
-                window.location.href='?token=true';
-            },1000);
+            token = true;
+            //add input security token
+            var securityTokenArea = $('#securityToken-area');
+            securityTokenArea.addClass('has-feedback');
+            strSTA = '<label for="securityToken" th:text="#{security.token.text}"></label>';
+            strSTA += '<input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>';
+            securityTokenArea.html(strSTA);
+
+            //disable numberAccountType and numberAccount
+            $('#numberAccountType').attr('disabled','disabled').addClass('disabled');
+            $('#numberAccount').attr('disabled','disabled').addClass('disabled');
         }
     });
 </script>

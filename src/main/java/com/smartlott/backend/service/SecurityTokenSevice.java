@@ -80,7 +80,7 @@ public class SecurityTokenSevice {
     public SecurityToken createNewSecurityTokenForUser(User user) {
         SecurityToken securityToken = null;
 
-        String token = UUID.randomUUID().toString();
+        String token = UUID.randomUUID().toString().substring(0,8);
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         securityToken = new SecurityToken(token, user, now, tokenExpirationLengthInMinutes);
 
@@ -89,5 +89,13 @@ public class SecurityTokenSevice {
         LOGGER.debug("Successfully created token {} for user {}", securityToken, user);
 
         return securityToken;
+    }
+
+    /**
+     * Delete token by id
+     * @param id
+     */
+    public void remove(long id) {
+        tokenRepository.delete(id);
     }
 }

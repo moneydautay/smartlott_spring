@@ -21,6 +21,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -56,13 +58,13 @@ public class NumberAccountRestController {
     private String passPhrase;
 
     @Autowired
-    private SecurityTokenSevice securityTokenSevice;
-
-    @Autowired
     private EmailService emailService;
 
     @Value("${webmaster.email}")
     private String webmasterEmail;
+
+    @Autowired
+    private SecurityTokenSevice securityTokenSevice;
 
 
     /**
@@ -90,6 +92,15 @@ public class NumberAccountRestController {
 
         List<MessageDTO> messageDTOS = new ArrayList<>();
 
+        //check security token
+        SecurityToken securityToken = securityTokenSevice.getSecurityTokenByToken(numberAccount.getSecurityToken());
+        if(securityToken == null || LocalDateTime.now(Clock.systemUTC()).isAfter(securityToken.getExpiryDate())){
+            LOGGER.error("Token {} is not valid", numberAccount.getSecurityToken());
+            String message = messageSource.getMessage("security.token.invalid", new Object[]{numberAccount.getSecurityToken()} , locale);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
         //Checking user exist
         User localUser = userService.findOne(userId);
 
@@ -104,6 +115,11 @@ public class NumberAccountRestController {
 
         //Create new number account
         numberAccountService.create(numberAccount);
+
+
+        //delete security token
+        securityTokenSevice.remove(securityToken.getId());
+        LOGGER.debug("Removed security token {} ",securityToken.getToken());
 
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
@@ -130,15 +146,20 @@ public class NumberAccountRestController {
         return new ResponseEntity<Object>(localNumberAccount, HttpStatus.OK);
     }
 
-
+    /**
+     * Verify number account if valid to send email
+     * @param numberAccount
+     * @param locale
+     * @return number account or null if not valid
+     */
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public ResponseEntity<Object> verifyNumberAccount(@Valid @RequestBody NumberAccount numberAccount, Locale locale){
         System.out.println(numberAccount.toString());
         List<MessageDTO> messageDTOS = new ArrayList<>();
 
         if(numberAccount.getNumberAccountType().getId()==2) {
-            System.out.println(verifyAccountPerfectMoney(numberAccount.getNumber().trim()).isEmpty());
-            if (verifyAccountPerfectMoney(numberAccount.getNumber().trim()).isEmpty()) {
+            String verifyResult = verifyAccountPerfectMoney(numberAccount.getNumber().trim()).trim();
+            if (verifyResult.isEmpty() || verifyResult.equals("ERROR: Invalid Account")) {
                 LOGGER.error("Number account {} not valid", numberAccount.getNumber());
                 String message = messageSource.getMessage("NotValid.numberAccount.number", new Object[]{numberAccount.getNumber()} , locale);
                 messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
@@ -155,24 +176,23 @@ public class NumberAccountRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
+        //send email
+        sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
 
-        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(numberAccount.getUser().getEmail().trim());
-
-        String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
-        String subject = messageSource.getMessage("security.token.subject.text", null, locale);
-
-        //sending mail to email
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(webmasterEmail);
-        mailMessage.setTo(numberAccount.getUser().getEmail().trim());
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
-
-        emailService.sendGenericEmailMessage(mailMessage);
-        System.out.println("Sent email  with content ["+message+"] to email {"+ numberAccount.getUser().getEmail().trim()+"}");
-        LOGGER.debug("Sent email  with content {} to email {}", message, numberAccount.getUser().getEmail().trim());
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/verify-delete", method = RequestMethod.POST)
+    public ResponseEntity<Object> verifyDeleteNumberAccount(@Valid @RequestBody NumberAccount numberAccount, Locale locale){
+        //send email
+        sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
+
+        return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
+    }
+
+
+
+
 
     /**
      * Get number account given by number account id
@@ -197,12 +217,20 @@ public class NumberAccountRestController {
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{numberAccountId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> delete(@PathVariable long numberAccountId, Locale locale){
+    @RequestMapping(value = "/{numberAccountId}/{token}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> delete(@PathVariable long numberAccountId, @PathVariable String token, Locale locale){
         List<MessageDTO> messageDTOS = new ArrayList<>();
 
-        NumberAccount numberAccount = numberAccountService.getAccount(numberAccountId);
+        //check security token
+        SecurityToken securityToken = securityTokenSevice.getSecurityTokenByToken(token);
+        if(securityToken == null || LocalDateTime.now(Clock.systemUTC()).isAfter(securityToken.getExpiryDate())){
+            LOGGER.error("Token {} is not valid", token);
+            String message = messageSource.getMessage("security.token.invalid", new Object[]{token} , locale);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
 
+        NumberAccount numberAccount = numberAccountService.getAccount(numberAccountId);
         if(numberAccount == null){
             LOGGER.error("Number account id {} not found", numberAccountId);
             String message = messageSource.getMessage("NotFound.numberAccount.number", new Object[]{numberAccountId} , locale);
@@ -228,4 +256,22 @@ public class NumberAccountRestController {
         return result;
     }
 
+
+    private void sendSecurityTokenEmail(String email, Locale locale){
+        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(email.trim());
+
+        String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
+        String subject = messageSource.getMessage("security.token.subject.text", null, locale);
+
+        //sending mail to email
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(webmasterEmail);
+        mailMessage.setTo(email);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        emailService.sendGenericEmailMessage(mailMessage);
+        System.out.println("Sent email  with content ["+message+"] to email {"+ email+"}");
+        LOGGER.debug("Sent email  with content {} to email {}", message, email);
+    }
 }

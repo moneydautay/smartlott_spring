@@ -20,11 +20,14 @@ public class NumberAccount {
     @Column(unique = true)
     private String number;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private NumberAccountType numberAccountType;
+
+    @Transient
+    private String securityToken;
 
     public NumberAccount() {
     }
@@ -65,6 +68,14 @@ public class NumberAccount {
 
     public void setNumberAccountType(NumberAccountType numberAccountType) {
         this.numberAccountType = numberAccountType;
+    }
+
+    public String getSecurityToken() {
+        return securityToken;
+    }
+
+    public void setSecurityToken(String securityToken) {
+        this.securityToken = securityToken;
     }
 
     @Override

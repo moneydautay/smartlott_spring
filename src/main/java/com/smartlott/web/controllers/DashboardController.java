@@ -1,5 +1,6 @@
 package com.smartlott.web.controllers;
 
+import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,7 @@ public class DashboardController {
         return DASHBOARD_VIEW_NAME+"/profileAccount";
     }
 
-    @RequestMapping(PROFILE_ACCOUNT_URL+"/add")
+    @RequestMapping(value = PROFILE_ACCOUNT_URL+"/add", method = RequestMethod.GET)
     public String profileAddCount(){
         return DASHBOARD_VIEW_NAME+"/profileAddAccount";
     }
