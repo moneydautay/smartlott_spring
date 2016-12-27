@@ -2,9 +2,12 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.NumberAccount;
+import com.smartlott.backend.persistence.domain.backend.SecurityToken;
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.repositories.EmailService;
 import com.smartlott.backend.service.NumberAccountService;
 import com.smartlott.backend.service.PerfectMoneyService;
+import com.smartlott.backend.service.SecurityTokenSevice;
 import com.smartlott.backend.service.UserService;
 import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,6 +55,16 @@ public class NumberAccountRestController {
     @Value("${perfectmoney.passPhrase}")
     private String passPhrase;
 
+    @Autowired
+    private SecurityTokenSevice securityTokenSevice;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${webmaster.email}")
+    private String webmasterEmail;
+
+
     /**
      * Get accounts by userid
      * @param userId
@@ -69,7 +83,7 @@ public class NumberAccountRestController {
      * @param userId
      * @param numberAccount
      * @param locale
-     * @return A number account after create
+     * @return A number account after createSecurityTokenForUsername
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.POST)
     public ResponseEntity<Object> create(@PathVariable long userId,@Valid @RequestBody NumberAccount numberAccount, Locale locale){
@@ -82,24 +96,6 @@ public class NumberAccountRestController {
         if(localUser == null){
             LOGGER.error("User id {} not found", userId);
             String message = messageSource.getMessage("Id.user.not.found", new Object[]{userId} , locale);
-            messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
-            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
-        }
-
-        if(numberAccount.getNumberAccountType().getId()==2) {
-            if (verifyAccountPerfectMoney(numberAccount.getNumber()).isEmpty()) {
-                LOGGER.error("Number account {} not valid", numberAccount.getNumber());
-                String message = messageSource.getMessage("NotValid.numberAccount.number", new Object[]{numberAccount.getNumber()} , locale);
-                messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
-                return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
-            }
-        }
-
-        //checking duplicated number account
-        NumberAccount localNumberAccount = numberAccountService.findByNumber(numberAccount.getNumber());
-        if(localNumberAccount != null){
-            LOGGER.error("Number account {} has been existed", numberAccount.getNumber());
-            String message = messageSource.getMessage("Duplicated.numberAccount.number", new Object[]{numberAccount.getNumber()} , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
@@ -126,8 +122,23 @@ public class NumberAccountRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
+        localNumberAccount.setNumber(numberAccount.getNumber());
+
+        //Update new number account
+        localNumberAccount = numberAccountService.update(localNumberAccount);
+
+        return new ResponseEntity<Object>(localNumberAccount, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/verify", method = RequestMethod.POST)
+    public ResponseEntity<Object> verifyNumberAccount(@Valid @RequestBody NumberAccount numberAccount, Locale locale){
+        System.out.println(numberAccount.toString());
+        List<MessageDTO> messageDTOS = new ArrayList<>();
+
         if(numberAccount.getNumberAccountType().getId()==2) {
-            if (verifyAccountPerfectMoney(numberAccount.getNumber()).isEmpty()) {
+            System.out.println(verifyAccountPerfectMoney(numberAccount.getNumber().trim()).isEmpty());
+            if (verifyAccountPerfectMoney(numberAccount.getNumber().trim()).isEmpty()) {
                 LOGGER.error("Number account {} not valid", numberAccount.getNumber());
                 String message = messageSource.getMessage("NotValid.numberAccount.number", new Object[]{numberAccount.getNumber()} , locale);
                 messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
@@ -136,20 +147,31 @@ public class NumberAccountRestController {
         }
 
         //checking duplicated number account
-        NumberAccount duplicatedNumberAccount = numberAccountService.findByNumber(numberAccount.getNumber());
-        if(duplicatedNumberAccount != null){
+        NumberAccount localNumberAccount = numberAccountService.findByNumber(numberAccount.getNumber());
+        if(localNumberAccount != null){
             LOGGER.error("Number account {} has been existed", numberAccount.getNumber());
             String message = messageSource.getMessage("Duplicated.numberAccount.number", new Object[]{numberAccount.getNumber()} , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
-        localNumberAccount.setNumber(numberAccount.getNumber());
 
-        //Update new number account
-        localNumberAccount = numberAccountService.update(localNumberAccount);
+        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(numberAccount.getUser().getEmail().trim());
 
-        return new ResponseEntity<Object>(localNumberAccount, HttpStatus.OK);
+        String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
+        String subject = messageSource.getMessage("security.token.subject.text", null, locale);
+
+        //sending mail to email
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(webmasterEmail);
+        mailMessage.setTo(numberAccount.getUser().getEmail().trim());
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        emailService.sendGenericEmailMessage(mailMessage);
+        System.out.println("Sent email  with content ["+message+"] to email {"+ numberAccount.getUser().getEmail().trim()+"}");
+        LOGGER.debug("Sent email  with content {} to email {}", message, numberAccount.getUser().getEmail().trim());
+        return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
 
     /**
@@ -201,6 +223,7 @@ public class NumberAccountRestController {
     public String verifyAccountPerfectMoney(String account){
         String result = null;
         result = perfectMoneyService.verifyAccount(id, passPhrase, account);
+        System.out.println(result);
         LOGGER.info("Checking account perfect money: {}", result);
         return result;
     }

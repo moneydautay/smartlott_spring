@@ -56,7 +56,7 @@ public class S3Service {
             if(uploadFile != null && !uploadFile.isEmpty()){
                 byte[] bytes = uploadFile.getBytes();
 
-                //The root of our temporary assets. Will create if it doesn't exist
+                //The root of our temporary assets. Will createSecurityTokenForUsername if it doesn't exist
                 File tmpImageStoredFolder = new File(tempImageStore + File.separatorChar + username);
                 if(!tmpImageStoredFolder.exists()){
                     LOGGER.info("Creating the temporary root for the S3 assets");
@@ -106,7 +106,7 @@ public class S3Service {
         if(null == rootBucketUrl){
 
             LOGGER.error("The bucket {} does not exist and the application"
-                    + " was not able to create it. The image won't be stored with the profile", rootBucketUrl );
+                    + " was not able to createSecurityTokenForUsername it. The image won't be stored with the profile", rootBucketUrl );
         }else {
             AccessControlList acl = new AccessControlList();
             acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);

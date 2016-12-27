@@ -20,7 +20,6 @@ public class NumberAccount {
     @Column(unique = true)
     private String number;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

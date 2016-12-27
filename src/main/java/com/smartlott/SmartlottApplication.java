@@ -82,7 +82,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		NumberAccountType pm = numberAccountTypeService.getOne(1);
 
 		List<Role> roles = new ArrayList<>();
-		//create role
+		//createSecurityTokenForUsername role
 		Role custRole = new Role(RolesEnum.CUSTOMER);
 		Role seoRole = new Role(RolesEnum.SEO);
 		Role staffRole = new Role(RolesEnum.STAFF);
@@ -127,7 +127,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		numberAccountService.create(accBigCoin);
 		numberAccountService.create(accPerfectMoney);
 
-		//create slider
+		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
 
 

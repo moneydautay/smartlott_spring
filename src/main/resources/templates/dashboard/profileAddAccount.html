@@ -45,13 +45,17 @@
                                 <div class="col-md-6">
                                     <form id="frmNumberAccount" th:action="@{/api/number-account}" method="post">
                                         <div class="form-group">
-                                            <label for="numberAccountType">Loại tài khoản</label>
+                                            <label for="numberAccountType" th:text="#{profile.number.account.type.text}">Loại tài khoản</label>
                                             <select class="form-control" name="numberAccountType" id="numberAccountType">
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="numberAccount">Số tài khoản</label>
+                                            <label for="numberAccount" th:text="#{profile.number.account.text}">Số tài khoản</label>
                                             <input type="text" id="numberAccount" name="numberAccount" class="form-control"/>
+                                        </div>
+                                        <div th:if="${param.token}" class="form-group">
+                                            <label for="securityToken" th:text="#{security.token.text}"></label>
+                                            <input type="text" id="securityToken" name="securityToken" class="form-control"/>
                                         </div>
                                         <div class="form-group">
                                             <button th:if="${!(#httpServletRequest.getRequestURI().contains('delete'))}" type="submit" class="btn btn-primary" th:text="#{profile.submit.account.text}">Lưu</button>
@@ -96,6 +100,7 @@
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function($) {
         var accountNumberId = /*[[${accountNumberId}]]*/;
+        var token = /*[[${param.token}]]*/;
         var url = /*[[@{/api/number-account-type}]]*/;
         //get data number account type
         getData(url, showNumberAccountType);
@@ -162,6 +167,13 @@
                         }
                     }
                 },
+                securityToken: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Mã xác nhận không được bỏ trống'
+                        }
+                    }
+                }
             }
         }).on('success.form.fv',function (e) {
             e.preventDefault();
@@ -169,25 +181,34 @@
             var url = /*[[@{/api/number-account}]]*/;
             var data = {};
             var type = 'POST';
-            data['numberAccountType'] = {'id':$('#numberAccountType').val()};
+            data['numberAccountType'] = {'id': $('#numberAccountType').val()};
             data['number'] = $('#numberAccount').val();
             data['user'] = {};
-            if(accountNumberId == null)
-                url+='/'+id;
-            else{
-                url+='/'+accountNumberId;
-                type='PUT';
-                if(/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/){
-                    type='DELETE';
-                }
-            }
-            if(type=='DELETE')
-                if(!confirm('Bạn muốn muốn xóa số tài khoản này')){
-                    $(this).find('button[type="submit"]').removeAttr('disabled').removeClass('disabled');
-                    return;
-                }
+            if (token == null) {
+                url = /*[[@{/api/security-token}]]*/;
+                type='POST';
 
-            saveOrupdateData(url, type, data ,createSuccess,showLocalError);
+                //set email
+                data = /*[[${#authorization.getAuthentication().getPrincipal().email}]]*/;
+                saveOrupdateData(url, type, data, sentTokenSuccessfully, showLocalError);
+            } else {
+                if (accountNumberId == null)
+                    url += '/' + id;
+                else {
+                    url += '/' + accountNumberId;
+                    type = 'PUT';
+                    if (/*[[${#httpServletRequest.getRequestURI().contains('delete')}]]*/) {
+                        type = 'DELETE';
+                    }
+                }
+                if (type == 'DELETE')
+                    if (!confirm('Bạn muốn muốn xóa số tài khoản này')) {
+                        $(this).find('button[type="submit"]').removeAttr('disabled').removeClass('disabled');
+                        return;
+                    }
+
+                saveOrupdateData(url, type, data, createSuccess, showLocalError);
+            }
         });
 
         function createSuccess(data) {
@@ -222,6 +243,22 @@
                 .data('formValidation')
                 .updateStatus('numberAccount','INVALID');
             $('#frmNumberAccount').formValidation('updateMessage', 'numberAccount', 'notEmpty', 'Số tài khoản không hợp lệ');
+        }
+
+        function sentTokenSuccessfully(data){
+            var msg  = 'Vui lòng kiểm tra email nhập mã xác nhận vào ô Mã xác nhận bên dưới ';
+
+            var message = showMessage(msg, 'alert-warn', true);
+            var messageArea = $('#messageArea');
+            messageArea.html('');
+            messageArea.append(message);
+            //clear all notified message
+            $('#frmNumberAccount').data('formValidation').resetForm();
+
+            //Redirect to profile account after 1s
+            setTimeout(function () {
+                window.location.href='?token=true';
+            },1000);
         }
     });
 </script>

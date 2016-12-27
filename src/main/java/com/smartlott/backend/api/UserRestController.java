@@ -214,6 +214,7 @@ public class UserRestController {
 
         userService.updateUser(localUser);
         return new ResponseEntity<Object>(localUser, HttpStatus.OK);
-
     }
+
+
 }

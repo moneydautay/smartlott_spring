@@ -26,7 +26,8 @@ public class SecurityToken implements Serializable{
     public static final Integer DEFAULT_TOKEN_SECURITY_IN_MINUTES = 120;
 
     @Id
-    @Column(name="security_token_id")
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(unique = true)

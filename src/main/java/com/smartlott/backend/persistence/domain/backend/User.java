@@ -48,7 +48,7 @@ public class User implements Serializable, UserDetails{
     private long id;
 
     @Email(message = "Email.user.email")
-    @Size(min = 5, max = 50, message = "Size.user.email")
+    @Size(min = 5, max = 100, message = "Size.user.email")
     private String email;
 
 

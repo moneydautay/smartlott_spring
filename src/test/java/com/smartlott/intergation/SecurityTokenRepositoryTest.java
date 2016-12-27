@@ -17,6 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -73,7 +76,51 @@ public class SecurityTokenRepositoryTest extends AbstractIntegrationTest{
 
     @Test
     public void testDeleteToken() throws Exception{
+        User user = createCustUser(testName);
+        String token = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
 
+        SecurityToken securityToken = createSecurityToken(token, user, now);
+        long tokenId = securityToken.getId();
+        securityTokenRepository.delete(tokenId);
+
+        SecurityToken shouldNotExistToken = securityTokenRepository.findOne(tokenId);
+        Assert.assertNull(shouldNotExistToken);
+    }
+
+    @Test
+    public  void testCascadeDeleteFormUserEntity() throws Exception{
+        User user = createCustUser(testName);
+        String token = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+
+        SecurityToken securityToken = createSecurityToken(token, user, now);
+        long tokenId = securityToken.getId();
+        securityTokenRepository.delete(tokenId);
+
+        List<SecurityToken> shouldNotExistTokens = securityTokenRepository.findByUserId(user.getId());
+        Assert.assertTrue(shouldNotExistTokens.isEmpty());
+    }
+
+    @Test
+    public void testMulitipleTokenAreReturendWhenQueringUserId() throws Exception{
+
+        User user = createCustUser(testName);
+        Assert.assertNotNull(user);
+        String token1 = UUID.randomUUID().toString();
+        String token2 = UUID.randomUUID().toString();
+        String token3 = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+
+        List<SecurityToken> securityTokens = new ArrayList<>();
+
+        securityTokens.add(createSecurityToken(token1, user, now));
+        securityTokens.add(createSecurityToken(token2, user, now));
+        securityTokens.add(createSecurityToken(token3, user, now));
+
+        List<SecurityToken> actualSecurityTokens = securityTokenRepository.findByUserId(user.getId());
+
+        Assert.assertEquals(securityTokens.size(), actualSecurityTokens.size());
     }
 
     private SecurityToken createSecurityToken(String token, User user, LocalDateTime now) {
