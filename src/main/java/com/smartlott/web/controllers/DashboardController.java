@@ -11,17 +11,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by greenlucky on 12/22/16.
  */
 @Controller
-@RequestMapping("/dashboard")
 public class DashboardController {
 
     public static final String DASHBOARD_VIEW_NAME = "/dashboard";
 
-    public static final String PROFILE_GENERAL_URL = "/profile";
-    public static final String PROFILE_PASSWORD_URL = "/profile/password";
-    public static final String PROFILE_DOC_URL = "/profile/doc";
-    public static final String PROFILE_ACCOUNT_URL = "/profile/account";
+    public static final String PROFILE_GENERAL_URL = "/dashboard/profile";
+    public static final String PROFILE_PASSWORD_URL = "/dashboard/profile/password";
+    public static final String PROFILE_DOC_URL = "/dashboard/profile/doc";
+    public static final String PROFILE_ACCOUNT_URL = "/dashboard/profile/account";
 
-    @RequestMapping("")
+    @RequestMapping(DASHBOARD_VIEW_NAME)
     public String dashboard(){
         return DASHBOARD_VIEW_NAME+"/index";
     }

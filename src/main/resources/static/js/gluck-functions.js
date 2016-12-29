@@ -39,3 +39,21 @@ function showErrors(errors) {
     });
 }
 
+/**
+ * Show all errors html tag has id messageArea
+ * @param errors
+ */
+function showNotifications(id, msgs, type) {
+    var xButton = true;
+    var messageArea = $('#'+id);
+    $.each(msgs, function (index, msg) {
+        var massge = msg.content;
+        if (msg.notificationType.required) {
+            xButton = false;
+            var url = msg.notificationType.url;
+            massge = '<a href="' + url + '">' + msg.content + '</a>';
+        }
+        messageArea.append(showMessage(massge,type,xButton));
+    });
+}
+

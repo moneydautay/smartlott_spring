@@ -356,7 +356,7 @@ function uploadDoc(frmId, nameFunction=null){
  * @param callBack will be call back after save or update successfully
  * @param errorCallBack will be call back if error
  */
-function saveOrupdateData(url, type = 'POSt', data, callBack=null, errorCallBack=null){
+function saveOrupdateData(url, type = 'POST', data, callBack=null, errorCallBack=null){
 
     var header = $('meta[name="_csrf_header"]').attr('content');
     var token = $('meta[name="_csrf"]').attr('content');

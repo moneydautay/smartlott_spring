@@ -5,10 +5,7 @@ import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import com.smartlott.backend.persistence.domain.backend.SecurityToken;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.repositories.EmailService;
-import com.smartlott.backend.service.NumberAccountService;
-import com.smartlott.backend.service.PerfectMoneyService;
-import com.smartlott.backend.service.SecurityTokenSevice;
-import com.smartlott.backend.service.UserService;
+import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +63,9 @@ public class NumberAccountRestController {
     @Autowired
     private SecurityTokenSevice securityTokenSevice;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     /**
      * Get accounts by userid
@@ -116,10 +116,13 @@ public class NumberAccountRestController {
         //Create new number account
         numberAccountService.create(numberAccount);
 
-
         //delete security token
         securityTokenSevice.remove(securityToken.getId());
         LOGGER.debug("Removed security token {} ",securityToken.getToken());
+
+        //turnoff notification
+        if(!localUser.isActived() && localUser.getDocumentOne() != null && localUser.getDocumentTwo() != null)
+            notificationService.turnOffNotification(localUser, NUMBER_ACCOUNT_URL);
 
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
@@ -189,10 +192,6 @@ public class NumberAccountRestController {
 
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
-
-
-
-
 
     /**
      * Get number account given by number account id

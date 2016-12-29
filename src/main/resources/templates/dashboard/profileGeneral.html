@@ -24,6 +24,9 @@
             <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashbroad</a></li>
             <li class="breadcrumb-item active">Thông tin cá nhân</li>
         </ol>
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
+
         <div class="container" id="dashboard">
             <div class="col-md-8 category">
                 <div class="row" id="messageArea">
@@ -210,5 +213,6 @@
     }
 
 </script>
+<div th:replace="dashboard/include :: script-nofitication"/>
 </body>
 </html>

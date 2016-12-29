@@ -97,6 +97,8 @@ public class User implements Serializable, UserDetails{
     @Column(updatable = false)
     private LocalDateTime createDate;
 
+    private boolean actived = false;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "active_by", updatable = false)
     private User activeBy;
@@ -248,6 +250,15 @@ public class User implements Serializable, UserDetails{
         this.createDate = createDate;
     }
 
+
+    public boolean isActived() {
+        return actived;
+    }
+
+    public void setActived(boolean actived) {
+        this.actived = actived;
+    }
+
     public User getActiveBy() {
         return activeBy;
     }
@@ -334,6 +345,7 @@ public class User implements Serializable, UserDetails{
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", profileImage='" + profileImage + '\'' +
                 ", documentOne='" + documentOne + '\'' +
@@ -343,6 +355,7 @@ public class User implements Serializable, UserDetails{
                 ", status=" + status +
                 ", cash=" + cash +
                 ", createDate=" + createDate +
+                ", actived=" + actived +
                 ", activeBy=" + activeBy +
                 ", userRoles=" + userRoles +
                 '}';

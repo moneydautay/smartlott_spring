@@ -26,5 +26,27 @@
     <li th:class="${#httpServletRequest.getRequestURI().contains('doc')?'active':''}"><a th:href="@{/dashboard/profile/doc}" aria-controls="doc">Tài liệu</a></li>
     <li th:class="${#httpServletRequest.getRequestURI().contains('account')?'active':''}"><a th:href="@{/dashboard/profile/account}" aria-controls="account">Tài khoản</a></li>
 </ul>
+
+<div class="row" th:fragment="profile-notification" id="notification">
+</div>
+<div th:fragment="script-nofitication">
+<script th:inline="javascript" type="application/javascript">
+    var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/
+    jQuery(document).ready(function(){
+        //get all notifications
+        var url = /*[[@{/api/notification}]]*/;
+        url += "/"+userId;
+        setTimeout(function () {
+            getData(url, showNotification);
+        },5000);
+
+    });
+
+    function showNotification(data) {
+        showNotifications('notification',data,'alert-warning alert-dismissible');
+    }
+
+</script>
+</div>
 </body>
 </html>

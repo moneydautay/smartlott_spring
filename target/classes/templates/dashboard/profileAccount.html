@@ -18,6 +18,8 @@
 
     <!-- Slider image-->
     <div class="container category">
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
             <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashbroad</a></li>
@@ -135,5 +137,6 @@
         }
     });
 </script>
+<div th:replace="dashboard/include :: script-nofitication"/>
 </body>
 </html>

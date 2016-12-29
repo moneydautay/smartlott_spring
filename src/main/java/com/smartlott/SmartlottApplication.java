@@ -2,6 +2,7 @@ package com.smartlott;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
+import com.smartlott.enums.NotificationTypeEnum;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.utils.*;
 import org.slf4j.Logger;
@@ -52,6 +53,12 @@ public class SmartlottApplication implements CommandLineRunner{
 
 	@Autowired
 	private NumberAccountService numberAccountService;
+
+	@Autowired
+	private NotificationTypeService notificationTypeService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -108,8 +115,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		userRoles.add(new UserRole(custRole, user));
 
 		user.setUserRoles(userRoles);
-		user.setDocumentOne("https://develops-spring-boot.s3-ap-southeast-1.amazonaws.com/admin/profileImage.jpg");
-		user.setDocumentTwo("https://develops-spring-boot.s3-ap-southeast-1.amazonaws.com/admin/profileImage.jpg");
 
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);
@@ -120,17 +125,10 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Add address to user
 		addressService.createAddress(address);
 
-		//add account number to user
-		NumberAccount accBigCoin = NumberAccountUtils.createNewNumberAccount("greenlucky", user, bigCoin);
-		NumberAccount accPerfectMoney = NumberAccountUtils.createNewNumberAccount("U38274738", user, pm);
-
-		numberAccountService.create(accBigCoin);
-		numberAccountService.create(accPerfectMoney);
+		createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
-
-
 	}
 
 	public void createFeaturedSlider(){
@@ -187,4 +185,54 @@ public class SmartlottApplication implements CommandLineRunner{
 		numberAccountTypeService.create(bigCoin);
 		numberAccountTypeService.create(pm);
 	}
+
+	public void createNotificationForNewUser(User user){
+		//add notification type
+		//create notification type;
+
+		NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
+		NotificationType type2 = new NotificationType(NotificationTypeEnum.Pssword);
+		NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
+		NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
+		NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);
+
+		List<NotificationType> notificationTypes = new ArrayList<>();
+		notificationTypes.add(type1);
+		notificationTypes.add(type2);
+		notificationTypes.add(type3);
+		notificationTypes.add(type4);
+		notificationTypes.add(type5);
+
+		//adds notificationTypes
+		notificationTypeService.creates(notificationTypes);
+
+		//add notification after create new user;
+		Notification notif1= new Notification();
+		notif1.setContent("Welcome to Smartlott");
+		notif1.setUser(user);
+		notif1.setNotificationType(type5);
+
+		notificationService.create(notif1);
+
+		Notification notif2= new Notification();
+		notif2.setContent("Please update your information before buy lottery");
+		notif2.setUser(user);
+		notif2.setNotificationType(type1);
+
+		notificationService.create(notif2);
+
+		Notification notif3= new Notification();
+		notif3.setContent("Please upload your bill of bank or bill or electricity or water to varify your address");
+		notif3.setUser(user);
+		notif3.setNotificationType(type3);
+
+		notificationService.create(notif3);
+
+		Notification notif4= new Notification();
+		notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
+		notif4.setUser(user);
+		notif4.setNotificationType(type4);
+		notificationService.create(notif4);
+	}
+
 }

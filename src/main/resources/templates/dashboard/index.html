@@ -19,6 +19,9 @@
 
     <!-- Slider image-->
     <div class="container category">
+
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
             <li class="breadcrumb-item active">Dashbroad</li>
@@ -53,7 +56,6 @@
 <script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-
-
+<div th:replace="dashboard/include :: script-nofitication"/>
 </body>
 </html>

@@ -148,8 +148,7 @@
         }).on('success.form.fv', function(e) {
             // Prevent form submission
             e.preventDefault();
-            uploadDoc(this);
-
+            uploadDoc(this,showDoc);
         });
 
         /* Change password form validation */
@@ -177,7 +176,6 @@
     });
 
     function showDoc(data) {
-        console.log(data);
         var docOne = data.documentOne;
         var docTwo = data.documentTwo;
         if(docOne != '') {
@@ -188,5 +186,6 @@
         }
     }
 </script>
+<div th:replace="dashboard/include :: script-nofitication"/>
 </body>
 </html>

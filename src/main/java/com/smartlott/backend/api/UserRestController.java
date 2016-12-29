@@ -25,7 +25,6 @@ import java.util.*;
  * Created by Mrs Hoang on 20/12/2016.
  */
 @RestController
-@RequestMapping("/api/user")
 public class UserRestController {
 
     /** The Serial Version UID for Serializable classes */
@@ -34,6 +33,11 @@ public class UserRestController {
     /** The application logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestController.class);
 
+    public static final String API_USER_REST_URL="/api/user";
+
+    public static final String API_USER_NUMERIC_JOINED_REST_URL= UserRestController.API_USER_REST_URL+"/numeric-joined-member";
+    public static final String API_USER_PASSWORD_REST_URL= UserRestController.API_USER_REST_URL+"/change-password";
+    public static final String API_USER_UPLOADOC_REST_URL= UserRestController.API_USER_REST_URL+"/uploaddoc";
 
     @Autowired
     private UserService userService;
@@ -53,12 +57,15 @@ public class UserRestController {
     @Autowired
     private S3Service s3Service;
 
+    @Autowired
+    private NotificationService notificationService;
+
     /**
      * Get numeric members in system has role given by roleId
      * @param roleId
      * @return A numeric members
      */
-    @RequestMapping(value = "/numeric-joined-member/{roleId}", method = RequestMethod.GET)
+    @RequestMapping(value = API_USER_NUMERIC_JOINED_REST_URL+"/{roleId}", method = RequestMethod.GET)
     public Long getNumericJoinedMemember(@PathVariable int roleId){
         Role role = roleService.getRole(roleId);
         if(role == null){
@@ -67,14 +74,13 @@ public class UserRestController {
         return (long) userRoleService.findByRole(role).size();
     }
 
-
     /**
      * Create a new user
      * @param user
      * @param locale current locale get by browser
      * @return A User or error if email or username is not valid
      */
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = API_USER_REST_URL, method = RequestMethod.POST)
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user, Locale locale){
 
         List<MessageDTO> messages = new ArrayList<>();
@@ -111,7 +117,7 @@ public class UserRestController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = API_USER_REST_URL+"/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user, Locale locale){
         if(userService.findOne(user.getId()) == null){
             LOGGER.error("User {} not found", user);
@@ -120,8 +126,12 @@ public class UserRestController {
 
         user = userService.updateUser(user);
 
+        if(!user.isActived())
+            notificationService.turnOffNotification(user, API_USER_REST_URL);
+
         return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
+
 
     /**
      * Get user by username
@@ -129,7 +139,7 @@ public class UserRestController {
      * @param locale current locale given by browser
      * @return A user
      */
-    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
+    @RequestMapping(value = API_USER_REST_URL+"/{username}", method = RequestMethod.GET)
     public ResponseEntity<Object> getUser(@PathVariable String username, Locale locale){
 
         User user = userService.findByUsername(username);
@@ -149,7 +159,7 @@ public class UserRestController {
      * @param locale
      * @return
      */
-    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    @RequestMapping(value = API_USER_PASSWORD_REST_URL, method = RequestMethod.POST)
     public ResponseEntity<Object> changePassword(@RequestBody UserPassword userPassword, Locale locale){
 
         List<MessageDTO> messages = new ArrayList<>();
@@ -179,18 +189,19 @@ public class UserRestController {
 
         userService.changePassword(userPassword.getUsername(), password.getPassword());
 
+        //turnoff notification
+        if(!localUser.isActived())
+            notificationService.turnOffNotification(localUser, API_USER_PASSWORD_REST_URL);
+
         return new ResponseEntity<Object>(new Object[]{new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.change.succed", locale))}, HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/uploaddoc", method = RequestMethod.POST)
+    @RequestMapping(value = API_USER_UPLOADOC_REST_URL, method = RequestMethod.POST)
     public ResponseEntity<Object> uploadDoc(@RequestParam("username") String username,
                                             @RequestParam("docType") int docType,
                                             @RequestParam("tempFile") MultipartFile tempFile, Locale locale){
         List<MessageDTO> messages = new ArrayList<>();
-        LOGGER.info("Username: {}",username);
-        LOGGER.info("DocType: {}",docType);
-
         User localUser = userService.findByUsername(username);
 
         if(localUser == null){
@@ -211,10 +222,12 @@ public class UserRestController {
                         +"The user's profile will be created without the image profile");
             }
         }
+        //turnoff notification
+        if(!localUser.isActived() && localUser.getDocumentOne() != null && localUser.getDocumentTwo() != null)
+            notificationService.turnOffNotification(localUser, API_USER_UPLOADOC_REST_URL);
 
         userService.updateUser(localUser);
         return new ResponseEntity<Object>(localUser, HttpStatus.OK);
     }
-
 
 }
