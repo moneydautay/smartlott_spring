@@ -2,9 +2,13 @@ package com.smartlott.backend.persistence.repositories;
 
 import com.smartlott.backend.persistence.domain.backend.Notification;
 import com.smartlott.backend.persistence.domain.backend.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -55,4 +59,8 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
     public List<Notification> findByUserId(long userId);
 
     List<Notification> findByUserIdAndProcessed(long userId, boolean processed);
+
+    @Modifying
+    @Query("SELECT n FROM Notification n where n.user.id =:userId AND n.processed =:processed AND (n.timeShow = null OR n.timeShow <=:localDateTime)")
+    List<Notification> findByUserIdAndProcessedAndShowTime(@Param("userId") long userId,@Param("processed") boolean processed,@Param("localDateTime") LocalDateTime localDateTime);
 }

@@ -40,6 +40,33 @@ function showErrors(errors) {
 }
 
 /**
+ * Show notification
+ * @param message
+ * @param type
+ * @param xButton
+ * @returns {string}
+ */
+function showNotification(messageId, message, type, xButton=true) {
+    var strError = '';
+    strError += '<div class="alert '+type+'" role="alert">';
+    //<!--aria-hidden="true" -->
+    if(xButton) {
+        strError += ' <button onclick="processedNotif('+messageId+',1)" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close" id="'+messageId+'">';
+        strError += ' <span class="msgBtn">Để sau</span>';
+        strError += '</button>';
+        strError += ' <button onclick="processedNotif('+messageId+', 2)" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close" id="'+messageId+'">';
+        strError += ' <span class="msgBtn">Đóng</span>';
+        strError += '</button>';
+    }
+    strError += '<p>';
+    strError += message;
+    strError += '</p>';
+    strError += '</div>';
+
+    return strError;
+}
+
+/**
  * Show all errors html tag has id messageArea
  * @param errors
  */
@@ -53,7 +80,8 @@ function showNotifications(id, msgs, type) {
             var url = msg.notificationType.url;
             massge = '<a href="' + url + '">' + msg.content + '</a>';
         }
-        messageArea.append(showMessage(massge,type,xButton));
+        messageArea.append(showNotification(msg.id,massge,type,xButton));
     });
 }
+
 

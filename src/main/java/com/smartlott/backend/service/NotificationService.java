@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -56,8 +57,8 @@ public class NotificationService {
         return notificationRepository.findByUserId(userId);
     }
 
-    public List<Notification> getByUserIdAndProcessed(long userId, boolean processed) {
-        return notificationRepository.findByUserIdAndProcessed(userId, processed);
+    public List<Notification> getByUserIdAndProcessed(long userId, boolean processed, LocalDateTime localDateTime) {
+        return notificationRepository.findByUserIdAndProcessedAndShowTime(userId, processed, localDateTime);
     }
 
     @Transactional
@@ -66,5 +67,9 @@ public class NotificationService {
             notification.setProcessed(true);
             notificationRepository.save(notification);
             LOGGER.debug("Change status of notification {}", notification);
+    }
+
+    public Notification getOne(long notificationId) {
+        return  notificationRepository.findOne(notificationId);
     }
 }

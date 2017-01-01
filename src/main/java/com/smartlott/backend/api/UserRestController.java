@@ -3,17 +3,17 @@ package com.smartlott.backend.api;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
+import com.smartlott.enums.NotificationTypeEnum;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.RoleNotFoundException;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -114,9 +114,18 @@ public class UserRestController {
 
         LOGGER.info("User {} has been created and logged to application ", user);
 
+        //set notification for new user
+        setNotification(user);
+
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    /**
+     * Update infomation for user
+     * @param user
+     * @param locale
+     * @return New information of user or Message and HttpStatus error if not found
+     */
     @RequestMapping(value = API_USER_REST_URL+"/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user, Locale locale){
         if(userService.findOne(user.getId()) == null){
@@ -128,6 +137,7 @@ public class UserRestController {
 
         if(!user.isActived())
             notificationService.turnOffNotification(user, API_USER_REST_URL);
+        LOGGER.info("Update information of user {}", user);
 
         return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
@@ -193,6 +203,8 @@ public class UserRestController {
         if(!localUser.isActived())
             notificationService.turnOffNotification(localUser, API_USER_PASSWORD_REST_URL);
 
+        LOGGER.info("Changed password for user {}", localUser);
+
         return new ResponseEntity<Object>(new Object[]{new MessageDTO(MessageType.ERROR, i18NService.getMessage("profile.password.change.succed", locale))}, HttpStatus.OK);
     }
 
@@ -227,7 +239,48 @@ public class UserRestController {
             notificationService.turnOffNotification(localUser, API_USER_UPLOADOC_REST_URL);
 
         userService.updateUser(localUser);
+        LOGGER.debug("Update user {}", localUser);
+
         return new ResponseEntity<Object>(localUser, HttpStatus.OK);
     }
 
+    public void setNotification(User user){
+        NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
+        NotificationType type2 = new NotificationType(NotificationTypeEnum.Pssword);
+        NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
+        NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
+        NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);
+
+        //add notification after create new user;
+        Notification notif1= new Notification();
+        notif1.setContent("Welcome to Smartlott");
+        notif1.setUser(user);
+        notif1.setNotificationType(type5);
+
+        notificationService.create(notif1);
+        LOGGER.info("Add notification {} for user {}", notif1, user);
+
+        Notification notif2= new Notification();
+        notif2.setContent("Please update your information before buy lottery");
+        notif2.setUser(user);
+        notif2.setNotificationType(type1);
+
+        notificationService.create(notif2);
+        LOGGER.info("Add notification {} for user {}", notif2, user);
+
+        Notification notif3= new Notification();
+        notif3.setContent("Please upload your bill of bank or bill or electricity or water to varify your address");
+        notif3.setUser(user);
+        notif3.setNotificationType(type3);
+
+        notificationService.create(notif3);
+        LOGGER.info("Add notification {} for user {}", notif3, user);
+
+        Notification notif4= new Notification();
+        notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
+        notif4.setUser(user);
+        notif4.setNotificationType(type4);
+        notificationService.create(notif4);
+        LOGGER.info("Add notification {} for user {}", notif4, user);
+    }
 }

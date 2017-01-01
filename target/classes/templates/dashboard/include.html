@@ -32,20 +32,33 @@
 <div th:fragment="script-nofitication">
 <script th:inline="javascript" type="application/javascript">
     var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/
-    jQuery(document).ready(function(){
-        //get all notifications
-        var url = /*[[@{/api/notification}]]*/;
-        url += "/"+userId;
-        setTimeout(function () {
-            getData(url, showNotification);
-        },5000);
+        jQuery(document).ready(function () {
+            //get all notifications
+            var url = /*[[@{/api/notification}]]*/;
+            var urlMain = url + "/" + userId;
+            setTimeout(function () {
+                getData(urlMain, showNotif);
+            }, 5000);
 
-    });
+            $('.close').click(function () {
+                console.log(this);
+            })
 
-    function showNotification(data) {
-        showNotifications('notification',data,'alert-warning alert-dismissible');
+        });
+
+    function showNotif(data) {
+        showNotifications('notification', data, 'alert-warning alert-dismissible');
     }
-
+    /**
+     * Processed notification
+     * @param id
+     * @param type: 1: show later; 2: close
+     */
+    function processedNotif(id, type=1) {
+        var url = /*[[@{/api/notification/process}]]*/;
+        url += "/"+ id + "/" + type;
+        saveOrUpdateDataByGet(url);
+    }
 </script>
 </div>
 </body>

@@ -388,4 +388,38 @@ function saveOrupdateData(url, type = 'POST', data, callBack=null, errorCallBack
     });
 }
 
+/**
+ * Create or Update data given by url and data
+ * @param url will be sent data to
+ * @param data
+ * @param callBack will be call back after save or update successfully
+ * @param errorCallBack will be call back if error
+ */
+function saveOrUpdateDataByGet(url, callBack=null, errorCallBack=null){
+
+    var header = $('meta[name="_csrf_header"]').attr('content');
+    var token = $('meta[name="_csrf"]').attr('content');
+
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        timeout: 10000,
+        success: function(data) {
+            if(callBack != null)
+                callBack(data);
+        },
+        error: function(e) {
+            if(errorCallBack!=null)
+                errorCallBack(JSON.parse(e.responseText));
+            else
+                showErrors(JSON.parse(e.responseText));
+        },
+        done: function(e) {
+            console.log("DONE");
+        }
+    });
+}
+
 
