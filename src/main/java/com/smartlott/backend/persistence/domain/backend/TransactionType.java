@@ -1,7 +1,9 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.enums.TransactionTypeEnum;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import java.io.Serializable;
 
 /**
@@ -18,10 +20,10 @@ public class TransactionType implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Max(value = 120)
+    @Length(max = 120)
     private String name;
 
-    @Max(value = 255)
+    @Length(max = 255)
     private String description;
 
     public TransactionType() {
@@ -31,6 +33,13 @@ public class TransactionType implements Serializable{
         this.name = name;
         this.description = description;
     }
+
+    public TransactionType(TransactionTypeEnum typeEnum){
+        this.id = typeEnum.getId();
+        this.name = typeEnum.getName();
+        this.description = typeEnum.getDescription();
+    }
+
 
     public long getId() {
         return id;

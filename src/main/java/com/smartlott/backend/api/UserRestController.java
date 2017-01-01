@@ -162,7 +162,6 @@ public class UserRestController {
         return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
 
-
     /**
      * Change password
      * @param userPassword

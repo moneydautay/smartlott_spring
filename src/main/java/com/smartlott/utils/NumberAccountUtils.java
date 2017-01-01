@@ -22,8 +22,8 @@ public class NumberAccountUtils {
      * @param description
      * @return A entity number account
      */
-    public static NumberAccountType createNewNumberAccountType(String name, String description){
-        NumberAccountType numberAccountType = new NumberAccountType(name, description);
+    public static NumberAccountType createNewNumberAccountType(String name, String description, double feesWithDraw, boolean rate){
+        NumberAccountType numberAccountType = new NumberAccountType(name, description, feesWithDraw, rate);
         return numberAccountType;
     }
 

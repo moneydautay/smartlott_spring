@@ -7,6 +7,7 @@ import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.repositories.NumberAccountRepository;
 import com.smartlott.backend.persistence.repositories.NumberAccountTypeRepository;
 import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.smartlott.enums.NumberAccountTypeEnum;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,8 +60,8 @@ public class NumberAccountTest extends AbstractIntegrationTest{
         Assert.assertNotNull(user);
 
         //add account type
-        NumberAccountType numberAccountType1 = new NumberAccountType("Perfect Money","");
-        NumberAccountType numberAccountType2 = new NumberAccountType("BitCoin","");
+        NumberAccountType numberAccountType1 = new NumberAccountType(NumberAccountTypeEnum.BitCoin);
+        NumberAccountType numberAccountType2 = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
 
         numberAccountType.save(numberAccountType1);
         numberAccountType.save(numberAccountType2);

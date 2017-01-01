@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.enums.NumberAccountTypeEnum;
+
 import javax.persistence.*;
 
 /**
@@ -17,12 +19,26 @@ public class NumberAccountType {
 
     private String description;
 
+    private double feesWithdraw = 0.0;
+
+    private boolean rate = true;
+
     public NumberAccountType() {
     }
 
-    public NumberAccountType(String name, String description) {
+    public NumberAccountType(NumberAccountTypeEnum accountTypeEnum){
+        this.id = accountTypeEnum.getId();
+        this.name = accountTypeEnum.getName();
+        this.description = accountTypeEnum.getDescription();
+        this.feesWithdraw = accountTypeEnum.getFeesWithdraw();
+        this.rate = accountTypeEnum.isRate();
+    }
+
+    public NumberAccountType(String name, String description, double feesWithdraw, boolean rate) {
         this.name = name;
         this.description = description;
+        this.feesWithdraw = feesWithdraw;
+        this.rate = rate;
     }
 
     public int getId() {
@@ -49,9 +65,25 @@ public class NumberAccountType {
         this.description = description;
     }
 
+    public double getfeesWithdraw() {
+        return feesWithdraw;
+    }
+
+    public void setfeesWithdraw(double feesWithdraw) {
+        this.feesWithdraw = feesWithdraw;
+    }
+
+    public boolean isRate() {
+        return rate;
+    }
+
+    public void setRate(boolean rate) {
+        this.rate = rate;
+    }
+
     @Override
     public String toString() {
-        return "NumberAccountType{" +
+        return "NumberAccountTypeEnum{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

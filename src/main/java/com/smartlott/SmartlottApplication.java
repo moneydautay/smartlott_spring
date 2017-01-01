@@ -3,7 +3,9 @@ package com.smartlott;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.NotificationTypeEnum;
+import com.smartlott.enums.NumberAccountTypeEnum;
 import com.smartlott.enums.RolesEnum;
+import com.smartlott.enums.TransactionTypeEnum;
 import com.smartlott.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private NotificationService notificationService;
 
+	@Autowired
+	private TransactionTypeService transactionTypeService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
 	}
@@ -66,7 +71,6 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Override
 	public void run(String...args) throws Exception{
 		LOGGER.info("Creating user with role admin into database...");
-
 
 		//Create country and province
 		createCountry();
@@ -85,7 +89,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		CreateNumberAccountType();
 
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
-		NumberAccountType pm = numberAccountTypeService.getOne(1);
+		NumberAccountType pm = numberAccountTypeService.getOne(2);
 
 		List<Role> roles = new ArrayList<>();
 		//createSecurityTokenForUsername role
@@ -105,7 +109,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		LOGGER.info("Create roles into database..");
 		roleService.createRoles(roles);
 
-
 		User user = UserUtils.createCustUser("admin","admin@gmail.com");
 		user.setPassword("123456");
 
@@ -114,7 +117,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		userRoles.add(new UserRole(custRole, user));
 
 		user.setUserRoles(userRoles);
-
+		user.setActived(true);
+		user.setCash(1200);
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
@@ -124,10 +128,19 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Add address to user
 		addressService.createAddress(address);
 
-		createNotificationForNewUser(user);
+		//createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
+
+		//add number account
+		NumberAccount numberAccount1 = new NumberAccount("greenlucky", user, bigCoin);
+		NumberAccount numberAccount2 = new NumberAccount("U73273487", user, pm);
+		numberAccountService.create(numberAccount1);
+		numberAccountService.create(numberAccount2);
+
+		//creat transaction type
+		createTransactionType();
 	}
 
 	public void createFeaturedSlider(){
@@ -149,9 +162,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		sliderImageService.save(featuredSliderImage2);
 		sliderImageService.save(featuredSliderImage3);
 		LOGGER.info("Created Featured Slider Images");
-
-
-
 	}
 
 
@@ -178,8 +188,8 @@ public class SmartlottApplication implements CommandLineRunner{
 
 	public void CreateNumberAccountType(){
 		//Create new account for BigCoin
-		NumberAccountType bigCoin = NumberAccountUtils.createNewNumberAccountType("BigCoin","This is account of BigCoin");
-		NumberAccountType pm = NumberAccountUtils.createNewNumberAccountType("Perfect Money","This is account of Perfect Money");
+		NumberAccountType bigCoin = new NumberAccountType(NumberAccountTypeEnum.BitCoin);
+		NumberAccountType pm = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
 
 		numberAccountTypeService.create(bigCoin);
 		numberAccountTypeService.create(pm);
@@ -232,6 +242,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		notif4.setUser(user);
 		notif4.setNotificationType(type4);
 		notificationService.create(notif4);
+	}
+
+	public void createTransactionType(){
+		TransactionType type1= new TransactionType(TransactionTypeEnum.Withdraw);
+		TransactionType type2= new TransactionType(TransactionTypeEnum.BuyingLottery);
+
+		transactionTypeService.createNew(type1);
+		transactionTypeService.createNew(type2);
 	}
 
 }

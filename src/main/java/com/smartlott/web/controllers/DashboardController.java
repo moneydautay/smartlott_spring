@@ -1,6 +1,5 @@
 package com.smartlott.web.controllers;
 
-import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +13,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class DashboardController {
 
     public static final String DASHBOARD_VIEW_NAME = "/dashboard";
-
+    public static final String DASHBOARD_URL = "/dashboard";
     public static final String PROFILE_GENERAL_URL = "/dashboard/profile";
     public static final String PROFILE_PASSWORD_URL = "/dashboard/profile/password";
     public static final String PROFILE_DOC_URL = "/dashboard/profile/doc";
     public static final String PROFILE_ACCOUNT_URL = "/dashboard/profile/account";
+    public static final String MY_CASH_ACCOUNT_URL = "/dashboard/mycash";
 
-    @RequestMapping(DASHBOARD_VIEW_NAME)
+    @RequestMapping(DASHBOARD_URL)
     public String dashboard(){
         return DASHBOARD_VIEW_NAME+"/index";
     }
+
+    /**
+     * THIS IS PROFILE SECTION
+     */
 
     @RequestMapping(PROFILE_GENERAL_URL)
     public String profileGeneral(){
@@ -61,4 +65,14 @@ public class DashboardController {
         model.addAttribute("accountNumberId");
         return DASHBOARD_VIEW_NAME+"/profileAddAccount";
     }
+
+    /**
+     * THIS IS MY CASH SECTION
+     */
+    @RequestMapping(value = MY_CASH_ACCOUNT_URL, method = RequestMethod.GET)
+    public String myCash(){
+        return DASHBOARD_VIEW_NAME+"/myCash";
+    }
+
+
 }

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen" />
+<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen" />
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu" />
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header" />
+
+    <!-- Slider image-->
+    <div class="container category">
+
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+            <li class="breadcrumb-item" ><a th:href="@{/dashboard}" th:text="#{breadcrumb.dashboard.text}">Dashbroad</a></li>
+            <li class="breadcrumb-item active" th:text="#{breadcrumb.mycash.text}">My Cash</li>
+        </ol>
+        <div class="container" id="dashboard">
+            <div class="col-md-8 category">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="content">
+                    <h3 th:text="#{mycash.title.text}">My Cash</h3>
+
+                    <h4><span th:text="#{mycash.current.amount.text}"></span>$<span class="currentAmount">1,2323</span></h4>
+                    <hr/>
+                    <form  method="post" id="frmWithDraw">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="numberAccount" th:text="#{mycash.choose.number.account.text}"></label>
+                                <div class="row" id="numberAccountArea">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="amount" th:text="#{mycash.amount.text}"></label>
+                                    <p><span th:text="#{mycash.message.max.amount.receive.text}"></span> $<span class="amountWithDraw"></span></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="amount" name="amount" class="form-control"/>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <p> - <span th:text="#{mycash.fees.withdraw.text}"></span> $<span id="fees">0</span></p>
+                                    <hr/>
+                                </div>
+                                <div class="clearfix"></div>
+                                <label for="total" th:text="#{mycash.total.receive.withdraw.text}"></label>
+                                <div class="clearfix"></div>
+                                <div class="col-md-4">
+                                    <h4>$ <span id="total">0</span></h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="form-group" id="securityTokenArea">
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" th:text="#{mycash.button.withdraw.text}"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="currentAmount" value="1234"/>
+                    </form>
+                </div>
+            </div>
+
+            <!-- INCLUDE RIGHT SIDEBAR-->
+            <aside th:replace="dashboard/include :: dashboard-siderbar"/>
+        </div>
+
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news" />
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment" />
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer" />
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/hashtable.js}"></script>
+<script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    var maxWithDrawAmount = 0;
+    var token = false;
+    var currentAmount= 0;
+    var feesWithdraw = 0;
+    jQuery(document).ready(function () {
+
+        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var username = /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/;
+        var url = /*[[@{/api/number-account/by-user}]]*/;
+        url+="/"+userId;
+        //get all number accounts given by userid
+        getData(url, showNumberAccountToRadio);
+
+        url = /*[[@{/api/user/}]]*/;
+        url += '/'+username;
+        //get user info
+        getData(url, showCash);
+
+        /* Signup form validation */
+        $('#frmWithDraw').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                amount: {
+                    validators: {
+                        notEmpty:{
+                            message: 'Số tiền rút không thể bỏ trống'
+                        },
+                        greaterThan:{
+                            value: 1,
+                            message: 'Số tiền rút phải lớn hơn 0'
+                        },
+                        lessThan:{
+                            value: 9999999999999999999999999,
+                            message: 'Số tiền rút phải nhỏ hơn '+ maxWithDrawAmount
+                        }
+                    }
+                },
+                securityNumber:{
+                    validators: {
+                        notEmpty: {
+                            message: 'Mã xác thực không được bỏ trống'
+                        },
+                    }
+                },
+            }
+        }).on('success.form.fv',function (e) {
+            e.preventDefault();
+
+            var amount = $('#amount').val();
+            if(amount > currentAmount){
+                $('#frmWithDraw').formValidation('updateMessage','amount','lessThan','Số tiền rút phải nhỏ hơn hoặc bằng '+ maxWithDrawAmount);
+                $('#frmWithDraw').data('formValidation').updateStatus('amount','INVALID','lessThan');
+            } else {
+                console.log(token);
+                if (token == false) {
+                    url = /*[[@{/api/security-token}]]*/;
+                    url += "/" + userId;
+                    console.log(url);
+                    saveOrUpdateDataByGet(url, sentTokenSuccessfully, showInvalidSecurityToken);
+                } else {
+                    url = /*[[@{/api/transaction/withdraw}]]*/;
+                    var numberAccountId = $('#numberAccount:checked').val();
+                    var securityToken = $('#securityToken').val();
+                    url += "/" + numberAccountId;
+                    var data = {};
+                    data['amount'] = amount;
+                    data['transactionType'] = {'id': 1}
+                    data['ofUser'] = {'id': userId}
+                    data['securityToken'] = securityToken;
+                    saveOrupdateData(url, 'POST', data, showWithdrawSuccessFully, showInvalidSecurityToken);
+                }
+            }
+        });
+
+        //live click jquery
+        $('body').on('click','.numberAccount',function () {
+            calAmountWithDraw(this);
+        });
+
+        //automatic calculate withdraw amount
+        setTimeout(function () {
+            calAmountWithDraw('.numberAccount');
+        },2000);
+        
+        $('#amount').keyup(function () {
+            var amount = $(this).val();
+
+            if(amount > currentAmount){
+                $('#frmWithDraw').formValidation('updateMessage','amount','lessThan','Số tiền rút phải nhỏ hơn hoặc bằng '+ maxWithDrawAmount);
+                $('#frmWithDraw').data('formValidation').updateStatus('amount','INVALID','lessThan');
+            }
+            var fees = (amount*feesWithdraw)/100;
+            $('#fees').html(fees);
+            $('#total').html(amount - fees);
+        });
+    });
+    
+    function calAmountWithDraw(clazz) {
+        feesWithdraw = $(clazz).attr('feeswithdraw');
+        maxWithDrawAmount = currentAmount - ((currentAmount*feesWithdraw)/100);
+        $('.amountWithDraw').html(maxWithDrawAmount);
+    }
+
+    function sentTokenSuccessfully(data){
+        var msg  = 'Vui lòng kiểm tra email nhập mã xác nhận vào ô Mã xác nhận bên dưới ';
+
+        var message = showMessage(msg, 'alert-warning', false);
+        var messageArea = $('#messageArea');
+        messageArea.html('');
+        messageArea.append(message);
+        //clear all notified message
+        $('#frmWithDraw').data('formValidation').resetForm();
+
+        //add input security token
+        var securityTokenArea = $('#securityTokenArea');
+        securityTokenArea.addClass('has-feedback');
+        strSTA = '<div class="row">';
+        strSTA += '<label for="securityToken" th:text="#{security.token.text}"></label>';
+        strSTA += '</div>';
+        strSTA += '<div class="col-md-4">'
+        strSTA += '<input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>';
+        strSTA += '</div><div class="clearfix"></div>';
+        securityTokenArea.html(strSTA);
+
+        //disable numberAccountType and numberAccount
+        $('.numberAccount').attr('disabled','disabled').addClass('disabled');
+        $('#amount').attr('disabled','disabled').addClass('disabled');
+        token = true;
+    }
+
+    function showInvalidSecurityToken(errors) {
+
+        var messageArea = $('#messageArea');
+        messageArea.html('');
+        $.each(errors, function (index, error) {
+            messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+        });
+
+        $('#frmWithDraw')
+            .data('formValidation')
+            .updateStatus('securityNumber','INVALID');
+        $('#frmWithDraw').formValidation('updateMessage', 'securityNumber', 'notEmpty', 'Mã xác thực không hợp lệ');
+        $('#frmWithDraw').find('button[type="submit"]').removeAttr('disabled').removeClass('disabled');
+    }
+
+    function showNumberAccountToRadio(data) {
+        var numberAccountArea = $('#numberAccountArea');
+        numberAccountArea.html('');
+        var i = 0;
+        $.each(data, function (index, numberAccount) {
+            var checked = 'false';
+            if(i==0)
+                checked = 'true';
+
+            var strRadio = '';
+            strRadio += '<div class="row">';
+            strRadio += '<label>';
+            strRadio += '<input type="radio" class="numberAccount" checked="'+checked+'" name="numberAccount" feesWithdraw="'+numberAccount.numberAccountType.feesWithdraw+'" id="numberAccount" value="'+numberAccount.id+'" />';
+            strRadio += ' '+numberAccount.number;
+            strRadio += '</label>';
+            strRadio += '</div>';
+            numberAccountArea.append(strRadio);
+            i++;
+        });
+    }
+
+
+    /**
+     * Show current cash of user
+     * @param data
+     */
+    function showCash(data) {
+        $('.currentAmount').html(data.cash);
+        $('#currentAmount').val(data.cash);
+        currentAmount = data.cash;
+    }
+    
+    function showWithdrawSuccessFully(data) {
+        var msg  = 'Đã gửi yêu cầu rút tiền thành công. Chúng tôi sẽ xử lý trong thời gian sớm nhất. Xin cảm ơn';
+
+        var message = showMessage(msg, 'alert-success', true);
+        var messageArea = $('#messageArea');
+        messageArea.html('');
+        messageArea.append(message);
+
+        //Redirect to profile account after 1s
+        setTimeout(function () {
+            window.location.href=/*[[@{/dashboard/mycash}]]*/;
+        },1000);
+    }
+</script>
+
+<div th:replace="dashboard/include :: script-nofitication"/>
+</body>
+</html>

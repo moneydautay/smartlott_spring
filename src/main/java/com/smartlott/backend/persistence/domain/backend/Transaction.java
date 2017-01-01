@@ -38,6 +38,12 @@ public class Transaction implements Serializable{
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime handleDate;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TransactionType transactionType;
+
+    @Transient
+    private String securityToken;
+
     public Transaction() {
     }
 
@@ -89,6 +95,22 @@ public class Transaction implements Serializable{
         this.handleDate = handleDate;
     }
 
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public String getSecurityToken() {
+        return securityToken;
+    }
+
+    public void setSecurityToken(String securityToken) {
+        this.securityToken = securityToken;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -98,6 +120,7 @@ public class Transaction implements Serializable{
                 ", ofUser=" + ofUser +
                 ", handleBy=" + handleBy +
                 ", handleDate=" + handleDate +
+                ", transactionType=" + transactionType +
                 '}';
     }
 
@@ -108,25 +131,11 @@ public class Transaction implements Serializable{
 
         Transaction that = (Transaction) o;
 
-        if (id != that.id) return false;
-        if (Double.compare(that.amount, amount) != 0) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (ofUser != null ? !ofUser.equals(that.ofUser) : that.ofUser != null) return false;
-        if (handleBy != null ? !handleBy.equals(that.handleBy) : that.handleBy != null) return false;
-        return handleDate != null ? handleDate.equals(that.handleDate) : that.handleDate == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        temp = Double.doubleToLongBits(amount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (ofUser != null ? ofUser.hashCode() : 0);
-        result = 31 * result + (handleBy != null ? handleBy.hashCode() : 0);
-        result = 31 * result + (handleDate != null ? handleDate.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

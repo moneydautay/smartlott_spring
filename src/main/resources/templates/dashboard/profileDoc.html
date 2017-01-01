@@ -21,9 +21,9 @@
     <!-- Slider image-->
     <div class="container category">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/login}">Trang chủ</a></li>
-            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashbroad</a></li>
-            <li class="breadcrumb-item active">Thông tin cá nhân</li>
+            <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+            <li class="breadcrumb-item" ><a th:href="@{/dashboard}" th:text="#{breadcrumb.dashboard.text}">Dashbroad</a></li>
+            <li class="breadcrumb-item active" th:text="#{breadcrumb.general.info.text}">Thông tin cá nhân</li>
         </ol>
 
         <!-- NOTIFICATION -->

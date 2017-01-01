@@ -1,9 +1,13 @@
 package com.smartlott.backend.api;
 
+import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.SecurityToken;
+import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.repositories.EmailService;
+import com.smartlott.backend.service.I18NService;
 import com.smartlott.backend.service.SecurityTokenSevice;
-import org.apache.tomcat.jni.Local;
+import com.smartlott.backend.service.UserService;
+import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -26,7 +32,13 @@ public class SecurityTokenRestController {
     /** The application logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityTokenRestController.class);
 
-    public static final String SECURITY_TOKEN_URL = "api/security-token";
+    public static final String SECURITY_TOKEN_URL = "/api/security-token";
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private I18NService i18NService;
 
     @Autowired
     private SecurityTokenSevice securityTokenSevice;
@@ -40,9 +52,19 @@ public class SecurityTokenRestController {
     @Autowired
     private MessageSource messageSource;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Object> createNewToken(@RequestBody String email, Locale locale){
-        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(email.trim());
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> createNewToken(@PathVariable @RequestBody long userId, Locale locale){
+        List<MessageDTO> messages = new ArrayList<>();
+
+        User localUser = userService.findOne(userId);
+        //Checking valid username and password
+        if(localUser == null){
+            LOGGER.error("user Id {} was not found", userId);
+            messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("Id.user.not.found", locale)));
+            return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(localUser.getEmail());
 
         String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
         String subject = messageSource.getMessage("security.token.subject.text", null, locale);
@@ -50,13 +72,13 @@ public class SecurityTokenRestController {
         //sending mail to email
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(webmasterEmail);
-        mailMessage.setTo(email);
+        mailMessage.setTo(localUser.getEmail());
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
 
         emailService.sendGenericEmailMessage(mailMessage);
-
-        LOGGER.debug("Sent email  with content {} to email {}", message, email);
+        System.out.println("Sent token "+securityToken+"to email "+localUser.getEmail());
+        LOGGER.debug("Sent email  with content {} to email {}", message, localUser.getEmail());
 
         return new ResponseEntity<Object>(securityToken, HttpStatus.OK);
     }
