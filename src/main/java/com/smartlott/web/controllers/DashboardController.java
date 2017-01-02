@@ -19,6 +19,10 @@ public class DashboardController {
     public static final String PROFILE_DOC_URL = "/dashboard/profile/doc";
     public static final String PROFILE_ACCOUNT_URL = "/dashboard/profile/account";
     public static final String MY_CASH_ACCOUNT_URL = "/dashboard/mycash";
+    public static final String MY_BONUS_ACCOUNT_URL = "/dashboard/mybonus";
+    public static final String MY_LOTTERY_ACCOUNT_URL = "/dashboard/mylottery";
+    public static final String MY_TRANSACTION_ACCOUNT_URL = "/dashboard/mytransaction";
+    public static final String MY_NETWORK_ACCOUNT_URL = "/dashboard/mynetwork";
 
     @RequestMapping(DASHBOARD_URL)
     public String dashboard(){
@@ -74,5 +78,35 @@ public class DashboardController {
         return DASHBOARD_VIEW_NAME+"/myCash";
     }
 
+    /**
+     * THIS IS MY BONUS
+     */
+    @RequestMapping(value = MY_BONUS_ACCOUNT_URL, method = RequestMethod.GET)
+    public String myBonus(){
+        return DASHBOARD_VIEW_NAME+"/myBonus";
+    }
 
+    /**
+     * THIS IS MY LOTTERY
+     */
+    @RequestMapping(value = MY_LOTTERY_ACCOUNT_URL, method = RequestMethod.GET)
+    public String myLottery(){
+        return DASHBOARD_VIEW_NAME+"/myLottery";
+    }
+
+    /**
+     * THIS IS MY TRANSACTION
+     */
+    @RequestMapping(value = MY_TRANSACTION_ACCOUNT_URL, method = RequestMethod.GET)
+    public String myTransaction(){
+        return DASHBOARD_VIEW_NAME+"/myTransaction";
+    }
+
+    /**
+     * THIS IS MY NETWORK
+     */
+    @RequestMapping(value = MY_NETWORK_ACCOUNT_URL, method = RequestMethod.GET)
+    public String myNetWork(){
+        return DASHBOARD_VIEW_NAME+"/myNetwork";
+    }
 }

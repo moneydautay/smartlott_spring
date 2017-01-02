@@ -6,19 +6,14 @@ import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConver
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.websocket.ClientEndpoint;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -122,6 +117,10 @@ public class User implements Serializable, UserDetails{
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Address> addresses = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "introducted_by")
+    private User introductedBy;
 
     public User() {
     }
@@ -289,6 +288,14 @@ public class User implements Serializable, UserDetails{
 
     public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public User getIntroductedBy() {
+        return introductedBy;
+    }
+
+    public void setIntroductedBy(User introductedBy) {
+        this.introductedBy = introductedBy;
     }
 
     @Override

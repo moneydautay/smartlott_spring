@@ -13,18 +13,22 @@ public class WithdrawDetail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private double fees;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private NumberAccount numberAccount;
 
+
     public WithdrawDetail() {
     }
 
-    public WithdrawDetail(Transaction transaction, NumberAccount numberAccount) {
+    public WithdrawDetail(Transaction transaction, NumberAccount numberAccount, double fees) {
         this.transaction = transaction;
         this.numberAccount = numberAccount;
+        this.fees = fees;
     }
 
     public long getId() {
@@ -33,6 +37,14 @@ public class WithdrawDetail {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public double getFees() {
+        return fees;
+    }
+
+    public void setFees(double fees) {
+        this.fees = fees;
     }
 
     public Transaction getTransaction() {
@@ -55,6 +67,7 @@ public class WithdrawDetail {
     public String toString() {
         return "WithdrawDetail{" +
                 "id=" + id +
+                ", fees=" + fees +
                 ", transaction=" + transaction +
                 ", numberAccount=" + numberAccount +
                 '}';

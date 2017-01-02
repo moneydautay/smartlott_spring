@@ -9,10 +9,10 @@
                 <li role="presentation" th:class="${#httpServletRequest.getRequestURI().equals('/dashboard')?'active':''}"><a th:href="@{/dashboard}">Dashboard</a></li>
                 <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('profile')?'active':''}"><a th:href="@{/dashboard/profile}">Profile</a></li>
                 <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mycash')?'active':''}"><a th:href="@{/dashboard/mycash}">My Cash</a></li>
-                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mybonous')?'active':''}"><a th:href="@{/dashboard/mybonous}">My Bonous</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mybonus')?'active':''}"><a th:href="@{/dashboard/mybonus}">My Bonus</a></li>
                 <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mylottery')?'active':''}"><a th:href="@{/dashboard/mylottery}">My Lottery</a></li>
                 <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mytransaction')?'active':''}"><a th:href="@{/dashboard/mytransaction}">My Transaction</a></li>
-                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mynetword')?'active':''}"><a th:href="@{/dashboard/mynetword}">My Netword</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mynetwork')?'active':''}"><a th:href="@{/dashboard/mynetwork}">My Network</a></li>
             </ul>
         </div>
     </div>

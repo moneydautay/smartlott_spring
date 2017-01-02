@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -22,6 +23,9 @@ public class Transaction implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Column(updatable = false)
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createdDate;
 
     @Value("0.0")
@@ -35,6 +39,7 @@ public class Transaction implements Serializable{
     @JoinColumn(name = "handle_by")
     private User handleBy;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime handleDate;
 

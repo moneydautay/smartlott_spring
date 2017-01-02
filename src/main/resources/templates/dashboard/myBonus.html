@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen" />
+<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen" />
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu" />
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header" />
+
+    <!-- Slider image-->
+    <div class="container category">
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+            <li class="breadcrumb-item" ><a th:href="@{/dashboard}" th:text="#{breadcrumb.dashboard.text}">Dashboard</a></li>
+            <li class="breadcrumb-item active" th:text="#{breadcrumb.mybonus.text}">My Bonus</li>
+        </ol>
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
+        <div class="container" id="dashboard">
+            <div class="col-md-8 category">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="content">
+                    <h3 th:text="#{bonus.title.text}"></h3>
+                    <hr/>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td th:text="#{bonus.amount.text}">Bonus</td>
+                                <td th:text="#{bonus.from.user.text}"></td>
+                                <td th:text="#{bonus.datetime.text}"></td>
+                                <td th:text="#{bonus.level.text}"></td>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" id="contentTable">
+                            <tr>
+                                <td>0.1</td>
+                                <td>greenlucky</td>
+                                <td>20/12/2016 12:11:01</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="navigaion">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li>
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li>
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INCLUDE RIGHT SIDEBAR-->
+            <aside th:replace="dashboard/include :: dashboard-siderbar"/>
+        </div>
+
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news" />
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment" />
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer" />
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/hashtable.js}"></script>
+<script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/customer-validator.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/js/pagination.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function ($) {
+        /*<![CDATA[*/
+        var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
+        var url = [[@{/api/bonus/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        /*]]>*/
+        pagination(url,showBonus);
+    });
+    function showBonus(data) {
+        var contentTable = $('#contentTable');
+        contentTable.html('');
+        $.each(data.content, function (index, bonus) {
+            var strRow = '';
+            strRow += '<tr>';
+            strRow += '<td>'+ bonus.bonus +'</td>';
+            strRow += '<td>'+ bonus.fromUser.username +'</td>';
+            strRow += '<td>'+ bonus.receivedDate +'</td>';
+            strRow += '<td>'+ bonus.level +'</td>';
+            strRow += '</tr>';
+            contentTable.append(strRow);
+        });
+
+        //show pagination
+        var pagination = $('.pagination');
+        pagination.html('');
+        var strPrevious = '<li class="previous">';
+        strPrevious += ' <a href="#" aria-label="Previous">';
+        strPrevious += '<span aria-hidden="true">«</span>';
+        strPrevious += '</a>';
+        strPrevious += '</li>';
+        pagination.append(strPrevious);
+        totalPages = data.totalPages;
+        /*<![CDATA[*/
+        for(var i=0 ; i < totalPages ; i++){
+            var strNum = '';
+            strNum += '<li id="el_'+i+'" class="el_item" page="'+i+'"><a href="#" >'+(i+1)+'</a></li>';
+            pagination.append(strNum);
+        }
+        /*]]>*/
+        var strNext = '<li class="next">';
+        strNext += ' <a href="#" aria-label="Next">';
+        strNext += '<span aria-hidden="true">»</span>';
+        strNext += '</a>';
+        strNext += '</li>';
+        pagination.append(strNext);
+        currentPage = data.number;
+        //select active
+        $('#el_'+currentPage).addClass('active');
+    }
+</script>
+<div th:replace="dashboard/include :: script-nofitication"/>
+</body>
+</html>

@@ -1,9 +1,9 @@
 package com.smartlott.intergation;
 
 import com.smartlott.SmartlottApplication;
-import com.smartlott.backend.persistence.domain.backend.Bonous;
+import com.smartlott.backend.persistence.domain.backend.Bonus;
 import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.repositories.BonousRepository;
+import com.smartlott.backend.persistence.repositories.BonusRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,27 +27,27 @@ import java.util.List;
 public class BonousTest extends AbstractIntegrationTest{
 
     @Autowired
-    private BonousRepository bonousRepository;
+    private BonusRepository bonusRepository;
 
     @Rule
     public TestName testName = new TestName();
 
     @Before
     public void beforeTest() throws  Exception{
-        Assert.assertNotNull(bonousRepository);
+        Assert.assertNotNull(bonusRepository);
     }
 
     @Test
     public void bonousTest() throws Exception{
         User user1 = createCustUser(testName);
 
-        Bonous bonous = new Bonous(user1, user1, LocalDateTime.now(Clock.systemUTC()));
+        Bonus bonous = new Bonus(0.1 ,user1, user1, LocalDateTime.now(Clock.systemUTC()),1);
 
-        bonousRepository.save(bonous);
+        bonusRepository.save(bonous);
 
-        List<Bonous> bonouss = bonousRepository.findByOfUser(user1);
+        List<Bonus> bonouss = bonusRepository.findByOfUser(user1);
 
-        Assert.assertEquals("List Bonous mus be equal 1", 1, bonouss.size());
+        Assert.assertEquals("List Bonus mus be equal 1", 1, bonouss.size());
 
     }
 }

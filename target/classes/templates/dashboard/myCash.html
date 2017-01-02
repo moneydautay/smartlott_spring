@@ -49,20 +49,20 @@
                                     <label for="amount" th:text="#{mycash.amount.text}"></label>
                                     <p><span th:text="#{mycash.message.max.amount.receive.text}"></span> $<span class="amountWithDraw"></span></p>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5 has-right-icon">
                                     <input type="text" id="amount" name="amount" class="form-control"/>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <p> - <span th:text="#{mycash.fees.withdraw.text}"></span> $<span id="fees">0</span></p>
                                     <hr/>
                                 </div>
                                 <div class="clearfix"></div>
                                 <label for="total" th:text="#{mycash.total.receive.withdraw.text}"></label>
                                 <div class="clearfix"></div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <h4>$ <span id="total">0</span></h4>
                                 </div>
                                 <div class="clearfix"></div>
@@ -197,22 +197,30 @@
         },2000);
         
         $('#amount').keyup(function () {
-            var amount = $(this).val();
-
-            if(amount > currentAmount){
-                $('#frmWithDraw').formValidation('updateMessage','amount','lessThan','Số tiền rút phải nhỏ hơn hoặc bằng '+ maxWithDrawAmount);
-                $('#frmWithDraw').data('formValidation').updateStatus('amount','INVALID','lessThan');
-            }
-            var fees = (amount*feesWithdraw)/100;
-            $('#fees').html(fees);
-            $('#total').html(amount - fees);
+            calculateAmount(this);
+        });
+        $('#amount').change(function () {
+            calculateAmount(this);
         });
     });
+
+    function calculateAmount(id) {
+        var amount = $(id).val();
+        if(amount > currentAmount){
+            $('#frmWithDraw').formValidation('updateMessage','amount','lessThan','Số tiền rút phải nhỏ hơn hoặc bằng '+ maxWithDrawAmount);
+            $('#frmWithDraw').data('formValidation').updateStatus('amount','INVALID','lessThan');
+        }
+        var fees = $._roundNumber((amount*feesWithdraw)/100,3);
+        $('#fees').html(fees);
+        $('#total').html(amount - fees);
+    }
     
     function calAmountWithDraw(clazz) {
         feesWithdraw = $(clazz).attr('feeswithdraw');
         maxWithDrawAmount = currentAmount - ((currentAmount*feesWithdraw)/100);
         $('.amountWithDraw').html(maxWithDrawAmount);
+        if($('#amount').val() > 0)
+            calculateAmount('#amount');
     }
 
     function sentTokenSuccessfully(data){

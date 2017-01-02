@@ -53,10 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     };
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
 
         List<String> activeProflies = Arrays.asList(env.getActiveProfiles());
-        if(activeProflies.contains("dev")){
+        if (activeProflies.contains("dev")) {
             http.csrf().disable();
             http.headers().frameOptions().disable();
         }
@@ -69,7 +69,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .formLogin().loginPage("/login").defaultSuccessUrl("/")
                 .failureUrl("/login?error=true").permitAll()
                 .and()
-                .logout().permitAll();
+                .logout().permitAll()
+                .and()
+                .rememberMe()
+                .rememberMeCookieName("REMEMBER_ME_SMARTLOTT");
     }
 
     @Autowired

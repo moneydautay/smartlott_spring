@@ -1,17 +1,18 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Created by Mrs Hoang on 17/12/2016.
+ * Created by Mr Lam on 17/12/2016.
  */
 @Entity
-@Table(name = "bonous")
-public class Bonous {
+@Table(name = "bonus")
+public class Bonus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,16 +24,23 @@ public class Bonous {
     @ManyToOne(fetch = FetchType.EAGER)
     private User fromUser;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime receivedDate;
 
-    public Bonous() {
+    private int level;
+
+    private double bonus;
+
+    public Bonus() {
     }
 
-    public Bonous(User ofUser, User fromUser, LocalDateTime receivedDate) {
+    public Bonus(double bonus, User ofUser, User fromUser, LocalDateTime receivedDate, int level) {
+        this.bonus = bonus;
         this.ofUser = ofUser;
         this.fromUser = fromUser;
         this.receivedDate = receivedDate;
+        this.level = level;
     }
 
     public long getId() {
@@ -67,12 +75,40 @@ public class Bonous {
         this.receivedDate = receivedDate;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public double getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(double bonus) {
+        this.bonus = bonus;
+    }
+
+    @Override
+    public String toString() {
+        return "Bonus{" +
+                "id=" + id +
+                ", ofUser=" + ofUser +
+                ", fromUser=" + fromUser +
+                ", receivedDate=" + receivedDate +
+                ", level=" + level +
+                ", bonus=" + bonus +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Bonous bonous = (Bonous) o;
+        Bonus bonous = (Bonus) o;
 
         if (id != bonous.id) return false;
         if (ofUser != null ? !ofUser.equals(bonous.ofUser) : bonous.ofUser != null) return false;
@@ -87,15 +123,5 @@ public class Bonous {
         result = 31 * result + (fromUser != null ? fromUser.hashCode() : 0);
         result = 31 * result + (receivedDate != null ? receivedDate.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Bonous{" +
-                "id=" + id +
-                ", ofUser=" + ofUser +
-                ", fromUser=" + fromUser +
-                ", receivedDate=" + receivedDate +
-                '}';
     }
 }

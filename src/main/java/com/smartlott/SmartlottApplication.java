@@ -14,6 +14,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +65,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 	@Autowired
 	private TransactionTypeService transactionTypeService;
+
+	@Autowired
+	private BonusService bonusService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -141,6 +146,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//creat transaction type
 		createTransactionType();
+
+		//create bonus for user
+		createBonusForUser(user);
 	}
 
 	public void createFeaturedSlider(){
@@ -250,6 +258,13 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
+	}
+
+	public void createBonusForUser(User user){
+		for(int i = 0; i < 25 ; i++){
+			Bonus bonus = new Bonus(0.1, user, user, LocalDateTime.now(Clock.systemUTC()).plusMinutes(i), 1);
+			bonusService.createNew(bonus);
+		}
 	}
 
 }
