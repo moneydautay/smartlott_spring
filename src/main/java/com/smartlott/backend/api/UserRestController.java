@@ -9,6 +9,7 @@ import com.smartlott.exceptions.RoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,6 +61,13 @@ public class UserRestController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private NetworkService networkService;
+
+    //Get level of network
+    @Value("${network.level}")
+    private int level;
+
     /**
      * Get numeric members in system has role given by roleId
      * @param roleId
@@ -84,6 +92,8 @@ public class UserRestController {
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user, Locale locale){
 
         List<MessageDTO> messages = new ArrayList<>();
+        List<Network> networks = new ArrayList<>();
+
         boolean duplicated = false;
 
 
@@ -108,6 +118,8 @@ public class UserRestController {
                 duplicated = true;
             }
             user.setIntroducedBy(introducedUser);
+
+
         }
 
         if(duplicated){
@@ -124,6 +136,18 @@ public class UserRestController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         LOGGER.info("User {} has been created and logged to application ", user);
+
+        int currentLevel = 1;
+        //add user to network of introduced
+        networks.add(new Network(user, user.getIntroducedBy(),currentLevel));
+
+        //find ancestor of ancestor user
+        networks.addAll(networkService.findAncestor(user, user.getIntroducedBy(),(--level),(++currentLevel)));
+
+        //create network of user
+        networkService.createNetworks(networks);
+
+        LOGGER.debug("Created networks {} for user", networks, user);
 
         //set notification for new user
         setNotification(user);

@@ -33,17 +33,17 @@
 
                 </div>
                 <div class="content">
-                    <h3 th:text="#{mytransaction.title.text}"></h3>
+                    <h3 th:text="#{mynetwork.title.text}"></h3>
                     <p><span th:text="#{mynetwork.introduced.link.text}"></span>: <a href="" id="introducedLink"></a></p>
                     <hr/>
 
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <td th:text="#{transaction.id.text}">Bonus</td>
-                                <td th:text="#{transaction.datetime.text}"></td>
-                                <td th:text="#{transaction.amount.text}"></td>
-                                <td th:text="#{transaction.type.text}"></td>
+                                <td th:text="#{network.order.text}"></td>
+                                <td th:text="#{network.username.text}">Username</td>
+                                <td th:text="#{network.created.date.text}"></td>
+                                <td th:text="#{network.level.text}"></td>
                             </tr>
                         </thead>
                         <tbody class="text-center" id="contentTable">
@@ -113,7 +113,6 @@
 
         var url = [[@{/api/network/ofancestor/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
         /*]]>*/
-        url+=0;
         pagination(url, showNetwork);
 
     });
@@ -121,13 +120,13 @@
     function showNetwork(data) {
         var contentTable = $('#contentTable');
         contentTable.html('');
-        $.each(data.content, function (index, trans) {
+        $.each(data.content, function (index, network) {
             var strRow = '';
             strRow += '<tr>';
-            strRow += '<td>'+ trans.id +'</td>';
-            strRow += '<td>'+ trans.createdDate +'</td>';
-            strRow += '<td>'+ trans.amount +'</td>';
-            strRow += '<td>'+ trans.transactionType.name +'</td>';
+            strRow += '<td>'+ (index+1) +'</td>';
+            strRow += '<td>'+ network.ofUser.username +'</td>';
+            strRow += '<td>'+ network.ofUser.createDate +'</td>';
+            strRow += '<td>'+ network.level +'</td>';
             strRow += '</tr>';
             contentTable.append(strRow);
         });
