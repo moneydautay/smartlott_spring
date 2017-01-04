@@ -99,6 +99,17 @@ public class UserRestController {
             duplicated = true;
         }
 
+        //checking introduced key whether valid or not
+        if(user.getIntroducedKey() != null){
+            User introducedUser = userService.getUserByIntroducedKey(user.getIntroducedKey());
+            if(introducedUser == null){
+                LOGGER.error("Introduced key {} not valid", user.getIntroducedKey());
+                messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("NotValid.user.introduce.key",locale)));
+                duplicated = true;
+            }
+            user.setIntroducedBy(introducedUser);
+        }
+
         if(duplicated){
             return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
         }
@@ -245,7 +256,6 @@ public class UserRestController {
 
     public void setNotification(User user){
         NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
-        NotificationType type2 = new NotificationType(NotificationTypeEnum.Pssword);
         NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
         NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
         NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);

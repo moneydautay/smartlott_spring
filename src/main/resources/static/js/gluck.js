@@ -211,7 +211,8 @@ function changePassword(username,frmId=null) {
         data: JSON.stringify(data),
         timeout: 10000,
         beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
+            if(typeof ($.trim(header)) === 'undefined')
+                xhr.setRequestHeader(header, token);
         },
         success: function (data) {
             console.log(data);

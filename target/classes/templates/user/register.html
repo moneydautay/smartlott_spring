@@ -82,6 +82,9 @@
                             <button type="submit" class="btn btn-primary form-control">Đăng ký</button>
                         </div>
                     </div>
+                    <div th:if="${param.introkey != null}">
+                        <input type="hidden" id="introducedKey" name="introducedKey" th:value="${param.introkey[0]}"/>
+                    </div>
                 </form>
             </div>
         </div>
@@ -136,9 +139,10 @@
         var data = {};
 
         data['email'] = $('#email').val();
-        data['phone'] = $('#phoneNumber').val();
+        data['phoneNumber'] = $('#phoneNumber').val();
         data['username'] = $('#username').val();
         data['password'] = $('#password').val();
+        data['introducedKey'] = $('#introducedKey').val();
         console.log(data);
         $.ajax({
             type: 'POST',
@@ -148,7 +152,8 @@
             dataType: 'json',
             timeout: 10000,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
+                if(typeof ($.trim(header)) === 'undefined')
+                    xhr.setRequestHeader(header, token);
             },
             success: function (data) {
                 $('#signupForm').html('');

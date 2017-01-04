@@ -51,7 +51,6 @@ public class User implements Serializable, UserDetails{
     @Size(min=4, max=50, message = "Size.user.username")
     private String username;
 
-    @JsonIgnore
     @Size(min=6, max = 100, message = "Size.user.password")
     @Column(updatable = false)
     private String password;
@@ -119,8 +118,11 @@ public class User implements Serializable, UserDetails{
     private Set<Address> addresses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "introducted_by")
-    private User introductedBy;
+    @JoinColumn(name = "introduced_by", updatable = false)
+    private User introducedBy;
+
+    @Column(name = "introduced_key", updatable = false)
+    private String introducedKey;
 
     public User() {
     }
@@ -290,12 +292,21 @@ public class User implements Serializable, UserDetails{
         this.addresses = addresses;
     }
 
-    public User getIntroductedBy() {
-        return introductedBy;
+    public User getIntroducedBy() {
+        return introducedBy;
     }
 
-    public void setIntroductedBy(User introductedBy) {
-        this.introductedBy = introductedBy;
+    public void setIntroducedBy(User introductedBy) {
+        this.introducedBy = introductedBy;
+    }
+
+
+    public String getIntroducedKey() {
+        return introducedKey;
+    }
+
+    public void setIntroducedKey(String introducedKey) {
+        this.introducedKey = introducedKey;
     }
 
     @Override

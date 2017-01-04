@@ -133,7 +133,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Add address to user
 		addressService.createAddress(address);
 
-		//createNotificationForNewUser(user);
+		createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
@@ -223,7 +223,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		//adds notificationTypes
 		notificationTypeService.creates(notificationTypes);
 
-		//add notification after create new user;
+		/*//add notification after create new user;
 		Notification notif1= new Notification();
 		notif1.setContent("Welcome to Smartlott");
 		notif1.setUser(user);
@@ -249,7 +249,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
 		notif4.setUser(user);
 		notif4.setNotificationType(type4);
-		notificationService.create(notif4);
+		notificationService.create(notif4);*/
 	}
 
 	public void createTransactionType(){

@@ -45,4 +45,11 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Transactional
     @Query("update User u set u.password = :newPassword where u.username= :username")
     void changePassword(@Param("username") String username,@Param("newPassword") String newPassword);
+
+    /**
+     * find user by introduced key
+     * @param introducedKey
+     * @return A user or null if not found
+     */
+    public User findByIntroducedKey(String introducedKey);
 }

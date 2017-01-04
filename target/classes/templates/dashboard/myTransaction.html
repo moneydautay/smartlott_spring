@@ -35,7 +35,7 @@
                 <div class="content">
                     <h3 th:text="#{mytransaction.title.text}"></h3>
                     <hr/>
-                    <form id="frmTransactionFilter" th:action="@{/api/transaction/filter}" method="get">
+                    <form id="frmTransactionFilter" th:action="@{/api/transaction/filterofuser}" method="get">
                         <div class="row">
                             <div class="col-xs-12 col-md-5">
                                 <div class="form-group">
@@ -55,7 +55,7 @@
                             <div class="col-xs-12 col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-2">
-                                        <label th:text="#{transaction.filter.from.text}"></label>
+                                        <label th:text="#{transaction.filter.to.text}"></label>
                                     </div>
                                     <div class="col-md-10">
                                         <div class="input-group date" data-provide="datepicker" id="filterToFormat">
@@ -174,7 +174,9 @@
             if(to == '')
                 to = getCurrentDate('-');
             url+='/'+userId+'/'+from+'/'+to;
-            console.log(url);
+            url+= /*[[@{/(size=10,page=)}]]*/;
+
+            pagination(url, showTransaction);
         });
     });
 

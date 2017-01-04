@@ -35,6 +35,7 @@ public class NotificationType implements Serializable{
     }
 
     public NotificationType(NotificationTypeEnum typeEnum) {
+        this.id = typeEnum.getId();
         this.name = typeEnum.getName();
         this.description = typeEnum.getDescription();
         this.required = typeEnum.isRequired();

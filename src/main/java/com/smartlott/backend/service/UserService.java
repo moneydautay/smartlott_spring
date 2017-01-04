@@ -14,6 +14,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -67,6 +68,11 @@ public class UserService {
         user.setPasswords(passwords);
         user.setCreateDate(LocalDateTime.now(Clock.systemUTC()));
 
+        //set introduced key
+        byte[] charKey = user.getUsername().getBytes();
+        String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-","").substring(0,8);
+        user.setIntroducedKey(introducedKey);
+
         user = userRepository.save(user);
 
         return user;
@@ -102,5 +108,14 @@ public class UserService {
     @Transactional
     public void changePassword(String username, String newPassword){
         userRepository.changePassword(username, newPassword);
+    }
+
+    /**
+     * Get user by introduced key
+     * @param introducedKey
+     * @return A user or null if not found
+     */
+    public User getUserByIntroducedKey(String introducedKey) {
+        return userRepository.findByIntroducedKey(introducedKey);
     }
 }
