@@ -203,7 +203,7 @@
     });
 
     function showAddress(data) {
-        if(data != null){
+        if(data[0] != null){
             $('#addressId').val(data[0].id);
             $('#address').val(data[0].address);
             $('#city').val(data[0].city);

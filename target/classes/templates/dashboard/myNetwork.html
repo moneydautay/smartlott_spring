@@ -111,28 +111,14 @@
         //get user data
         getData(urlGetIUserInfo, showIntroducedLink);
 
-        var url = [[@{/api/transaction/ofuser/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        var url = [[@{/api/network/ofancestor/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
         /*]]>*/
-        pagination(url, showTransaction);
+        url+=0;
+        pagination(url, showNetwork);
 
-        
-        $('#frmTransactionFilter').submit(function (e) {
-            e.preventDefault();
-            var url = $(this).attr('action');
-            var from = encodeURI($('#filterFrom').val());
-            var to = encodeURI($('#filterTo').val());
-            if(from == '')
-                from = '01-01-1970';
-            if(to == '')
-                to = getCurrentDate('-');
-            url+='/'+userId+'/'+from+'/'+to;
-            url+= /*[[@{/(size=10,page=)}]]*/;
-
-            pagination(url, showTransaction);
-        });
     });
 
-    function showTransaction(data) {
+    function showNetwork(data) {
         var contentTable = $('#contentTable');
         contentTable.html('');
         $.each(data.content, function (index, trans) {
@@ -184,7 +170,6 @@
         urlIntroduction += "?introkey="+data.introducedKey;
         introducedLink.attr('href',urlIntroduction);
         introducedLink.html(urlIntroduction);
-        console.log(data.introducedKey);
     }
 </script>
 <div th:replace="dashboard/include :: script-nofitication"/>

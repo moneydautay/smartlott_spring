@@ -69,6 +69,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private BonusService bonusService;
 
+	@Autowired
+	private NetworkService networkService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
 	}
@@ -147,8 +150,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		//creat transaction type
 		createTransactionType();
 
-		//create bonus for user
-		createBonusForUser(user);
+		//create list user
+		createCusts(user);
 	}
 
 	public void createFeaturedSlider(){
@@ -265,6 +268,90 @@ public class SmartlottApplication implements CommandLineRunner{
 			Bonus bonus = new Bonus(0.1, user, user, LocalDateTime.now(Clock.systemUTC()).plusMinutes(i), 1);
 			bonusService.createNew(bonus);
 		}
+	}
+
+	public void createCusts(User user){
+
+		List<Network> networks = new ArrayList<>();
+
+		Role custRole = new Role(RolesEnum.CUSTOMER);
+
+		String name = "customerA";
+		User localUserA = UserUtils.createCustUser(name, name + "@smartlott.com");
+		localUserA.setPassword("123456");
+
+		Set<UserRole> userRoles = new HashSet<>();
+		userRoles.add(new UserRole(custRole, localUserA));
+
+		localUserA.setUserRoles(userRoles);
+		localUserA.setActived(true);
+		localUserA.setCash(100);
+		localUserA.setIntroducedBy(user);
+
+		LOGGER.debug("Creating user with username {} and email {}", localUserA.getUsername(), localUserA.getEmail());
+		localUserA = userService.createUser(localUserA);
+		LOGGER.info("User {} has been created", localUserA);
+
+		//add network
+		networks.add(new Network(localUserA, user,1));
+
+		name = "customerB";
+		User localUserB = UserUtils.createCustUser(name, name + "@smartlott.com");
+		localUserB.setPassword("123456");
+		userRoles = new HashSet<>();
+		userRoles.add(new UserRole(custRole, localUserB));
+		localUserB.setUserRoles(userRoles);
+		localUserB.setActived(true);
+		localUserB.setCash(100);
+		localUserB.setIntroducedBy(user);
+
+		LOGGER.debug("Creating user with username {} and email {}", localUserB.getUsername(), localUserB.getEmail());
+		localUserB = userService.createUser(localUserB);
+		LOGGER.info("User {} has been created", localUserB);
+
+		//add network
+		networks.add(new Network(localUserB, user,1));
+
+		for(int i = 0; i < 5; i++) {
+			name = "customer" + i;
+			User localUser = UserUtils.createCustUser(name, name + "@smartlott.com");
+			localUser.setPassword("123456");
+			userRoles = new HashSet<>();
+			userRoles.add(new UserRole(custRole, localUser));
+			localUser.setUserRoles(userRoles);
+			localUser.setActived(true);
+			localUser.setCash(100);
+			localUser.setIntroducedBy(localUserA);
+
+			LOGGER.debug("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());
+			localUser = userService.createUser(localUser);
+			LOGGER.info("User {} has been created", localUser);
+
+			//add network
+			networks.add(new Network(localUser, localUserA,1));
+			networks.addAll(networkService.findAncestor(localUser, localUserA,1,2));
+		}
+
+		for(int i = 6; i < 11; i++) {
+			name = "customer" + i;
+			User localUser = UserUtils.createCustUser(name, name + "@smartlott.com");
+			localUser.setPassword("123456");
+			userRoles = new HashSet<>();
+			userRoles.add(new UserRole(custRole, localUser));
+			localUser.setUserRoles(userRoles);
+			localUser.setActived(true);
+			localUser.setCash(100);
+			localUser.setIntroducedBy(localUserB);
+
+			LOGGER.debug("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());
+			localUser = userService.createUser(localUser);
+			LOGGER.info("User {} has been created", localUser);
+
+			//add network
+			networks.add(new Network(localUser, localUserB,1));
+			networks.addAll(networkService.findAncestor(localUser, localUserB,1,2));
+		}
+		networkService.createNetworks(networks);
 	}
 
 }
