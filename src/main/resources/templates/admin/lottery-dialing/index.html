@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta name="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i><span th:text="#{admin.dashboard.text}">Dashboard</span></a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/lottery}" th:text="#{admin.lottery.text}">Lottery</a>
+            </li>
+            <li class="active">
+                <strong th:text="#{admin.lottery.dialing.text}">Dialing</strong>
+            </li>
+        </ol>
+
+        <h2 th:text="#{admin.lottery.dialing.title.text}">Lottery dialing</h2>
+
+        <div class="row">
+            <table class="table responsive" id="featured-slider">
+                <thead>
+                <tr>
+                    <th th:text="#{admin.lottery.dialing.table.id.text}">ID</th>
+                    <th th:text="#{admin.lottery.dialing.table.from.date.text}">From date</th>
+                    <th th:text="#{admin.lottery.dialing.table.to.date.text}">To date</th>
+                    <th>#</th>
+                </tr>
+                </thead>
+                <tbody id="contentTable">
+                </tbody>
+            </table>
+            <a href="#" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                <span th:text="#{admin.lottery.dialing.add.button.text}">Add</span>
+            </a>
+        </div>
+
+      <footer th:replace="admin/common/footer::common-footer"></footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+
+    });
+</script>
+</body>
+</html>

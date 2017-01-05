@@ -151,7 +151,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		createTransactionType();
 
 		//create list user
-		createCusts(user);
+		//createCusts(user);
 	}
 
 	public void createFeaturedSlider(){

@@ -46,19 +46,33 @@
         <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin'?'active':''}">
             <a th:href="@{/stl-admin}">
                 <i class="entypo-gauge"></i>
-                <span>Dashboard</span>
+                <span th:text="#{admin.dashboard.text}">Dashboard</span>
             </a>
         </li>
-        <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin/theme-management/?*'?'active opened':''}">
+        <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/theme-management')?'active opened':''}">
             <a th:href="@{/stl-admin/theme-management}">
                 <i class="entypo-gauge"></i>
-                <span>Giao diện</span>
+                <span th:text="#{admin.interface.text}">Giao diện</span>
             </a>
             <ul>
-                <li th:classappend="${#httpServletRequest.getRequestURI()=='/stl-admin/theme-management/slider'?'active':''}">
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('slider')?'active':''}">
                     <a th:href="@{/stl-admin/theme-management/slider}">
                         <i class="entypo-flow-parallel"></i>
-                        <span>Slider management</span>
+                        <span th:text="#{admin.slider.slidermanagement.text}">Slider management</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/lottery')?'active opened':''}">
+            <a th:href="@{/stl-admin/theme-management}">
+                <i class="entypo-gauge"></i>
+                <span th:text="#{admin.lottery.text}"></span>
+            </a>
+            <ul>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('lottery-dialing')?'active':''}">
+                    <a th:href="@{/stl-admin/lottery/lottery-dialing}">
+                        <i class="entypo-flow-parallel"></i>
+                        <span th:text="#{admin.lottery.dialing.text}">Lottery Dialing</span>
                     </a>
                 </li>
             </ul>
