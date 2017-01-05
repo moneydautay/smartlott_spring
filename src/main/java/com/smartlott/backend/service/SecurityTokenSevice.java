@@ -81,7 +81,7 @@ public class SecurityTokenSevice {
         SecurityToken securityToken = null;
 
         String token = UUID.randomUUID().toString().substring(0,8);
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         securityToken = new SecurityToken(token, user, now, tokenExpirationLengthInMinutes);
 
         securityToken = tokenRepository.save(securityToken);

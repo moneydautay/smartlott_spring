@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 /**
@@ -47,6 +49,7 @@ public class BonusRestController {
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.POST)
     public ResponseEntity<Object> create(@PathVariable long userId, @RequestBody Bonus bonus, Locale locale){
+        bonus.setReceivedDate(LocalDateTime.now(Clock.systemDefaultZone()));
         bonus = bonusService.createNew(bonus);
         return new ResponseEntity<Object>(bonus, HttpStatus.OK);
     }

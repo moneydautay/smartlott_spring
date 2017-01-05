@@ -72,7 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .logout().permitAll()
                 .and()
                 .rememberMe()
-                .rememberMeCookieName("REMEMBER_ME_SMARTLOTT");
+                .rememberMeCookieName("REMEMBER_ME_SMARTLOTT")
+                .tokenValiditySeconds(31536000);;
     }
 
     @Autowired

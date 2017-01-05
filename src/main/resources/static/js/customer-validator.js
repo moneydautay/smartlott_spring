@@ -203,4 +203,40 @@ function main() {
         e.preventDefault();
         updateUser();
     });
+
+    /* Signup form validation */
+    $('#frmAddLotteryDialing').formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            fromDate: {
+                validators: {
+                    notEmpty: {
+                        message: 'Ngày bắt đầu không được bỏ trống'
+                    },
+                }
+            },
+            toDate: {
+                validators: {
+                    notEmpty: {
+                        message: 'Ngày kết thúc không được bỏ trống'
+                    }
+                }
+            },
+        }
+    }).on('success.form.fv',function (e) {
+        e.preventDefault();
+        var createUrl = $(this).attr('action');
+        var data = {};
+        data['fromDate'] = $('#fromDate').val();
+        data['toDate'] = $('#toDate').val();
+        var type = 'POST';
+        if($(this).attr('method')!= null)
+            type = $(this).attr('method');
+        saveOrupdateData(createUrl, type  ,data,lotteryDialingSuccess);
+    });
 }

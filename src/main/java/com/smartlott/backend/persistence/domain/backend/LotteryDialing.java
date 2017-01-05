@@ -1,8 +1,13 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,14 +25,19 @@ public class LotteryDialing implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "from_date")
-    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Column(name = "from_date", updatable = false)
+    //@JsonSerialize(using = LocalDateTimeSerializer.class)
+    @Convert(converter =LocalDateTimeAttributeConverter.class)
     private LocalDateTime fromDate;
 
-    @Column(name = "to_date")
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Column(name = "to_date", updatable = false)
+    //@JsonSerialize(using = LocalDateTimeSerializer.class)
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime toDate;
 
+    private boolean opened = true;
 
     public LotteryDialing() {
     }
@@ -61,6 +71,14 @@ public class LotteryDialing implements Serializable{
         this.toDate = toDate;
     }
 
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
+
     @Override
     public String toString() {
         return "LotteryDialing{" +
@@ -77,16 +95,11 @@ public class LotteryDialing implements Serializable{
 
         LotteryDialing that = (LotteryDialing) o;
 
-        if (id != that.id) return false;
-        if (fromDate != null ? !fromDate.equals(that.fromDate) : that.fromDate != null) return false;
-        return toDate != null ? toDate.equals(that.toDate) : that.toDate == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (fromDate != null ? fromDate.hashCode() : 0);
-        result = 31 * result + (toDate != null ? toDate.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

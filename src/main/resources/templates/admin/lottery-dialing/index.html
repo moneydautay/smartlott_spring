@@ -33,16 +33,25 @@
             <table class="table responsive" id="featured-slider">
                 <thead>
                 <tr>
-                    <th th:text="#{admin.lottery.dialing.table.id.text}">ID</th>
-                    <th th:text="#{admin.lottery.dialing.table.from.date.text}">From date</th>
-                    <th th:text="#{admin.lottery.dialing.table.to.date.text}">To date</th>
-                    <th>#</th>
+                    <th th:text="#{admin.lottery.dialing.table.id.text}" class="text-center">ID</th>
+                    <th th:text="#{admin.lottery.dialing.table.from.date.text}" class="text-center">From date</th>
+                    <th th:text="#{admin.lottery.dialing.table.to.date.text}" class="text-center">To date</th>
+                    <th th:text="#{admin.lottery.dialing.table.opened.text}" class="text-center">Status</th>
+                    <th class="text-center">#</th>
                 </tr>
                 </thead>
-                <tbody id="contentTable">
+                <tbody class="text-conter" id="contentTable">
                 </tbody>
             </table>
-            <a href="#" class="btn btn-primary">
+            <div class="col-xs-12 text-right">
+                <div class="pagination-area">
+                    <ul class="pagination">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <a th:href="@{/stl-admin/lottery/lottery-dialing/add}" class="btn btn-primary">
                 <i class="entypo-plus"></i>
                 <span th:text="#{admin.lottery.dialing.add.button.text}">Add</span>
             </a>
@@ -53,11 +62,66 @@
 
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/js/pagination.js}"></script>
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
 
-
+        /*<![CDATA[*/
+            var url = [[@{/api/lottery-dialing(size=10,page=)}]];
+            pagination(url, showLotteryDialing);
+        /*]]>*/
     });
+
+    function showLotteryDialing(data) {
+        var closedUrl = /*[[@{/stl-admin/lottery/lottery-dialing/close}]]*/;
+        var contentTable = $('#contentTable');
+        contentTable.html('');
+        if(data.content != null)
+        $.each(data.content, function (index, lottDialing) {
+            var strRow = '';
+            closedUrl+='/'+lottDialing.id;
+            strRow += '<tr>';
+            strRow += '<td>'+ lottDialing.id +'</td>';
+            strRow += '<td>'+ lottDialing.fromDate +'</td>';
+            strRow += '<td>'+ lottDialing.toDate +'</td>';
+            strRow += '<td>'+ lottDialing.opened +'</td>';
+            if(lottDialing.opened)
+                strRow += '<td><a href="'+closedUrl+'">Đóng</a></td>';
+            else
+                strRow += '<td></td>';
+            strRow += '</tr>';
+            contentTable.append(strRow);
+        });
+
+        //show pagination
+        var pagination = $('.pagination');
+        pagination.html('');
+        var strPrevious = '<li class="previous">';
+        strPrevious += ' <a href="#" aria-label="Previous">';
+        strPrevious += '<span aria-hidden="true">«</span>';
+        strPrevious += '</a>';
+        strPrevious += '</li>';
+        pagination.append(strPrevious);
+        totalPages = data.totalPages;
+        /*<![CDATA[*/
+        for(var i=0 ; i < totalPages ; i++){
+            var strNum = '';
+            strNum += '<li id="el_'+i+'" class="el_item" page="'+i+'"><a href="#" >'+(i+1)+'</a></li>';
+            pagination.append(strNum);
+        }
+        /*]]>*/
+        var strNext = '<li class="next">';
+        strNext += ' <a href="#" aria-label="Next">';
+        strNext += '<span aria-hidden="true">»</span>';
+        strNext += '</a>';
+        strNext += '</li>';
+        pagination.append(strNext);
+        currentPage = data.number;
+        //select active
+        $('#el_'+currentPage).addClass('active');
+    }
 </script>
 </body>
 </html>

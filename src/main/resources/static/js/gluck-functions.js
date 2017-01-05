@@ -31,9 +31,21 @@ function showMessage(message, type, xButton=true) {
  * Show all errors html tag has id messageArea
  * @param errors
  */
-function showErrors(errors) {
-
+function showSuccess(data) {
     var messageArea = $('#messageArea');
+    messageArea.html('');
+    $.each(data, function (index, msg) {
+        messageArea.append(showMessage(msg.message,'alert-success alert-dismissible'));
+    });
+}
+
+/**
+ * Show all errors html tag has id messageArea
+ * @param errors
+ */
+function showErrors(errors) {
+    var messageArea = $('#messageArea');
+    messageArea.html('');
     $.each(errors, function (index, error) {
         messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
     });

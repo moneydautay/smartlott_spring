@@ -59,7 +59,7 @@ public class TransactionRestController {
 
         //check security token
         SecurityToken localSecurityToken = securityTokenSevice.getSecurityTokenByToken(transaction.getSecurityToken());
-        if(localSecurityToken == null || LocalDateTime.now(Clock.systemUTC()).isAfter(localSecurityToken.getExpiryDate())){
+        if(localSecurityToken == null || LocalDateTime.now(Clock.systemDefaultZone()).isAfter(localSecurityToken.getExpiryDate())){
             LOGGER.error("Token {} is not valid", transaction.getSecurityToken());
             String message = i18NService.getMessage("security.token.invalid", transaction.getSecurityToken() , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
@@ -89,7 +89,7 @@ public class TransactionRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
         //add create data to transaction
-        transaction.setCreatedDate(LocalDateTime.now(Clock.systemUTC()));
+        transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
 
         //save transaction
         transaction = transactionService.createNew(transaction);

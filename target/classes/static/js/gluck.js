@@ -149,7 +149,7 @@ function getData(url, callBack=null, errorCallBack=null){
         error: function (e) {
             console.log(e);
             if(errorCallBack!=null)
-                errorCallBack(e.responseText);
+                errorCallBack(JSON.parse(e.responseText));
         },
         done: function (e) {
             console.log("DONE");
@@ -376,6 +376,8 @@ function saveOrupdateData(url, type = 'POST', data, callBack=null, errorCallBack
         success: function(data) {
             if(callBack != null)
                 callBack(data);
+            else
+                showSuccess(JSON.parse(e.responseText));
         },
         error: function(e) {
             if(errorCallBack!=null)

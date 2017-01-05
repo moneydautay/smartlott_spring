@@ -62,11 +62,11 @@ public class UserService {
         String encryptPassword = passwordEncoder.encode(user.getPassword());
 
         Set<Password> passwords = new HashSet<>();
-        passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemUTC()), user));
+        passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemDefaultZone()), user));
         user.setPassword(encryptPassword);
 
         user.setPasswords(passwords);
-        user.setCreateDate(LocalDateTime.now(Clock.systemUTC()));
+        user.setCreateDate(LocalDateTime.now(Clock.systemDefaultZone()));
 
         //set introduced key
         byte[] charKey = user.getUsername().getBytes();

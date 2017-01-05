@@ -42,7 +42,7 @@ public class NotificationRestController {
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public ResponseEntity<Object> getNotification(@PathVariable long userId, Locale locale){
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         List<Notification> notifications = notificationService.getByUserIdAndProcessed(userId, false, now);
         return new ResponseEntity<Object>(notifications, HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class NotificationRestController {
         }
         if(type==1)
             //set time show later
-            notification.setTimeShow(LocalDateTime.now(Clock.systemUTC()).plusSeconds(TIME_SHOW_LATER));
+            notification.setTimeShow(LocalDateTime.now(Clock.systemDefaultZone()).plusSeconds(TIME_SHOW_LATER));
         else
             notification.setProcessed(true);
 

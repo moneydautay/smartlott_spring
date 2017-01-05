@@ -94,7 +94,7 @@ public class NumberAccountRestController {
 
         //check security token
         SecurityToken securityToken = securityTokenSevice.getSecurityTokenByToken(numberAccount.getSecurityToken());
-        if(securityToken == null || LocalDateTime.now(Clock.systemUTC()).isAfter(securityToken.getExpiryDate())){
+        if(securityToken == null || LocalDateTime.now(Clock.systemDefaultZone()).isAfter(securityToken.getExpiryDate())){
             LOGGER.error("Token {} is not valid", numberAccount.getSecurityToken());
             String message = messageSource.getMessage("security.token.invalid", new Object[]{numberAccount.getSecurityToken()} , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
@@ -222,7 +222,7 @@ public class NumberAccountRestController {
 
         //check security token
         SecurityToken securityToken = securityTokenSevice.getSecurityTokenByToken(token);
-        if(securityToken == null || LocalDateTime.now(Clock.systemUTC()).isAfter(securityToken.getExpiryDate())){
+        if(securityToken == null || LocalDateTime.now(Clock.systemDefaultZone()).isAfter(securityToken.getExpiryDate())){
             LOGGER.error("Token {} is not valid", token);
             String message = messageSource.getMessage("security.token.invalid", new Object[]{token} , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
