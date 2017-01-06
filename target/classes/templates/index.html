@@ -90,11 +90,8 @@
                 <div class="col-md-4">
                     <p class="count-down-title">Đếm ngược:</p>
                     <div class="count-down text-center">
-                        <ul class="timer">
-                            <li>02</li>
-                            <li>12</li>
-                            <li>32</li>
-                            <li>35</li>
+                        <ul class="timer" id="count-down-time">
+
                         </ul>
                         <ul>
                             <li>Ngày</li>
@@ -270,6 +267,19 @@
 <div th:replace="common/header :: common-before-scripts"/>
 <script th:src="@{/js/hashtable.js}"></script>
 <script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/moment.min.js}"></script>
+<script th:src="@{/sources/moment-timezone.js}"></script>
+<script th:src="@{/sources/jquery.countdown-2.2.0/jquery.countdown.min.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
 <script th:src="@{/js/homepage.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function ($) {
+
+        var urlLD = /*[[@{/api/lottery-dialing/opening}]]*/;
+
+        getData(urlLD, showCountDownTimerLotteryDialing);
+    })
+</script>
 </body>
 </html>

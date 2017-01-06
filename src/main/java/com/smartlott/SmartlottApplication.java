@@ -49,9 +49,6 @@ public class SmartlottApplication implements CommandLineRunner{
 	private ProvinceService provinceService;
 
 	@Autowired
-	private AddressService addressService;
-
-	@Autowired
 	private NumberAccountTypeService numberAccountTypeService;
 
 	@Autowired
@@ -60,8 +57,6 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private NotificationTypeService notificationTypeService;
 
-	@Autowired
-	private NotificationService notificationService;
 
 	@Autowired
 	private TransactionTypeService transactionTypeService;
@@ -72,6 +67,10 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private NetworkService networkService;
 
+	@Autowired
+	private LotteryDialingService dialingService;
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
 	}
@@ -80,18 +79,7 @@ public class SmartlottApplication implements CommandLineRunner{
 	public void run(String...args) throws Exception{
 		LOGGER.info("Creating user with role admin into database...");
 
-		//Create country and province
-		createCountry();
 
-		Country country = countryService.findOne(2);
-		Province province = provinceService.findOne(1);
-
-		Set<Address> addresses = new HashSet<>();
-		Address address = new Address();
-		address.setAddress("521/64 Binh Duong 1");
-		address.setCity("Di An");
-		address.setState("");
-		address.setProvince(province);
 
 		//Create number account type
 		CreateNumberAccountType();
@@ -131,12 +119,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
 
-		address.setUser(user);
 
-		//Add address to user
-		addressService.createAddress(address);
-
-		createNotificationForNewUser(user);
+		//createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
@@ -150,8 +134,10 @@ public class SmartlottApplication implements CommandLineRunner{
 		//creat transaction type
 		createTransactionType();
 
-		//create list user
-		//createCusts(user);
+		//open new lottery dialing
+		createLotteryDialing();
+
+
 	}
 
 	public void createFeaturedSlider(){
@@ -352,6 +338,13 @@ public class SmartlottApplication implements CommandLineRunner{
 			networks.addAll(networkService.findAncestor(localUser, localUserB,1,2));
 		}
 		networkService.createNetworks(networks);
+	}
+
+	public void createLotteryDialing() throws Exception{
+		LotteryDialing lotteryDialing = new LotteryDialing();
+		lotteryDialing.setFromDate(LocalDateTime.now(Clock.systemDefaultZone()).plusMinutes(10));
+		lotteryDialing.setToDate(LocalDateTime.now(Clock.systemDefaultZone()).plusDays(2));
+		dialingService.create(lotteryDialing);
 	}
 
 }

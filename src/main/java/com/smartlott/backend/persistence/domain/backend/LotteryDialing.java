@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
@@ -36,6 +37,9 @@ public class LotteryDialing implements Serializable{
     //@JsonSerialize(using = LocalDateTimeSerializer.class)
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime toDate;
+
+    @Transient
+    private String tempToDate;
 
     private boolean opened = true;
 
@@ -77,6 +81,13 @@ public class LotteryDialing implements Serializable{
 
     public void setOpened(boolean opened) {
         this.opened = opened;
+    }
+
+    public String getTempToDate() {
+        DateTimeFormatter ft = DateTimeFormatter.ofPattern("kk:mm:ss MM/dd/yyyy");
+        if(toDate != null)
+            tempToDate = toDate.format(ft);
+        return tempToDate;
     }
 
     @Override

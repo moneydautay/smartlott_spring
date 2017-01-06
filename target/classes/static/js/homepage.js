@@ -111,4 +111,20 @@ jQuery(document).ready(function ($) {
 
     //load mueric joined memeber
     getNumericJoinedMemember(1);
-})
+
+});
+
+function showCountDownTimerLotteryDialing(data) {
+
+    $("#count-down-time")
+        .countdown(data.toDate, function(event) {
+            $(this).html(
+                event.strftime(''
+                    + '<li>%D</li>'
+                    + '<li>%H</li>'
+                    + '<li>%M</li>'
+                    + '<li>%S</li>'
+                )
+            );
+        });
+}

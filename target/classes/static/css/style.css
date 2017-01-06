@@ -204,17 +204,19 @@ img.logo {
 }
 .count-down ul li {
     display: inline-block;
-    padding: 0 3px;
+    padding: 0 6px;
+    margin: 3px;
 }
 .count-down .timer li{
     display: inline-block;
-    padding: 5px 5px;
+    padding: 5px 8px;
     background-color: #191314;
     color: #fff;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
     border-radius: 5px;
     font-family: 'Open Sans', sans-serif;
+    margin: 3px;
 }
 .count-down-title{
     margin-left: 20px;

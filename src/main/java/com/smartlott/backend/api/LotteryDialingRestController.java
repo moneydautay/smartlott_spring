@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -153,6 +154,20 @@ public class LotteryDialingRestController {
         return new ResponseEntity<Object>(localLotteryDialing, HttpStatus.OK);
     }
 
+    @Secured("ROLE_ANONYMOUS")
+    @RequestMapping(value = "/opening", method = RequestMethod.GET)
+    public ResponseEntity<Object> getOpening(Locale locale){
+
+        List<MessageDTO> messageDTOS = new ArrayList<>();
+        //Make sure don't have any lottery dialing is opening
+        LotteryDialing localLotteryDialing = dialingService.getOpenedLotteryDialing(true);
+        if(localLotteryDialing == null){
+            LOGGER.error("Have a lottery dialing {} is opening can't create new lottery dialing", localLotteryDialing);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("admin.lottery.dialing.close.text", String.valueOf(localLotteryDialing.getId()), locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity<Object>(localLotteryDialing, HttpStatus.OK);
+    }
 }
 
 

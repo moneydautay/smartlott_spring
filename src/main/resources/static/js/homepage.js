@@ -73,7 +73,7 @@ function getSliderImages() {
 }
 
 function showNumericJoinedMember(data) {
-    $('#joined_member').html(0);
+    $('#joined_member').html(data);
     if(data > 999)
         $('#joined_member').formatNumber({format:"#,###", locale:"us"});
 
@@ -92,7 +92,6 @@ function getNumericJoinedMemember(roleId){
 
         },
         success: function (data) {
-            console.log(data);
             showNumericJoinedMember(data);
         },
         error: function (e) {
@@ -111,4 +110,20 @@ jQuery(document).ready(function ($) {
 
     //load mueric joined memeber
     getNumericJoinedMemember(1);
-})
+
+});
+
+function showCountDownTimerLotteryDialing(data) {
+
+    $("#count-down-time")
+        .countdown(data.tempToDate, function(event) {
+            $(this).html(
+                event.strftime(''
+                    + '<li>%D</li>'
+                    + '<li>%H</li>'
+                    + '<li>%M</li>'
+                    + '<li>%S</li>'
+                )
+            );
+        });
+}
