@@ -395,10 +395,11 @@ ul.fgp-tip li a:active {
  *----------------------------------------------------------------*/
 .selling-lottery {
     background-color: #fff;
-    margin-top: 15px;
+    margin: 15px auto;
     text-align: center;
-    border: 5px solid #cb0e20;
-    padding: 0;
+    border: 2px dashed #555;
+    padding: 20px;
+    max-width: 600px;
 }
 .selling-lottery h3 {
     background-color: #cb0e20;
