@@ -26,15 +26,17 @@ jQuery(document).ready(function ($) {
 
         $('.box-numeric-lottery').html('');
         while ( i < numeric_buying){
-            var box = '<div class="row" id="lot-'+i+'">';
+            var box = '<div class="row has-feedback" id="lot-'+i+'">';
             box += '<label>Vé số #'+(i+1)+'</label>';
             box += '<ul class="box-memeric">';
             for(var j = 0 ; j < 6; j++){
                 box += '<li>';
-                box += '<input type="text" id="lot-'+i+'-'+j+'" name="lot[]['+j+']" class="form-control" value="">';
+                box += '<input type="text" id="lot-'+i+'-'+j+'" name="lot['+i+']['+j+']" class="form-control" value="">';
                 box += '</li>';
             }
             box += '</ul>';
+            box += '<small class="help-block" data-fv-validator="notEmpty" data-fv-for="phoneNumber" ' +
+                'data-fv-result="NOT_VALIDATED" style="display: none;" id="errLot-'+i+'"></small>';
             box += '</div>';
 
             $('.box-numeric-lottery').append(box);
@@ -54,16 +56,94 @@ jQuery(document).ready(function ($) {
         }
 
     })
+
     
     $('#btn-buying-lottery').click(function () {
+
+        var boxNumericLottery = $('.box-numeric-lottery');
         var count_invalid = 0;
+        var duplicated = 0;
         $('.box-numeric-lottery input').each(function () {
             if($.trim($(this).val()).length  == 0){
                 count_invalid++;
                 $(this).addClass('invalid-input-lot');
             }
         });
+
+        $('.has-feedback').removeClass('has-error');
+        $('.help-block').hide();
+        //checking duplicate lottery
+        var numericBuying = $('.numeric-buying-lottery').val();
+        var i = 0;
+
+        var listLottery = [];
+        while (i < numericBuying){
+            var j = i + 1;
+            var comparingLot = concatLottery(i);
+            listLottery[i] = createArrLottery(i,1);
+            while (j < numericBuying){
+                var comparedLot = concatLottery(j);
+                if(comparingLot == comparedLot && comparedLot != ''){
+                    console.log("i: "+i+" = j: "+j);
+                    $('#errLot-'+i).html('Vé số này trùng với vé số '+(j+1));
+                    $('#errLot-'+i).show();
+                    $('#errLot-'+j).html('Vé số này trùng với vé số '+(i+1));
+                    $('#errLot-'+j).show();
+                    $('#lot-'+i).addClass('has-error');
+                    $('#lot-'+j).addClass('has-error');
+                    duplicated++;
+                }
+               j++;
+            }
+            i++;
+        }
+
         if(count_invalid > 0)
             alert("Vui lòng chọn tất cả các ô số bỏ trống; tô màu !");
+        else
+            if(duplicated > 0)
+                alert("Vui lòng không chọn hai vé số trùng nhau");
+            else {
+                console.log(JSON.stringify(listLottery));
+                var url = '/api/lottery';
+                var data = {};
+                data['lotteries'] = listLottery;
+                data['userId'] = userId;
+                data['lotteryTypeId'] = 1;
+                saveOrupdateData(url, 'POST', data, showSuccessSellingLottery);
+            }
     })
+
 })
+
+function concatLottery(orderNumber) {
+    var boxNumericLottery = $('.box-numeric-lottery');
+    var lottery= $(".box-numeric-lottery #lot-"+orderNumber+"-0").val();
+    lottery+= $(".box-numeric-lottery #lot-"+orderNumber+"-1").val();
+    lottery+= $(".box-numeric-lottery #lot-"+orderNumber+"-2").val();
+    lottery+= $(".box-numeric-lottery #lot-"+orderNumber+"-3").val();
+    lottery+= $(".box-numeric-lottery #lot-"+orderNumber+"-4").val();
+    lottery+= $(".box-numeric-lottery #lot-"+orderNumber+"-5").val();
+    return lottery;
+}
+
+function createArrLottery(orderNumber, lotteryTypeId=1){
+    var boxNumericLottery = $('.box-numeric-lottery');
+    var lottery= {}
+    lottery['coupleOne'] = $(".box-numeric-lottery #lot-"+orderNumber+"-0").val();
+    lottery['coupleTwo'] = $(".box-numeric-lottery #lot-"+orderNumber+"-1").val();
+    lottery['coupleThree'] = $(".box-numeric-lottery #lot-"+orderNumber+"-2").val();
+    lottery['coupleFour'] = $(".box-numeric-lottery #lot-"+orderNumber+"-3").val();
+    lottery['coupleFive'] = $(".box-numeric-lottery #lot-"+orderNumber+"-4").val();
+    lottery['coupleSix'] = $(".box-numeric-lottery #lot-"+orderNumber+"-5").val();
+    lottery['lotteryType'] = {'id': lotteryTypeId};
+    return lottery;
+}
+
+/**
+ * Function handles after success created lotteries of user
+ * @param data
+ */
+function showSuccessSellingLottery(data) {
+    window.location.href = urlCheckout+"/"+data.id;
+}

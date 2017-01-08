@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu"/>
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header"/>
+    <div class="container">
+        <div class=" category">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+                <li class="breadcrumb-item active" th:text="#{breadcrumb.lottery.checkout.text}">Checkout</li>
+            </ol>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news"/>
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment"/>
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer"/>
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/moment.min.js}"></script>
+<script th:src="@{/sources/moment-timezone.js}"></script>
+<script th:src="@{/sources/jquery.countdown-2.2.0/jquery.countdown.min.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/js/homepage.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function ($) {
+
+    })
+</script>
+</body>
+</html>

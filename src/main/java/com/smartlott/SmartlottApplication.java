@@ -70,6 +70,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private LotteryDialingService dialingService;
 
+	@Autowired
+	private LotteryTypeService lotteryTypeService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -136,6 +139,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//open new lottery dialing
 		createLotteryDialing();
+
+		//create new lottery type;
+		createLotteryType();
 
 
 	}
@@ -345,6 +351,18 @@ public class SmartlottApplication implements CommandLineRunner{
 		lotteryDialing.setFromDate(LocalDateTime.now(Clock.systemDefaultZone()).plusMinutes(10));
 		lotteryDialing.setToDate(LocalDateTime.now(Clock.systemDefaultZone()).plusDays(2));
 		dialingService.create(lotteryDialing);
+	}
+
+	public void createLotteryType() throws Exception{
+		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",1.0);
+		lotteryTypeService.create(lotteryType1);
+
+		LOGGER.info("Created lottery type {}", lotteryType1);
+
+		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",1.2);
+		lotteryTypeService.create(lotteryType2);
+
+		LOGGER.info("Created lottery type {}", lotteryType2);
 	}
 
 }

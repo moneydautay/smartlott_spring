@@ -38,18 +38,23 @@ public class Lottery implements Serializable{
     private String coupleSix;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "lottery_dialing_id")
-    private LotteryDialing lotteryDialing;
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_type_id")
     private LotteryType lotteryType;
 
     public Lottery() {
+
+    }
+
+    public Lottery(String coupleOne, String coupleTwo, String coupleThree,
+                   String coupleFour, String coupleFive, String coupleSix,
+                   LotteryType lotteryType) {
+        this.coupleOne = coupleOne;
+        this.coupleTwo = coupleTwo;
+        this.coupleThree = coupleThree;
+        this.coupleFour = coupleFour;
+        this.coupleFive = coupleFive;
+        this.coupleSix = coupleSix;
+        this.lotteryType = lotteryType;
     }
 
     public long getId() {
@@ -108,22 +113,6 @@ public class Lottery implements Serializable{
         this.coupleSix = coupleSix;
     }
 
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
-
-    public LotteryDialing getLotteryDialing() {
-        return lotteryDialing;
-    }
-
-    public void setLotteryDialing(LotteryDialing lotteryDialing) {
-        this.lotteryDialing = lotteryDialing;
-    }
-
     public LotteryType getLotteryType() {
         return lotteryType;
     }
@@ -142,8 +131,6 @@ public class Lottery implements Serializable{
                 ", coupleFour='" + coupleFour + '\'' +
                 ", coupleFive='" + coupleFive + '\'' +
                 ", coupleSix='" + coupleSix + '\'' +
-                ", transaction=" + transaction +
-                ", lotteryDialing=" + lotteryDialing +
                 ", lotteryType=" + lotteryType +
                 '}';
     }
@@ -155,31 +142,11 @@ public class Lottery implements Serializable{
 
         Lottery lottery = (Lottery) o;
 
-        if (id != lottery.id) return false;
-        if (coupleOne != null ? !coupleOne.equals(lottery.coupleOne) : lottery.coupleOne != null) return false;
-        if (coupleTwo != null ? !coupleTwo.equals(lottery.coupleTwo) : lottery.coupleTwo != null) return false;
-        if (coupleThree != null ? !coupleThree.equals(lottery.coupleThree) : lottery.coupleThree != null) return false;
-        if (coupleFour != null ? !coupleFour.equals(lottery.coupleFour) : lottery.coupleFour != null) return false;
-        if (coupleFive != null ? !coupleFive.equals(lottery.coupleFive) : lottery.coupleFive != null) return false;
-        if (coupleSix != null ? !coupleSix.equals(lottery.coupleSix) : lottery.coupleSix != null) return false;
-        if (transaction != null ? !transaction.equals(lottery.transaction) : lottery.transaction != null) return false;
-        if (lotteryDialing != null ? !lotteryDialing.equals(lottery.lotteryDialing) : lottery.lotteryDialing != null)
-            return false;
-        return lotteryType != null ? lotteryType.equals(lottery.lotteryType) : lottery.lotteryType == null;
+        return id == lottery.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (coupleOne != null ? coupleOne.hashCode() : 0);
-        result = 31 * result + (coupleTwo != null ? coupleTwo.hashCode() : 0);
-        result = 31 * result + (coupleThree != null ? coupleThree.hashCode() : 0);
-        result = 31 * result + (coupleFour != null ? coupleFour.hashCode() : 0);
-        result = 31 * result + (coupleFive != null ? coupleFive.hashCode() : 0);
-        result = 31 * result + (coupleSix != null ? coupleSix.hashCode() : 0);
-        result = 31 * result + (transaction != null ? transaction.hashCode() : 0);
-        result = 31 * result + (lotteryDialing != null ? lotteryDialing.hashCode() : 0);
-        result = 31 * result + (lotteryType != null ? lotteryType.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

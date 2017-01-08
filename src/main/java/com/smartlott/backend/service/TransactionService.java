@@ -51,4 +51,8 @@ public class TransactionService {
     public Page<Transaction> getAllOfUserIdCreateDateBetween(long userId, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
         return transactionRepository.findByOfUserIdAndCreatedDateBetween(userId, fromDate, toDate, pageable);
     }
+
+    public Transaction getOne(long transactionid) {
+        return transactionRepository.findOne(transactionid);
+    }
 }

@@ -20,4 +20,8 @@ public class TransactionTypeService {
     public TransactionType createNew(TransactionType transactionType){
         return transactionTypeRepository.save(transactionType);
     }
+
+    public TransactionType getOne(long id) {
+        return transactionTypeRepository.findOne(id);
+    }
 }

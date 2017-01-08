@@ -3,7 +3,6 @@ package com.smartlott.backend.persistence.domain.backend;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import java.io.Serializable;
 
 /**
@@ -25,12 +24,15 @@ public class LotteryType implements Serializable{
 
     private String description;
 
+    private double price=0;
+
     public LotteryType() {
     }
 
-    public LotteryType(String name, String description) {
+    public LotteryType(String name, String description, double price) {
         this.name = name;
         this.description = description;
+        this.price = price;
     }
 
     public int getId() {
@@ -55,6 +57,14 @@ public class LotteryType implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override

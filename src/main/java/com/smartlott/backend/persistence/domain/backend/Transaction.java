@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
@@ -45,6 +47,9 @@ public class Transaction implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER)
     private TransactionType transactionType;
+
+    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
+    private Set<LotteryDetail> lotteryDetails = new HashSet<>();
 
     @Transient
     private String securityToken;
@@ -114,6 +119,14 @@ public class Transaction implements Serializable{
 
     public void setSecurityToken(String securityToken) {
         this.securityToken = securityToken;
+    }
+
+    public Set<LotteryDetail> getLotteryDetails() {
+        return lotteryDetails;
+    }
+
+    public void setLotteryDetails(Set<LotteryDetail> lotteryDetails) {
+        this.lotteryDetails = lotteryDetails;
     }
 
     @Override

@@ -79,6 +79,6 @@
 <div th:fragment="common-before-scripts">
     <script th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/selling-lottery.js}"></script>
+    <script th:inline="javascript" th:src="@{/js/selling-lottery.js}"></script>
 </div>
 </html>

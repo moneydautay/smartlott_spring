@@ -34,6 +34,8 @@ public class TransactionRestController {
 
     public static final String API_TRANS_URL = "/api/transaction";
 
+    private  List<MessageDTO> messageDTOS;
+
     @Autowired
     private TransactionService transactionService;
 
@@ -55,7 +57,7 @@ public class TransactionRestController {
     @RequestMapping(value = "/withdraw/{numberAccountId}", method = RequestMethod.POST)
     public ResponseEntity<Object> createWithDraw(@PathVariable long numberAccountId, @RequestBody Transaction transaction, Locale locale){
 
-        List<MessageDTO> messageDTOS = new ArrayList<>();
+        messageDTOS = new ArrayList<>();
 
         //check security token
         SecurityToken localSecurityToken = securityTokenSevice.getSecurityTokenByToken(transaction.getSecurityToken());
@@ -128,4 +130,20 @@ public class TransactionRestController {
 
         return new ResponseEntity<Object>(transactions, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/{transactionId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getTransactionById(@PathVariable long transactionId, Locale locale){
+        messageDTOS = new ArrayList<>();
+        Transaction transaction = transactionService.getOne(transactionId);
+
+        if(transaction == null){
+            LOGGER.error("Transaction ID {} was not existed", transactionId);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId),locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        return new ResponseEntity<Object>(transaction, HttpStatus.OK);
+    }
+
+
 }
