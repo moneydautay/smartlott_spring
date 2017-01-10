@@ -75,7 +75,7 @@ public class PerfectMoneyDetails {
     }
 
     public void setMemo(String memo) {
-        this.memo = memo;
+        this.memo = URLEncoder.encode(memo);
     }
 
     public String getPaymentId() {

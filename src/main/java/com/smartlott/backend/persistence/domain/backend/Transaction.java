@@ -51,6 +51,10 @@ public class Transaction implements Serializable{
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
     private Set<LotteryDetail> lotteryDetails = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "transaction_status_id")
+    private TransactionStatus transactionStatus;
+
     @Transient
     private String securityToken;
 
@@ -129,6 +133,15 @@ public class Transaction implements Serializable{
         this.lotteryDetails = lotteryDetails;
     }
 
+
+    public TransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(TransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -139,6 +152,9 @@ public class Transaction implements Serializable{
                 ", handleBy=" + handleBy +
                 ", handleDate=" + handleDate +
                 ", transactionType=" + transactionType +
+                ", lotteryDetails=" + lotteryDetails +
+                ", transactionStatus=" + transactionStatus +
+                ", securityToken='" + securityToken + '\'' +
                 '}';
     }
 

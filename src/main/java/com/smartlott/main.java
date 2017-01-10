@@ -3,6 +3,7 @@ package com.smartlott;
 import org.joda.time.DateTime;
 import sun.text.resources.FormatData;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
@@ -16,20 +17,8 @@ import java.util.UUID;
  */
 public class main {
     public static void main(String[] args){
-
-
-        String time = "12:02:23 05/01/2017";
-        DateTimeFormatter ft = DateTimeFormatter.ofPattern("kk:mm:ss dd/MM/yyyy");
-
-        try {
-            LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
-            System.out.println(now);
-            LocalDateTime dateTime = LocalDateTime.parse(time, ft);
-            System.out.println(dateTime);
-            System.out.println(dateTime.isBefore(now));
-        }catch (Exception we){
-            System.out.println(we.getMessage());
-        }
+        Timestamp timestamp = new Timestamp(1484012906);
+        System.out.println(timestamp.toLocalDateTime());
 
 
     }

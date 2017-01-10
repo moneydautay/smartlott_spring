@@ -33,6 +33,7 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
     @Override
     public String transferMoney(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException {
         String url = SPEND_MONEY_URL + this.getTransferURL(perfectMoneyDetails);
+        System.out.println(url);
         List<String> response = HTTPClient.sendRequest(url);
         return processPerfectMoneyResponse(response);
     }
@@ -58,6 +59,7 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
                 "&PassPhrase=" + perfectMoneyDetails.passPhrase +
                 "&batch=" + perfectMoneyDetails.batch +
                 "&code=" + perfectMoneyDetails.code;
+        System.out.println(url);
         List<String> response = HTTPClient.sendRequest(url);
         return processPerfectMoneyResponse(response);
     }
@@ -66,7 +68,7 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
 	@Override
     public String verifyAccount(String accountId, String password, String account) throws PerfectMoneyException {
         String url = VERIFY_ACCOUNT_URL + "?" + "AccountID={0}&PassPhrase={1}&Account={2}";
-        List<String> response = HTTPClient.sendRequest(url, accountId,  URLEncoder.encode(password), account);
+        List<String> response = HTTPClient.sendRequest(url, accountId, password, account);
       
         return processPerfectMoneyResponse(response);
     }
@@ -88,6 +90,7 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
                 "&counterfilter=" + perfectMoneyHistoryFilter.counterFilter +
                 "&payment_id=" + perfectMoneyHistoryFilter.paymentId +
                 "&desc=1";
+        System.out.println(url);
         List<String> response = HTTPClient.sendRequest(url);
         return processPerfectMoneyResponse(response);
     }
@@ -113,14 +116,14 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
                 "&Payer_Account=" + details.payerAccount +
                 "&Payee_Account=" + details.payeeAccount +
                 "&Amount=" + details.amount +
-                "&Memo=" + URLEncoder.encode(details.memo);
+                "&Memo=" +details.memo;
                 
     	if(details.getPaymentId() != null)
     		url+="&PAYMENT_ID=" + details.paymentId;
     	if(details.getCode() != null)
     		url+="&code=" + details.code;
     	if(details.getPeriod() != null)
-    		url+="&Period=" + details.period;
+    		url+="&period=" + details.period;
         return url;
     }
 

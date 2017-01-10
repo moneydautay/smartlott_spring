@@ -410,6 +410,7 @@ ul.fgp-tip li a:active {
 }
 .selling-lottery .form-group{
     padding:10px 5px;
+    position: relative;
 }
 .selling-lottery .row{
     margin-bottom: 15px;

@@ -26,6 +26,21 @@ function showMessage(message, type, xButton=true) {
     return strError;
 }
 
+function showMessages(data) {
+    var messageArea = $('#messageArea');
+
+    messageArea.html('');
+    $.each(data, function (index, msg) {
+        var messageType = msg.messageType;
+        console.log(messageType);
+        if(messageType.$name == 'SUCCESS' || messageType == 'SUCCESS')
+            messageArea.append(showMessage(msg.message,'alert-success alert-dismissible'));
+        else if (messageType.$name == 'WARNING' || messageType == 'WARNING')
+            messageArea.append(showMessage(msg.message,'alert-warning alert-dismissible'));
+        else
+            messageArea.append(showMessage(msg.message,'alert-danger alert-dismissible'));
+    });
+}
 
 /**
  * Show all errors html tag has id messageArea

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
+
 /**
  * Created by greenlucky on 1/8/17.
  */
@@ -26,4 +28,13 @@ public class LotterySerivce {
         return lotteryRepository.save(lottery);
     }
 
+    /**
+     * Updates lottery
+     * @param lottery
+     * @return A lottery after update or null if occurs errors
+     */
+    @Transactional
+    public Lottery update(Lottery lottery) {
+        return lotteryRepository.save(lottery);
+    }
 }

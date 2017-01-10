@@ -41,6 +41,8 @@ public class Lottery implements Serializable{
     @JoinColumn(name = "lottery_type_id")
     private LotteryType lotteryType;
 
+    private boolean enabled = false;
+
     public Lottery() {
 
     }
@@ -121,6 +123,14 @@ public class Lottery implements Serializable{
         this.lotteryType = lotteryType;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "Lottery{" +
@@ -132,6 +142,7 @@ public class Lottery implements Serializable{
                 ", coupleFive='" + coupleFive + '\'' +
                 ", coupleSix='" + coupleSix + '\'' +
                 ", lotteryType=" + lotteryType +
+                ", enabled=" + enabled +
                 '}';
     }
 

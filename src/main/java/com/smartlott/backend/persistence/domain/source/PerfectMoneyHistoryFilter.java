@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.source;
 
+import java.net.URLEncoder;
+
 /**
  * User: dbudunov
  * Date: 06.08.13
@@ -33,7 +35,7 @@ public class PerfectMoneyHistoryFilter {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = URLEncoder.encode(password);
     }
 
     public int getStartMonth() {

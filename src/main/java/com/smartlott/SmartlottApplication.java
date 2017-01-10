@@ -2,10 +2,7 @@ package com.smartlott;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
-import com.smartlott.enums.NotificationTypeEnum;
-import com.smartlott.enums.NumberAccountTypeEnum;
-import com.smartlott.enums.RolesEnum;
-import com.smartlott.enums.TransactionTypeEnum;
+import com.smartlott.enums.*;
 import com.smartlott.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +70,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private LotteryTypeService lotteryTypeService;
 
+	@Autowired
+	private TransactionStatusService transactionStatusService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -136,6 +136,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//creat transaction type
 		createTransactionType();
+
+		//create transaction status
+		createTransactionStatus();
 
 		//open new lottery dialing
 		createLotteryDialing();
@@ -354,15 +357,26 @@ public class SmartlottApplication implements CommandLineRunner{
 	}
 
 	public void createLotteryType() throws Exception{
-		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",1.0);
+		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",0.01);
 		lotteryTypeService.create(lotteryType1);
 
 		LOGGER.info("Created lottery type {}", lotteryType1);
 
-		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",1.2);
+		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",0.01);
 		lotteryTypeService.create(lotteryType2);
 
 		LOGGER.info("Created lottery type {}", lotteryType2);
 	}
+
+
+	public void createTransactionStatus(){
+		TransactionStatus status1 = new TransactionStatus(TransactionStatusEnum.PENDING);
+		TransactionStatus status2 = new TransactionStatus(TransactionStatusEnum.SUCCESS);
+		TransactionStatus status3 = new TransactionStatus(TransactionStatusEnum.CANCEL);
+		transactionStatusService.create(status1);
+		transactionStatusService.create(status2);
+		transactionStatusService.create(status3);
+	}
+
 
 }

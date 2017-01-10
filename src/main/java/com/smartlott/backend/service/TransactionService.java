@@ -55,4 +55,14 @@ public class TransactionService {
     public Transaction getOne(long transactionid) {
         return transactionRepository.findOne(transactionid);
     }
+
+    /**
+     * Updates transaction
+     * @param transaction
+     * @return A transaction after updated or exception if occurs errors
+     */
+    @Transactional
+    public Transaction update(Transaction transaction) {
+        return transactionRepository.save(transaction);
+    }
 }

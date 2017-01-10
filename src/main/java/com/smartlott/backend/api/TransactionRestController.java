@@ -18,9 +18,7 @@ import java.text.DecimalFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by greenlucky on 1/1/17.
@@ -142,7 +140,20 @@ public class TransactionRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
-        return new ResponseEntity<Object>(transaction, HttpStatus.OK);
+        //checking successful transaction
+        if(transaction.getTransactionStatus().getId() > 1){
+            LOGGER.error("Transaction ID {} was handle {}", transactionId,transaction.getTransactionStatus());
+            if(transaction.getTransactionStatus().getId()==2)
+                messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.lottery.success", String.valueOf(transactionId),locale)));
+            if(transaction.getTransactionStatus().getId()==3)
+                messageDTOS.add(new MessageDTO(MessageType.WARNING,i18NService.getMessage("order.lottery.cancel", String.valueOf(transactionId),locale)));
+        }
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("messages", messageDTOS);
+        data.put("content", transaction);
+
+        return new ResponseEntity<Object>(data, HttpStatus.OK);
     }
 
 

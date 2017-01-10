@@ -3,6 +3,7 @@ package com.smartlott.backend.api;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
+import com.smartlott.enums.TransactionStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,12 +91,16 @@ public class LotteryRestController {
             User user = userService.findOne(lotteries.getUserId());
 
             TransactionType transactionType = transactionTypeService.getOne(2);
+            TransactionStatus status = new TransactionStatus(TransactionStatusEnum.PENDING);
+
 
             transaction = new Transaction();
             transaction.setAmount(totalPrice);
             transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
             transaction.setTransactionType(transactionType);
             transaction.setOfUser(user);
+            transaction.setTransactionStatus(status);
+
             transactionService.createNew(transaction);
             LOGGER.info("Created new transaction {} for user {}",transaction, user);
 
