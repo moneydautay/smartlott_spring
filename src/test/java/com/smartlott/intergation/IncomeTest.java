@@ -67,7 +67,6 @@ public class IncomeTest extends AbstractIntegrationTest{
         //add element to income component
         IncomeComponent incomeComponent = new IncomeComponent();
         incomeComponent.setName("Giai dac biet");
-        incomeComponent.setDefaultRateValue(5.0);
         incomeComponent.setCreateBy(user);
 
         incomeComponentRepository.save(incomeComponent);
@@ -78,11 +77,9 @@ public class IncomeTest extends AbstractIntegrationTest{
 
         //add element to income rate
         IncomeRate incomeRate = new IncomeRate();
-        incomeRate.setEnabled(true);
         incomeRate.setFromDate(LocalDateTime.now(Clock.systemUTC()));
         incomeRate.setToDate(LocalDateTime.now(Clock.systemUTC()));
         incomeRate.setCreateBy(user);
-        incomeRate.setJeckpots(true);
         System.out.println(incomeRate.toString());
         incomeRateRepository.save(incomeRate);
 

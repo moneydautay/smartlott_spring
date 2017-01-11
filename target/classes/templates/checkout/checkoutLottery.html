@@ -141,7 +141,14 @@
         $('#orderCancelButton').click(function () {
             var msgConfirm = /*[[#{order.checkout.cancel.confirm.text}]]*/;
             if(confirm(msgConfirm)){
-                var
+                var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/
+                var urlCancelOrder = /*[[@{/api/transaction/handle/{transactionId}(transactionId=${checkoutId})}]]*/;
+                var data = {};
+                data['transactionId'] = /*[[${checkoutId}]]*/;
+                data['handleBy'] = {'id': userId};
+                data['transactionStatus'] = {'id':3}
+
+                saveOrupdateData(urlCancelOrder, 'PUT',data,showOrderCancleSuccess);
             }
         })
 
@@ -218,6 +225,12 @@
             numberAccountType.append(strNbAccType);
         });
     }
+
+    function showOrderCancleSuccess(data) {
+        showMessages(data);
+        $('#frmCheckoutOrder').html('');
+    }
+
 </script>
 </body>
 </html>
