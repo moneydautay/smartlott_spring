@@ -1,11 +1,12 @@
 package com.smartlott.backend.persistence.repositories;
 
 import com.smartlott.backend.persistence.domain.backend.IncomeRate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
@@ -13,5 +14,7 @@ import java.util.List;
 @Repository
 public interface IncomeRateRepository extends CrudRepository<IncomeRate, Long>{
 
-    public List<IncomeRate> findAll();
+    public Page<IncomeRate> findAll(Pageable pageable);
+
+    IncomeRate findByFromDateAndToDate(LocalDateTime fromDate, LocalDateTime toDate);
 }

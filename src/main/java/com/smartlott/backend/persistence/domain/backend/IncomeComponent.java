@@ -1,7 +1,5 @@
 package com.smartlott.backend.persistence.domain.backend;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -108,4 +106,6 @@ public class IncomeComponent implements Serializable{
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
     }
+
+
 }
