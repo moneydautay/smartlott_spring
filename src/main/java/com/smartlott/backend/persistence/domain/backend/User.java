@@ -88,7 +88,7 @@ public class User implements Serializable, UserDetails{
 
     @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
-    @Column(updatable = false)
+    @Column(name = "create_date", updatable = false)
     private LocalDateTime createDate;
 
     private boolean actived = false;

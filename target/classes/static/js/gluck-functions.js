@@ -33,9 +33,9 @@ function showMessages(data) {
     $.each(data, function (index, msg) {
         var messageType = msg.messageType;
         console.log(messageType);
-        if(messageType.$name == 'SUCCESS')
+        if(messageType.$name == 'SUCCESS' || messageType == 'SUCCESS')
             messageArea.append(showMessage(msg.message,'alert-success alert-dismissible'));
-        else if (messageType.$name == 'WARNING')
+        else if (messageType.$name == 'WARNING' || messageType == 'WARNING')
             messageArea.append(showMessage(msg.message,'alert-warning alert-dismissible'));
         else
             messageArea.append(showMessage(msg.message,'alert-danger alert-dismissible'));

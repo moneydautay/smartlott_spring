@@ -26,7 +26,11 @@ public class IncomeDetailRate implements Serializable{
     private IncomeComponent incomeComponent;
 
     @Value("0.0")
-    private double value;
+    private double value=0.0;
+
+    private double static_value_reward=0.0;
+
+    private boolean atLeastOne = false;
 
     public IncomeDetailRate() {
     }
@@ -63,6 +67,22 @@ public class IncomeDetailRate implements Serializable{
         this.value = value;
     }
 
+    public double getStatic_value_reward() {
+        return static_value_reward;
+    }
+
+    public void setStatic_value_reward(double static_value_reward) {
+        this.static_value_reward = static_value_reward;
+    }
+
+    public boolean isAtLeastOne() {
+        return atLeastOne;
+    }
+
+    public void setAtLeastOne(boolean atLeastOne) {
+        this.atLeastOne = atLeastOne;
+    }
+
     @Override
     public String toString() {
         return "IncomeDetailRate{" +
@@ -70,6 +90,8 @@ public class IncomeDetailRate implements Serializable{
                 ", incomeRate=" + incomeRate +
                 ", incomeComponent=" + incomeComponent +
                 ", value=" + value +
+                ", static_value_reward=" + static_value_reward +
+                ", atLeastOne=" + atLeastOne +
                 '}';
     }
 
@@ -80,21 +102,11 @@ public class IncomeDetailRate implements Serializable{
 
         IncomeDetailRate that = (IncomeDetailRate) o;
 
-        if (id != that.id) return false;
-        if (Double.compare(that.value, value) != 0) return false;
-        if (incomeRate != null ? !incomeRate.equals(that.incomeRate) : that.incomeRate != null) return false;
-        return incomeComponent != null ? incomeComponent.equals(that.incomeComponent) : that.incomeComponent == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (incomeRate != null ? incomeRate.hashCode() : 0);
-        result = 31 * result + (incomeComponent != null ? incomeComponent.hashCode() : 0);
-        temp = Double.doubleToLongBits(value);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

@@ -51,7 +51,7 @@
                     </div>
                     <form id="frmCheckoutOrder" method="post" th:action="@{/api/transaction/process-order}">
                         <div class="form-group">
-                            <label for="accountType" th:text="order.gate.checkout.text"></label>
+                            <label for="accountType" th:text="#{order.gate.checkout.text}"></label>
                             <select id="accountType" name="accountType" class="form-control"></select>
                         </div>
                         <div class="form-group">
@@ -110,8 +110,6 @@
         
         getData(urlGetTransaction, showTransactionInfo, showCheckoutErrors);
 
-
-
         /* Signup form validation */
         $('#frmCheckoutOrder').formValidation({
             framework: 'bootstrap',
@@ -140,11 +138,20 @@
         });
 
 
+        $('#orderCancelButton').click(function () {
+            var msgConfirm = /*[[#{order.checkout.cancel.confirm.text}]]*/;
+            if(confirm(msgConfirm)){
+                var
+            }
+        })
+
+
     })
     
     function showTransactionInfo(data) {
         var messages = data.messages;
-        if(messages != null){
+        console.log(messages);
+        if(messages.length>0){
             showMessages(messages);
             $('#frmCheckoutOrder').html('');
         }else {
@@ -211,8 +218,6 @@
             numberAccountType.append(strNbAccType);
         });
     }
-
-
 </script>
 </body>
 </html>

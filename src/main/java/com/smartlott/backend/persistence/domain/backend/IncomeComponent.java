@@ -23,15 +23,13 @@ public class IncomeComponent implements Serializable{
 
     private String description;
 
-    @Value("0.0")
-    @Column(name = "default_rate_value")
-    private double defaultRateValue;
-
     @ManyToOne(fetch = FetchType.EAGER)
     private User createBy;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User modifyBy;
+
+    private boolean jeckpots = false;
 
     public IncomeComponent() {
     }
@@ -60,14 +58,6 @@ public class IncomeComponent implements Serializable{
         this.description = description;
     }
 
-    public double getDefaultRateValue() {
-        return defaultRateValue;
-    }
-
-    public void setDefaultRateValue(double defaultRateValue) {
-        this.defaultRateValue = defaultRateValue;
-    }
-
     public User getCreateBy() {
         return createBy;
     }
@@ -84,15 +74,23 @@ public class IncomeComponent implements Serializable{
         this.modifyBy = modifyBy;
     }
 
+    public boolean isJeckpots() {
+        return jeckpots;
+    }
+
+    public void setJeckpots(boolean jeckpots) {
+        this.jeckpots = jeckpots;
+    }
+
     @Override
     public String toString() {
         return "IncomeComponent{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", defaultRateValue=" + defaultRateValue +
                 ", createBy=" + createBy +
                 ", modifyBy=" + modifyBy +
+                ", jeckpots=" + jeckpots +
                 '}';
     }
 

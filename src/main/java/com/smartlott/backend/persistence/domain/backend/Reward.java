@@ -29,6 +29,9 @@ public class Reward implements Serializable{
     @Value("false")
     private boolean jeckpots;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private IncomeComponent incomeComponent;
+
     public Reward() {
     }
 
@@ -68,6 +71,15 @@ public class Reward implements Serializable{
         this.jeckpots = jeckpots;
     }
 
+
+    public IncomeComponent getIncomeComponent() {
+        return incomeComponent;
+    }
+
+    public void setIncomeComponent(IncomeComponent incomeComponent) {
+        this.incomeComponent = incomeComponent;
+    }
+
     @Override
     public String toString() {
         return "Reward{" +
@@ -75,6 +87,7 @@ public class Reward implements Serializable{
                 ", name='" + name + '\'' +
                 ", value=" + value +
                 ", jeckpots=" + jeckpots +
+                ", incomeComponent=" + incomeComponent +
                 '}';
     }
 
@@ -85,21 +98,11 @@ public class Reward implements Serializable{
 
         Reward reward = (Reward) o;
 
-        if (id != reward.id) return false;
-        if (Double.compare(reward.value, value) != 0) return false;
-        if (jeckpots != reward.jeckpots) return false;
-        return name != null ? name.equals(reward.name) : reward.name == null;
+        return id == reward.id;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        temp = Double.doubleToLongBits(value);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (jeckpots ? 1 : 0);
-        return result;
+        return id;
     }
 }

@@ -157,4 +157,33 @@ public class TransactionRestController {
     }
 
 
+    @RequestMapping(value = "/handle/{transactionId}",method = RequestMethod.PUT)
+    public ResponseEntity<Object> handle(@PathVariable long transactionId, @RequestBody Transaction transaction, Locale locale){
+
+        messageDTOS = new ArrayList<>();
+        Transaction localTrans = transactionService.getOne(transactionId);
+
+        if(localTrans == null){
+            LOGGER.error("Transaction ID {} was not existed", transactionId);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId),locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        localTrans.setTransactionStatus(transaction.getTransactionStatus());
+        localTrans.setHandleBy(transaction.getHandleBy());
+        localTrans.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        localTrans = transactionService.update(localTrans);
+
+        if(localTrans.getTransactionStatus().getId() == 2){
+            messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.lottery.success", String.valueOf(transactionId),locale)));
+        }
+        if(localTrans.getTransactionStatus().getId() == 3){
+            messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.lottery.cancel", String.valueOf(transactionId),locale)));
+        }
+
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
+    }
+
+
 }

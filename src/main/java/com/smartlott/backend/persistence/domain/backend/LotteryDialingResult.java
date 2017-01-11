@@ -1,16 +1,19 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
  */
 @Entity
-@Table(name = "result_reward")
-public class ResultReward implements Serializable{
+@Table(name = "lottery_dialing_result")
+public class LotteryDialingResult implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
@@ -36,7 +39,11 @@ public class ResultReward implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     private Reward reward;
 
-    public ResultReward() {
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime createDate;
+
+    public LotteryDialingResult() {
     }
 
     public long getId() {
@@ -87,15 +94,24 @@ public class ResultReward implements Serializable{
         this.reward = reward;
     }
 
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public String toString() {
-        return "ResultReward{" +
+        return "LotteryDialingResult{" +
                 "id=" + id +
                 ", coupleNumber='" + coupleNumber + '\'' +
                 ", position=" + position +
                 ", lotteryDialing=" + lotteryDialing +
                 ", ofUser=" + ofUser +
                 ", reward=" + reward +
+                ", createDate=" + createDate +
                 '}';
     }
 
@@ -104,25 +120,13 @@ public class ResultReward implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ResultReward that = (ResultReward) o;
+        LotteryDialingResult that = (LotteryDialingResult) o;
 
-        if (id != that.id) return false;
-        if (position != that.position) return false;
-        if (coupleNumber != null ? !coupleNumber.equals(that.coupleNumber) : that.coupleNumber != null) return false;
-        if (lotteryDialing != null ? !lotteryDialing.equals(that.lotteryDialing) : that.lotteryDialing != null)
-            return false;
-        if (ofUser != null ? !ofUser.equals(that.ofUser) : that.ofUser != null) return false;
-        return reward != null ? reward.equals(that.reward) : that.reward == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (coupleNumber != null ? coupleNumber.hashCode() : 0);
-        result = 31 * result + position;
-        result = 31 * result + (lotteryDialing != null ? lotteryDialing.hashCode() : 0);
-        result = 31 * result + (ofUser != null ? ofUser.hashCode() : 0);
-        result = 31 * result + (reward != null ? reward.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

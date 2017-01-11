@@ -20,8 +20,7 @@ public class IncomeRate implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Value("true")
-    private boolean enabled;
+    private boolean _default;
 
     private LocalDateTime fromDate;
 
@@ -31,8 +30,6 @@ public class IncomeRate implements Serializable{
     @JoinColumn(name = "create_by")
     private User createBy;
 
-    @Value("false")
-    private boolean jeckpots;
 
     public IncomeRate() {
     }
@@ -45,12 +42,12 @@ public class IncomeRate implements Serializable{
         this.id = id;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isDefault() {
+        return _default;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDefault(boolean _default) {
+        this._default = _default;
     }
 
     public LocalDateTime getFromDate() {
@@ -77,23 +74,30 @@ public class IncomeRate implements Serializable{
         this.createBy = createBy;
     }
 
-    public boolean isJeckpots() {
-        return jeckpots;
-    }
-
-    public void setJeckpots(boolean jeckpots) {
-        this.jeckpots = jeckpots;
-    }
-
     @Override
     public String toString() {
         return "IncomeRate{" +
                 "id=" + id +
-                ", enabled=" + enabled +
+                ", _default=" + _default +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
                 ", createBy=" + createBy +
-                ", jeckpots=" + jeckpots +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IncomeRate that = (IncomeRate) o;
+
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }
