@@ -29,6 +29,8 @@ public class IncomeComponent implements Serializable{
 
     private boolean jeckpots = false;
 
+    private double value = 0.0;
+
     public IncomeComponent() {
     }
 
@@ -80,6 +82,15 @@ public class IncomeComponent implements Serializable{
         this.jeckpots = jeckpots;
     }
 
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "IncomeComponent{" +
@@ -89,6 +100,7 @@ public class IncomeComponent implements Serializable{
                 ", createBy=" + createBy +
                 ", modifyBy=" + modifyBy +
                 ", jeckpots=" + jeckpots +
+                ", value=" + value +
                 '}';
     }
 

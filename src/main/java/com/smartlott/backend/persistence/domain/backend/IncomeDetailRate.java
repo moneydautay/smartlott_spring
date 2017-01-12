@@ -28,7 +28,6 @@ public class IncomeDetailRate implements Serializable{
     @Value("0.0")
     private double value=0.0;
 
-    private double static_value_reward=0.0;
 
     private boolean atLeastOne = false;
 
@@ -67,14 +66,6 @@ public class IncomeDetailRate implements Serializable{
         this.value = value;
     }
 
-    public double getStatic_value_reward() {
-        return static_value_reward;
-    }
-
-    public void setStatic_value_reward(double static_value_reward) {
-        this.static_value_reward = static_value_reward;
-    }
-
     public boolean isAtLeastOne() {
         return atLeastOne;
     }
@@ -90,7 +81,6 @@ public class IncomeDetailRate implements Serializable{
                 ", incomeRate=" + incomeRate +
                 ", incomeComponent=" + incomeComponent +
                 ", value=" + value +
-                ", static_value_reward=" + static_value_reward +
                 ", atLeastOne=" + atLeastOne +
                 '}';
     }

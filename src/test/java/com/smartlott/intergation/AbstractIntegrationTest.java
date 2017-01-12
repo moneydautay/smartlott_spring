@@ -46,6 +46,14 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private IncomeComponentRepository incomeComponentRepository;
+
+    @Autowired
+    private IncomeRateRepository rateRepository;
+
+
+
     protected Role createCusRole(RolesEnum rolesEnum) {
         return new Role(rolesEnum);
     }
@@ -117,5 +125,23 @@ public abstract class AbstractIntegrationTest {
 
     public Address createAddress(TestName testName){
         return createAddress(testName.getMethodName(), testName.getMethodName(), testName.getMethodName());
+    }
+
+    public IncomeRate createIncomeRate(User user){
+        IncomeRate incomeRate = new IncomeRate();
+        incomeRate.setCreateBy(user);
+        incomeRate.setToDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        incomeRate.setFromDate(LocalDateTime.now(Clock.systemDefaultZone()).plusDays(10));
+        return rateRepository.save(incomeRate);
+    }
+
+    public IncomeComponent createIncomeComponent(User user, String name, String description, double value ,boolean jeckpots){
+        IncomeComponent incomeComponent = new IncomeComponent();
+        incomeComponent.setCreateBy(user);
+        incomeComponent.setName(name);
+        incomeComponent.setDescription(description);
+        incomeComponent.setJeckpots(jeckpots);
+        incomeComponent.setValue(value);
+        return incomeComponentRepository.save(incomeComponent);
     }
 }
