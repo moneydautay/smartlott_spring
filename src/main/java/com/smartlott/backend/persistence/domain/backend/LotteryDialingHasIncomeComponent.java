@@ -7,9 +7,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "lottery_dialing_has_income")
-public class LotteryDialingHasIncome {
+public class LotteryDialingHasIncomeComponent {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -20,7 +21,7 @@ public class LotteryDialingHasIncome {
 
     private double value;
 
-    public LotteryDialingHasIncome() {
+    public LotteryDialingHasIncomeComponent() {
     }
 
     public long getId() {
@@ -57,7 +58,7 @@ public class LotteryDialingHasIncome {
 
     @Override
     public String toString() {
-        return "LotteryDialingHasIncome{" +
+        return "LotteryDialingHasIncomeComponent{" +
                 "id=" + id +
                 ", lotteryDialing=" + lotteryDialing +
                 ", incomeComponent=" + incomeComponent +
@@ -70,7 +71,7 @@ public class LotteryDialingHasIncome {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LotteryDialingHasIncome that = (LotteryDialingHasIncome) o;
+        LotteryDialingHasIncomeComponent that = (LotteryDialingHasIncomeComponent) o;
 
         return id == that.id;
     }
