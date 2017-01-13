@@ -2,6 +2,8 @@ package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComponent;
 import com.smartlott.backend.persistence.repositories.LotteryDialingHasIncomeComponentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,9 @@ import java.util.List;
 @Service
 @Transactional
 public class LotteryDialingHasIncomeComponentService {
+    
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LotteryDialingHasIncomeComponentService.class);
 
     @Autowired
     private LotteryDialingHasIncomeComponentRepository dialingIncomCompRepository;
@@ -61,17 +66,21 @@ public class LotteryDialingHasIncomeComponentService {
     @Transactional
     public void saveIncomeForLotteryDialing(long lotteryDialingId, double value) {
 
+
         List<LotteryDialingHasIncomeComponent> results = dialingIncomCompRepository.findByLotteryDialingId(lotteryDialingId);
 
 
         for (LotteryDialingHasIncomeComponent item : results){
+            LOGGER.info("Update value of income in Lottery dialing has income component entity {}", item);
             double defautlRate = item.getIncomeComponent().getValue();
             double currentValue = item.getValue();
             //calculate income for each income component
-            double income = value*defautlRate/100;
+            double income = (value*defautlRate)/100;
             currentValue+=income;
             item.setValue(currentValue);
-            dialingIncomCompRepository.save(item);
+            item = dialingIncomCompRepository.save(item);
+            LOGGER.info("Updated value of income in Lottery dialing has income component entity {}", item);
         }
+
     }
 }

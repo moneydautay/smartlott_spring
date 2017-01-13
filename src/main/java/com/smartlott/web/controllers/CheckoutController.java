@@ -2,9 +2,7 @@ package com.smartlott.web.controllers;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.domain.source.PerfectMoney;
-import com.smartlott.backend.service.I18NService;
-import com.smartlott.backend.service.LotterySerivce;
-import com.smartlott.backend.service.TransactionService;
+import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.TransactionStatusEnum;
 import org.slf4j.Logger;
@@ -46,6 +44,12 @@ public class CheckoutController {
     @Autowired
     private I18NService i18NService;
 
+    @Autowired
+    private LotteryDialingService dialingService;
+
+    @Autowired
+    private LotteryDialingHasIncomeComponentService incomeComponentService;
+
     private List<MessageDTO> messageDTOS;
 
 
@@ -57,7 +61,6 @@ public class CheckoutController {
 
     @RequestMapping(value = CHECKOUT_URL+"/perfectmoney/{checkoutId}", method = RequestMethod.POST)
     public String checkoutByPerfectMoney(@PathVariable long checkoutId, PerfectMoney perfectMoney, Model model, Locale locale, ServletRequest request){
-        System.out.println("[Perfect Money]: "+ perfectMoney.toString());
         messageDTOS = new ArrayList<>();
 
         Transaction transaction = transactionService.getOne(checkoutId);
@@ -119,6 +122,12 @@ public class CheckoutController {
 
         System.out.println("Remote address: "+request.getRemoteAddr());
         System.out.println("Local address: "+request.getLocalAddr());
+
+
+        //Get current opened lottery dialing
+        LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
+        //update lottery dialing has income component
+        incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),transaction.getAmount());
 
         return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
     }
