@@ -31,6 +31,8 @@ public class IncomeComponent implements Serializable{
 
     private double value = 0.0;
 
+    private boolean enabled = true;
+
     public IncomeComponent() {
     }
 
@@ -91,6 +93,14 @@ public class IncomeComponent implements Serializable{
         this.value = value;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "IncomeComponent{" +
@@ -101,6 +111,7 @@ public class IncomeComponent implements Serializable{
                 ", modifyBy=" + modifyBy +
                 ", jeckpots=" + jeckpots +
                 ", value=" + value +
+                ", enabled =" + enabled +
                 '}';
     }
 

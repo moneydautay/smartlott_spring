@@ -22,6 +22,7 @@ public class LotteryDialingHasIncomeComponentService {
     @Autowired
     private LotteryDialingHasIncomeComponentRepository dialingIncomCompRepository;
 
+
     @Transactional
     public LotteryDialingHasIncomeComponent create(LotteryDialingHasIncomeComponent lotteryDialingHasIncomeComponent){
         return dialingIncomCompRepository.save(lotteryDialingHasIncomeComponent);
@@ -57,12 +58,20 @@ public class LotteryDialingHasIncomeComponentService {
         return new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(Sort.Direction.DESC,"Id"));
     }
 
+    @Transactional
     public void saveIncomeForLotteryDialing(long lotteryDialingId, double value) {
 
         List<LotteryDialingHasIncomeComponent> results = dialingIncomCompRepository.findByLotteryDialingId(lotteryDialingId);
 
+
         for (LotteryDialingHasIncomeComponent item : results){
-            
+            double defautlRate = item.getIncomeComponent().getValue();
+            double currentValue = item.getValue();
+            //calculate income for each income component
+            double income = value*defautlRate/100;
+            currentValue+=income;
+            item.setValue(currentValue);
+            dialingIncomCompRepository.save(item);
         }
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Created by greenlucky on 1/12/17.
@@ -81,6 +83,12 @@ public class IncomeComponentService {
         incomeComponentRepository.delete(id);
     }
 
+
+    public List<IncomeComponent> getAll() {
+        return incomeComponentRepository.findAll();
+    }
+
+
     /**
      * Gets all Income component exist all database or null if not exist.
      * This function using  of IncomeComponentRepository
@@ -99,5 +107,6 @@ public class IncomeComponentService {
         PageRequest request = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(Sort.Direction.DESC,"id"));
         return incomeComponentRepository.findAll(request);
     }
+
 
 }
