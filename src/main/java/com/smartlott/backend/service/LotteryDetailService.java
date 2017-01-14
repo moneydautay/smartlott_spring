@@ -7,6 +7,8 @@ import com.smartlott.backend.persistence.repositories.LotteryDetailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,5 +44,9 @@ public class LotteryDetailService {
             lotteryDetailRepository.save(lotteryDetail);
             LOGGER.info("Created Lottery detail {}", lotteryDetail);
         }
+    }
+
+    public Page<LotteryDetail> getLotteryDetialByUserId(long userId, Pageable pageable){
+        return lotteryDetailRepository.findByTransactionOfUserId(userId, pageable);
     }
 }

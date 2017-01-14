@@ -4,15 +4,15 @@ import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.TransactionStatusEnum;
+import com.smartlott.utils.PageRequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import java.time.Clock;
@@ -112,4 +112,21 @@ public class LotteryRestController {
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/ofuser/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getLotteriesByUser(@PathVariable("userId") long userId, Pageable pageable, Locale locale){
+
+        //checking user id exist
+        User user = userService.findOne(userId);
+        if(user == null){
+            LOGGER.error("User id {} was not found", userId);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("Id.user.not.found", String.valueOf(userId), locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        Page<LotteryDetail> lotteryDetails = lotteryDetailService.getLotteryDetialByUserId(userId, PageRequestUtils.createPageRequest(pageable));
+
+        return new ResponseEntity<Object>(lotteryDetails, HttpStatus.OK);
+    }
+
 }
