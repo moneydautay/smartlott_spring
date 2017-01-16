@@ -36,13 +36,10 @@ public class NetworkTest {
 
     @Test
     public void getAccestor() throws Exception{
-        User user = userRepository.findByEmail("customer7@smartlott.com");
-        Assert.assertNotNull(user);
-        List<Network> networks = networkService.findAncestor(user,2,1);
-        System.out.println(networks);
 
-        networks = networkService.createNetworks(networks);
-        System.out.println(networks);
+        List<Network> networks = networkService.getByOfUserId(4);
+        for(Network network : networks)
+            System.out.println(network.getNetworkLevel().getIncomeComponent().getValue());
 
     }
 }

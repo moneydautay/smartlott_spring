@@ -80,6 +80,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	private RewardService rewardService;
 
 	@Autowired
+	private NetworkLevelService networkLevelService;
+
+	@Autowired
 	private LotteryDialingHasIncomeComponentService incomeComponentService;
 
 
@@ -90,8 +93,6 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Override
 	public void run(String...args) throws Exception{
 		LOGGER.info("Creating user with role admin into database...");
-
-
 
 		//Create number account type
 		CreateNumberAccountType();
@@ -132,7 +133,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		LOGGER.info("User {} has been created", user);
 
 
-		//createNotificationForNewUser(user);
+		createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
@@ -161,6 +162,8 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//create new Lottery dialing has income component
 		createLotDialHasIncome();
+
+		createCusts(user);
 
 
 	}
@@ -303,8 +306,10 @@ public class SmartlottApplication implements CommandLineRunner{
 		localUserA = userService.createUser(localUserA);
 		LOGGER.info("User {} has been created", localUserA);
 
+		NetworkLevel level1 = networkLevelService.getOne(1);
+
 		//add network
-		networks.add(new Network(localUserA, user,1));
+		networks.add(new Network(localUserA, user,level1));
 
 		name = "customerB";
 		User localUserB = UserUtils.createCustUser(name, name + "@smartlott.com");
@@ -321,7 +326,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		LOGGER.info("User {} has been created", localUserB);
 
 		//add network
-		networks.add(new Network(localUserB, user,1));
+		networks.add(new Network(localUserB, user,level1));
 
 		for(int i = 0; i < 5; i++) {
 			name = "customer" + i;
@@ -339,7 +344,7 @@ public class SmartlottApplication implements CommandLineRunner{
 			LOGGER.info("User {} has been created", localUser);
 
 			//add network
-			networks.add(new Network(localUser, localUserA,1));
+			networks.add(new Network(localUser, localUserA,level1));
 			networks.addAll(networkService.findAncestor(localUser, localUserA,1,2));
 		}
 
@@ -359,7 +364,7 @@ public class SmartlottApplication implements CommandLineRunner{
 			LOGGER.info("User {} has been created", localUser);
 
 			//add network
-			networks.add(new Network(localUser, localUserB,1));
+			networks.add(new Network(localUser, localUserB,level1));
 			networks.addAll(networkService.findAncestor(localUser, localUserB,1,2));
 		}
 		networkService.createNetworks(networks);
@@ -373,12 +378,12 @@ public class SmartlottApplication implements CommandLineRunner{
 	}
 
 	public void createLotteryType() throws Exception{
-		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",0.01);
+		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",1);
 		lotteryTypeService.create(lotteryType1);
 
 		LOGGER.info("Created lottery type {}", lotteryType1);
 
-		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",0.01);
+		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",1.2);
 		lotteryTypeService.create(lotteryType2);
 
 		LOGGER.info("Created lottery type {}", lotteryType2);
@@ -434,11 +439,20 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent5 = new IncomeComponent();
 		incomeComponent5.setJeckpots(true);
 		incomeComponent5.setName("D");
-		incomeComponent5.setValue(5);
+		incomeComponent5.setValue(3);
 		incomeComponent5.setCreateBy(user);
 		incomeComponent5.setEnabled(true);
 		incomeComponent5.setDescription("D");
 		incomeComponent5 = componentService.create(incomeComponent5);
+
+		IncomeComponent incomeComponent6 = new IncomeComponent();
+		incomeComponent6.setJeckpots(true);
+		incomeComponent6.setName("F");
+		incomeComponent6.setValue(2);
+		incomeComponent6.setCreateBy(user);
+		incomeComponent6.setEnabled(true);
+		incomeComponent6.setDescription("F");
+		incomeComponent6 = componentService.create(incomeComponent6);
 
 		//create reward
 		Reward jeckpots = new Reward();
@@ -464,6 +478,17 @@ public class SmartlottApplication implements CommandLineRunner{
 		thirdReward.setValue(2000);
 		thirdReward.setIncomeComponent(incomeComponent4);
 		rewardService.create(thirdReward);
+
+		//create level of network
+		NetworkLevel level1 = new NetworkLevel(1, "Level 1", "", incomeComponent5);
+		NetworkLevel level2 = new NetworkLevel(2, "Level 2", "", incomeComponent6);
+
+		level1 = networkLevelService.create(level1);
+		LOGGER.info("Created network level: {}", level1);
+
+		level2 = networkLevelService.create(level2);
+		LOGGER.info("Created network level: {}", level2);
+
 	}
 
 	public void createLotDialHasIncome(){

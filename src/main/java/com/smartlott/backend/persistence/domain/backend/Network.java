@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "network",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"of_user","ancestor","level"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"of_user","ancestor","network_level_id"})
     )
 public class Network {
 
@@ -23,15 +23,18 @@ public class Network {
     @JoinColumn(name = "ancestor")
     private User ancestor;
 
-    private int level = 0;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "network_level_id")
+    private NetworkLevel networkLevel;
 
     public Network() {
     }
 
-    public Network(User ofUser, User ancestor, int level) {
+    public Network(User ofUser, User ancestor, NetworkLevel networkLevel) {
         this.ofUser = ofUser;
         this.ancestor = ancestor;
-        this.level = level;
+        this.networkLevel = networkLevel;
     }
 
     public long getId() {
@@ -58,12 +61,12 @@ public class Network {
         this.ancestor = ancestor;
     }
 
-    public int getLevel() {
-        return level;
+    public NetworkLevel getNetworkLevel() {
+        return networkLevel;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setNetworkLevel(NetworkLevel networkLevel) {
+        this.networkLevel = networkLevel;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class Network {
                 "id=" + id +
                 ", ofUser=" + ofUser +
                 ", ancestor=" + ancestor +
-                ", level=" + level +
+                ", networkLevel=" + networkLevel +
                 '}';
     }
 

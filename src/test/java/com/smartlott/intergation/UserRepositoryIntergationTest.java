@@ -97,4 +97,9 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
     }
 
+    @Test
+    public void updateCashUser(){
+
+    }
+
 }

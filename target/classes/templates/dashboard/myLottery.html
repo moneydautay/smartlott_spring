@@ -40,7 +40,7 @@
                             <td th:text="#{mylottery.id.text}">Username</td>
                             <td th:text="#{mylottery.number.text}"></td>
                             <td th:text="#{mylottery.status.text}"></td>
-                            <td th:text="#{mylottery..text}"></td>
+                            <td th:text="#{mylottery.createddate.text}"></td>
                         </tr>
                         </thead>
                         <tbody class="text-center" id="contentTable">
@@ -112,13 +112,14 @@
         contentTable.html('');
         $.each(data.content, function (index, lot) {
             var strRow = '';
-            var strNumber = lot.coupleOne+"-"+lot.coupleTwo+"-"+lot.coupleThree+"-"+lot.coupleFour+"-"+lot.coupleFive+"-"+lot.coupleSix;
+            var lottery = lot.lottery;
+            var strNumber = lottery.coupleOne+"-"+lottery.coupleTwo+"-"+lottery.coupleThree+"-"+lottery.coupleFour+"-"+lottery.coupleFive+"-"+lottery.coupleSix;
             strRow += '<tr>';
             strRow += '<td>'+ (index+1) +'</td>';
-            strRow += '<td>'+ (lot.id) +'</td>';
+            strRow += '<td>'+ (lottery.id) +'</td>';
             strRow += '<td>'+ strNumber +'</td>';
-            strRow += '<td>'+ lot.enabled +'</td>';
-            strRow += '<td>'+ lot.transaction.createdDate +'</td>';
+            strRow += '<td>'+ lottery.enabled +'</td>';
+            strRow += '<td></td>';
             strRow += '</tr>';
             contentTable.append(strRow);
         });

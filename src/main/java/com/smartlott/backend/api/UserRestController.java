@@ -64,6 +64,9 @@ public class UserRestController {
     @Autowired
     private NetworkService networkService;
 
+    @Autowired
+    private NetworkLevelService networkLevelService;
+
     //Get level of network
     @Value("${network.level}")
     private int level;
@@ -118,8 +121,6 @@ public class UserRestController {
                 duplicated = true;
             }
             user.setIntroducedBy(introducedUser);
-
-
         }
 
         if(duplicated){
@@ -129,7 +130,7 @@ public class UserRestController {
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(new Role(RolesEnum.CUSTOMER),user));
         user.setUserRoles(userRoles);
-        userService.createUser(user);
+        user = userService.createUser(user);
 
         //Auto login the registered user
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
@@ -138,8 +139,9 @@ public class UserRestController {
         LOGGER.info("User {} has been created and logged to application ", user);
 
         int currentLevel = 1;
+        NetworkLevel networkLevel = networkLevelService.getOne(1);
         //add user to network of introduced
-        networks.add(new Network(user, user.getIntroducedBy(),currentLevel));
+        networks.add(new Network(user, user.getIntroducedBy(),networkLevel));
 
         //find ancestor of ancestor user
         networks.addAll(networkService.findAncestor(user, user.getIntroducedBy(),(--level),(++currentLevel)));

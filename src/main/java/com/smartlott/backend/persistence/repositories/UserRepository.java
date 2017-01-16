@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by Mrs Hoang on 12/15/2016.
  */
 @Repository
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public interface UserRepository extends CrudRepository<User, Long>{
 
 
@@ -52,4 +52,12 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @return A user or null if not found
      */
     public User findByIntroducedKey(String introducedKey);
+
+    @Transactional
+    public User save(User user);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.cash = :cash where u.id = :userId")
+    public void updateCash(@Param("userId") long userId, @Param("cash") double cash);
 }

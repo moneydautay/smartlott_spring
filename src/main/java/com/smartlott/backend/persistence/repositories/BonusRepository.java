@@ -33,5 +33,12 @@ public interface BonusRepository extends PagingAndSortingRepository<Bonus, Long>
      * @param ofUserId
      * @return A list of bonus of user or null if not exist
      */
+    public List<Bonus> findByOfUserId(long ofUserId);
+
+    /**
+     * Retrieve all bonus of user
+     * @param ofUserId
+     * @return A list of bonus of user or null if not exist
+     */
     public Page<Bonus> findByOfUserId(long ofUserId, Pageable pageable);
 }

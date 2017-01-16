@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import sun.nio.ch.Net;
 
 import javax.servlet.ServletRequest;
 import java.util.ArrayList;
@@ -46,6 +47,10 @@ public class CheckoutController {
 
     @Autowired
     private LotteryDialingService dialingService;
+
+
+    @Autowired
+    private BonusService bonusService;
 
     @Autowired
     private LotteryDialingHasIncomeComponentService incomeComponentService;
@@ -128,6 +133,12 @@ public class CheckoutController {
         LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
         //update lottery dialing has income component
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),transaction.getAmount());
+
+        //save bonus fro ancestor of user
+        bonusService.saveBonousOfUser(transaction.getOfUser(), transaction.getAmount());
+
+        //update checkout of ancestors of user
+
 
         return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
     }
