@@ -378,12 +378,12 @@ public class SmartlottApplication implements CommandLineRunner{
 	}
 
 	public void createLotteryType() throws Exception{
-		LotteryType lotteryType1 = new LotteryType("Type One","This is type one lottery type",1);
+		LotteryType lotteryType1 = new LotteryType(LotteryTypeEnum.TYPE1);
 		lotteryTypeService.create(lotteryType1);
 
 		LOGGER.info("Created lottery type {}", lotteryType1);
 
-		LotteryType lotteryType2 = new LotteryType("Type Two","This is type two lottery type",1.2);
+		LotteryType lotteryType2 = new LotteryType(LotteryTypeEnum.TYPE2);
 		lotteryTypeService.create(lotteryType2);
 
 		LOGGER.info("Created lottery type {}", lotteryType2);

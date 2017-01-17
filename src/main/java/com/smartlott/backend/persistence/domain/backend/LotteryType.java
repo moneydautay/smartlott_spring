@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.enums.LotteryTypeEnum;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -33,6 +34,13 @@ public class LotteryType implements Serializable{
         this.name = name;
         this.description = description;
         this.price = price;
+    }
+
+    public LotteryType(LotteryTypeEnum typeEnum){
+        this.id = typeEnum.getId();
+        this.name = typeEnum.getName();
+        this.description = typeEnum.getDescription();
+        this.price = typeEnum.getPrice();
     }
 
     public int getId() {
