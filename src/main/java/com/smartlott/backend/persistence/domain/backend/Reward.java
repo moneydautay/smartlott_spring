@@ -29,6 +29,8 @@ public class Reward implements Serializable{
     @Value("false")
     private boolean jeckpots;
 
+    private int defaultNumericReward = 0;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private IncomeComponent incomeComponent;
 
@@ -63,6 +65,14 @@ public class Reward implements Serializable{
         this.value = value;
     }
 
+    public int getDefaultNumericReward() {
+        return defaultNumericReward;
+    }
+
+    public void setDefaultNumericReward(int defaultNumericReward) {
+        this.defaultNumericReward = defaultNumericReward;
+    }
+
     public boolean isJeckpots() {
         return jeckpots;
     }
@@ -87,6 +97,7 @@ public class Reward implements Serializable{
                 ", name='" + name + '\'' +
                 ", value=" + value +
                 ", jeckpots=" + jeckpots +
+                ", defaultNumericReward=" + defaultNumericReward +
                 ", incomeComponent=" + incomeComponent +
                 '}';
     }

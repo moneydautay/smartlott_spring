@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by greenlucky on 1/8/17.
  */
@@ -36,4 +38,7 @@ public class LotterySerivce {
         return lotteryRepository.save(lottery);
     }
 
+    public List<Lottery> getAll() {
+        return lotteryRepository.findAll();
+    }
 }

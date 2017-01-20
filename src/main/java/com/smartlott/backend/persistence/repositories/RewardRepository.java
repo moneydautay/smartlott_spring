@@ -13,4 +13,6 @@ import java.util.List;
 public interface RewardRepository extends CrudRepository<Reward, Integer>{
 
     List<Reward> findAll();
+
+    public Reward findByIncomeComponentId(long incomeComponentId);
 }

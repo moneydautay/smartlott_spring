@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface LotteryDialingHasIncomeComponentRepository extends CrudRepository<LotteryDialingHasIncomeComponent, Long>{
 
+    List<LotteryDialingHasIncomeComponent> findAll();
+
     Page<LotteryDialingHasIncomeComponent> findAll(Pageable pageable);
 
     List<LotteryDialingHasIncomeComponent> findByLotteryDialingId(long lotteryDialingId);

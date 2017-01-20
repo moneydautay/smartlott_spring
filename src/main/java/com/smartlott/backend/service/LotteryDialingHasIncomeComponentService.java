@@ -2,6 +2,7 @@ package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComponent;
 import com.smartlott.backend.persistence.repositories.LotteryDialingHasIncomeComponentRepository;
+import com.smartlott.utils.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -76,11 +78,16 @@ public class LotteryDialingHasIncomeComponentService {
             double currentValue = item.getValue();
             //calculate income for each income component
             double income = (value*defautlRate)/100;
-            currentValue+=income;
+            income = MathUtils.round(income,4);
+            currentValue = MathUtils.round(currentValue+income,4);
             item.setValue(currentValue);
             item = dialingIncomCompRepository.save(item);
             LOGGER.info("Updated value of income in Lottery dialing has income component entity {}", item);
         }
 
+    }
+
+    public List<LotteryDialingHasIncomeComponent> getAll() {
+        return dialingIncomCompRepository.findAll();
     }
 }

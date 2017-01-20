@@ -41,4 +41,8 @@ public class RewardService {
     public void delete(int id) {
         rewardRepository.delete(id);
     }
+
+    public Reward getRewardByIncomeComponentId(long id) {
+        return rewardRepository.findByIncomeComponentId(id);
+    }
 }

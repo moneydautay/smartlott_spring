@@ -105,4 +105,9 @@ public class RewardServiceTest extends AbstractIntegrationTest{
 
         Assert.assertEquals("List rewards must be 3", 3, rewards.size());
     }
+
+    @Test
+    public void getRewardByIncomeComponentId() throws Exception{
+
+    }
 }

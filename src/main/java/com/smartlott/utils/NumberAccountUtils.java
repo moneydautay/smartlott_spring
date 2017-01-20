@@ -9,6 +9,7 @@ import com.smartlott.backend.persistence.domain.backend.User;
  */
 public class NumberAccountUtils {
 
+
     /**
      * Non instantiable
      */
