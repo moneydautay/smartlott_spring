@@ -1,6 +1,0 @@
- var username = /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/;
- var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}}]]*/
- ID: 8635262
- Password: Meo*u%1311%
- U1: U9498703
- U2: U13344806
