@@ -148,8 +148,8 @@ public class Transaction implements Serializable{
                 "id=" + id +
                 ", createdDate=" + createdDate +
                 ", amount=" + amount +
-                ", ofUser=" + ofUser +
-                ", handleBy=" + handleBy +
+                ", ofUser=" + ofUser.getId() +
+                ", handleBy=" + handleBy.getId() +
                 ", handleDate=" + handleDate +
                 ", transactionType=" + transactionType +
                 ", lotteryDetails=" + lotteryDetails +

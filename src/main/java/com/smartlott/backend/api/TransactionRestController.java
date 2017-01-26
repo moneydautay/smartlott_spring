@@ -80,7 +80,7 @@ public class TransactionRestController {
 
         //Checking valid amount withdraw and current amount
         DecimalFormat df = new DecimalFormat("0.0000");
-        double fees = Double.valueOf(df.format((transaction.getAmount()*numberAccount.getNumberAccountType().getfeesWithdraw())/100));
+        double fees = Double.valueOf(df.format((transaction.getAmount()*numberAccount.getNumberAccountType().getFeesWithdraw())/100));
 
         if(transaction.getAmount() > localUser.getCash()){
             LOGGER.error("Amount withdraw {} of user {} is greater than current cash", transaction.getAmount() ,localUser, localUser.getCash());

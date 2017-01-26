@@ -11,6 +11,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
+
 /**
  * Created by greenlucky on 12/25/16.
  */
@@ -34,12 +36,18 @@ public class PerfectMoneyTest {
         Assert.notNull(passPhrase);
     }
 
-
-
     @Test
     public void verifyAccountTest() throws Exception{
 
         String account = perfectMoneyService.verifyAccount(id, passPhrase,"U13344806");
         Assert.notNull(account);
+    }
+
+    @Test
+    public void getHistoryTransactionTest() throws Exception{
+        LocalDate starDate = LocalDate.of(2017,1,1);
+        boolean result = perfectMoneyService.checkExistBatch(starDate, "161648305");
+
+        System.out.println("Found batch [160099402] is: "+ result);
     }
 }

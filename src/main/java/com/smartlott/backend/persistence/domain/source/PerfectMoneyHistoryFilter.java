@@ -19,8 +19,9 @@ public class PerfectMoneyHistoryFilter {
     public int paymentsMade;
     public int paymentsReceived;
     public int batchFilter;
-    public int counterFilter;
+    public String counterFilter;
     public String paymentId;
+    public int desc=0;
 
     public Long getAccountId() {
         return accountId;
@@ -118,11 +119,11 @@ public class PerfectMoneyHistoryFilter {
         this.paymentId = paymentId;
     }
 
-    public int getCounterFilter() {
+    public String getCounterFilter() {
         return counterFilter;
     }
 
-    public void setCounterFilter(int counterFilter) {
+    public void setCounterFilter(String counterFilter) {
         this.counterFilter = counterFilter;
     }
 }

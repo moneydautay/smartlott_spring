@@ -215,9 +215,11 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Create new account for BigCoin
 		NumberAccountType bigCoin = new NumberAccountType(NumberAccountTypeEnum.BitCoin);
 		NumberAccountType pm = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
+		NumberAccountType cash = new NumberAccountType(NumberAccountTypeEnum.Cash);
 
 		numberAccountTypeService.create(bigCoin);
 		numberAccountTypeService.create(pm);
+		numberAccountTypeService.create(cash);
 	}
 
 	public void createNotificationForNewUser(User user){

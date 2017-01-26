@@ -5,9 +5,12 @@ import com.smartlott.backend.persistence.domain.source.PerfectMoneyHistoryFilter
 import com.smartlott.backend.persistence.repositories.PerfectMoneyRepository;
 import com.smartlott.exceptions.PerfectMoneyException;
 import com.smartlott.utils.HTTPClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +33,18 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
     protected static String BALANCE_URL = "https://perfectmoney.is/acct/balance.asp";
     protected static String RATES_URL = "http://perfectmoney.is/acct/rates.asp";
 
+    @Value(value = "${perfectmoney.id}")
+    private String accountId;
+
+    @Value(value = "${perfectmoney.passPhrase}")
+    private String passpharse;
+
+    @Value(value = "${perfectmoney.account}")
+    private String accountNumber;
+
     @Override
     public String transferMoney(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException {
         String url = SPEND_MONEY_URL + this.getTransferURL(perfectMoneyDetails);
-        System.out.println(url);
         List<String> response = HTTPClient.sendRequest(url);
         return processPerfectMoneyResponse(response);
     }
@@ -83,16 +94,39 @@ public class PerfectMoneyService implements PerfectMoneyRepository {
                 "&startyear=" + perfectMoneyHistoryFilter.startYear +
                 "&endmonth=" + perfectMoneyHistoryFilter.endMonth +
                 "&endday=" + perfectMoneyHistoryFilter.endDay +
-                "&endyear=" + perfectMoneyHistoryFilter.endYear +
-                "&paymentsmade=" + perfectMoneyHistoryFilter.paymentsMade +
-                "&paymentsreceived=" + perfectMoneyHistoryFilter.paymentsReceived +
-                "&batchfilter=" + perfectMoneyHistoryFilter.batchFilter +
-                "&counterfilter=" + perfectMoneyHistoryFilter.counterFilter +
-                "&payment_id=" + perfectMoneyHistoryFilter.paymentId +
-                "&desc=1";
-        System.out.println(url);
+                "&endyear=" + perfectMoneyHistoryFilter.endYear;
+                if(perfectMoneyHistoryFilter.paymentsMade != 0)
+                    url += "&paymentsmade=" + perfectMoneyHistoryFilter.paymentsMade;
+                if(perfectMoneyHistoryFilter.paymentsMade != 0)
+                    url += "&paymentsreceived=" + perfectMoneyHistoryFilter.paymentsMade;
+                if(perfectMoneyHistoryFilter.batchFilter != 0)
+                    url += "&batchfilter=" + perfectMoneyHistoryFilter.batchFilter;
+                if(perfectMoneyHistoryFilter.counterFilter != null)
+                    url += "&counterfilter=" + perfectMoneyHistoryFilter.counterFilter;
+                if(perfectMoneyHistoryFilter.paymentId != null)
+                    url += "&payment_id=" + perfectMoneyHistoryFilter.paymentId;
+                url += "&desc=1";
         List<String> response = HTTPClient.sendRequest(url);
         return processPerfectMoneyResponse(response);
+    }
+
+    public boolean checkExistBatch(LocalDate starDate, String batch) throws  PerfectMoneyException{
+
+        PerfectMoneyHistoryFilter filter = new PerfectMoneyHistoryFilter();
+        filter.setAccountId(Long.valueOf(accountId));
+        filter.setPassword(passpharse);
+        filter.setBatchFilter(Integer.valueOf(batch));
+        filter.setStartMonth(starDate.getMonthValue());
+        filter.setStartDay(starDate.getDayOfMonth());
+        filter.setStartYear(starDate.getYear());
+        filter.setEndMonth(LocalDate.now(Clock.systemDefaultZone()).getMonthValue());
+        filter.setEndDay(LocalDate.now(Clock.systemDefaultZone()).getDayOfMonth());
+        filter.setEndYear(LocalDate.now(Clock.systemDefaultZone()).getYear());
+        filter.setPaymentsReceived(1);
+        filter.setCounterFilter(accountNumber);
+
+        String result = getTransferHistory(filter);
+        return result.contains(batch);
     }
 
 	@SuppressWarnings("deprecation")

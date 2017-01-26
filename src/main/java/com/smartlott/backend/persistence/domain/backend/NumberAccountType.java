@@ -23,6 +23,9 @@ public class NumberAccountType {
 
     private boolean rate = true;
 
+    @Column(name = "payee_account")
+    private String payeeAccount;
+
     public NumberAccountType() {
     }
 
@@ -32,6 +35,7 @@ public class NumberAccountType {
         this.description = accountTypeEnum.getDescription();
         this.feesWithdraw = accountTypeEnum.getFeesWithdraw();
         this.rate = accountTypeEnum.isRate();
+        this.payeeAccount = accountTypeEnum.getPayeeAccount();
     }
 
     public NumberAccountType(String name, String description, double feesWithdraw, boolean rate) {
@@ -65,14 +69,6 @@ public class NumberAccountType {
         this.description = description;
     }
 
-    public double getfeesWithdraw() {
-        return feesWithdraw;
-    }
-
-    public void setfeesWithdraw(double feesWithdraw) {
-        this.feesWithdraw = feesWithdraw;
-    }
-
     public boolean isRate() {
         return rate;
     }
@@ -81,12 +77,31 @@ public class NumberAccountType {
         this.rate = rate;
     }
 
+    public double getFeesWithdraw() {
+        return feesWithdraw;
+    }
+
+    public void setFeesWithdraw(double feesWithdraw) {
+        this.feesWithdraw = feesWithdraw;
+    }
+
+    public String getPayeeAccount() {
+        return payeeAccount;
+    }
+
+    public void setPayeeAccount(String payeeAccount) {
+        this.payeeAccount = payeeAccount;
+    }
+
     @Override
     public String toString() {
-        return "NumberAccountTypeEnum{" +
+        return "NumberAccountType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", feesWithdraw=" + feesWithdraw +
+                ", rate=" + rate +
+                ", payeeAccount='" + payeeAccount + '\'' +
                 '}';
     }
 
