@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -49,19 +49,19 @@ public class CalculatedRewardTest {
     @Test
     public void test40Lottery() throws Exception{
 
-        CreateTest(40);
+        CreateTest(40,100);
     }
 
     @Test
     public void test150Lottery() throws Exception{
 
-        CreateTest(150);
+        CreateTest(150,100);
     }
 
     @Test
     public void test2000Lottery() throws Exception{
 
-        CreateTest(2000);
+        CreateTest(500,100);
     }
 
     private String getRandom(){
@@ -74,7 +74,7 @@ public class CalculatedRewardTest {
         return cop1;
     }
 
-    private void CreateTest(int numberLottery) throws Exception{
+    private void CreateTest(int numberLottery, double price) throws Exception{
         LotteryType lotteryType = new LotteryType(LotteryTypeEnum.TYPE1);
         //get current lottery dialing
         LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
@@ -93,10 +93,12 @@ public class CalculatedRewardTest {
 
             lottery = lotterySerivce.createNewLottery(lottery);
 
-            componentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),1);
+            componentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),price);
         }
 
         List<Lottery> lotteries = lotterySerivce.getAll();
+
+        
 
         Assert.assertEquals("Number of lottery must be equals "+numberLottery, lotteries.size(),numberLottery);
 
@@ -106,7 +108,7 @@ public class CalculatedRewardTest {
 
             System.out.println("Dialing com: "+ component.getIncomeComponent().getName() + ": val "+ component.getValue());
             totalValue += component.getValue();
-            double expectValue = component.getIncomeComponent().getValue()*numberLottery/100;
+            double expectValue = price*component.getIncomeComponent().getValue()*numberLottery/100;
             expectValue = MathUtils.round(expectValue,4);
             Assert.assertEquals(expectValue,component.getValue(),numberLottery);
 
@@ -114,24 +116,92 @@ public class CalculatedRewardTest {
             Reward reward = rewardService.getRewardByIncomeComponentId(component.getIncomeComponent().getId());
             System.out.println();
             System.out.println();
-            System.out.println("[========================================================]");
-            System.out.println("[========================================================]");
+
             if(reward != null) {
+                System.out.println("[========================================================]");
+                System.out.println("[========================================================]");
+                System.out.println("[Value of jackpot]: "+component.getValue());
+                System.out.println("[Defalut value of jackpot]: "+ reward.getValue());
                 int numberReward = (int) (component.getValue() / reward.getValue());
+                if(component.getIncomeComponent().isJackpots())
+                    if (numberReward > 0)
+                        numberReward = 1;
+
                 if (numberReward > 0) {
                     System.out.println("Default reward: " + reward.getName() + ": " + reward.getValue());
                     System.out.println("Comp reward: " + ": " + component.getValue());
                     System.out.println(reward.getName() + ": " + numberReward);
+
                 }
                 else
                     System.out.println("Reward name: " + reward.getName() + ": " + reward.getDefaultNumericReward());
+                System.out.println("[========================================================]");
+                System.out.println("[========================================================]");
+                List<Lottery> listResult = new ArrayList<>();
+                if(component.getIncomeComponent().isJackpots()) {
+                    listResult = findJackpots(lotteries, numberReward);
+                    lotteries.removeAll(listResult);
+                }
+                else {
+                    listResult = findLotteryAwards(lotteries, reward.getCoupleNumber(), numberReward);
+                    lotteries.removeAll(listResult);
+                }
+                System.out.println("Number award found: "+listResult.size());
+                System.out.println(listResult.toString());
+                System.out.println("Number lotteries is: "+lotteries.size());
+                //checking all list result will be deleted from lotteries
+                if(lotteries.containsAll(listResult)){
+                    System.out.println("List result still exist in lotteries");
+                }
             }
-            System.out.println("[========================================================]");
-            System.out.println("[========================================================]");
+
             System.out.println();
             System.out.println();
         }
-        Assert.assertEquals(totalValue, numberLottery, numberLottery);
+        Assert.assertEquals(totalValue, price*numberLottery, numberLottery);
     }
 
+    public List<Lottery> findJackpots(List<Lottery> lotteries, int numberReward){
+        if(numberReward == 0)
+            return new ArrayList<>();
+        return findLotteryAwards(lotteries,6);
+    }
+
+    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple){
+        int index = (int)(Math.random()*lotteries.size());
+        Lottery reward = lotteries.get(index);
+        System.out.println(reward.printCoupleLottery(numberComparedCouple));
+        List<Lottery> results = new ArrayList<>();
+        results.add(reward);
+        //remove jackpot from list
+        lotteries.remove(index);
+        //found list of lottery mark with
+        for (Lottery lottery : lotteries)
+            if(reward.compareTwoLotteries(lottery,numberComparedCouple))
+                results.add(lottery);
+        return results;
+    }
+
+    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple, int numberReward){
+        List<Lottery> lstResults = new ArrayList<>();
+
+        //condition stop recursive
+        if(lotteries.size() <= 0 || numberReward <=0)
+            return lstResults;
+
+        lstResults = findLotteryAwards(lotteries, numberComparedCouple);
+        lotteries.removeAll(lstResults);
+        // find number awards equal aspect number reward
+        // if number award greater than aspect number reward
+        // will remove all lstResults and find again number awards
+        if(lstResults.size() == numberReward)
+            return lstResults;
+        else if(lstResults.size() > numberReward) {
+            lstResults = findLotteryAwards(lotteries, numberComparedCouple, numberReward);
+        }else {
+            numberReward = numberReward - lstResults.size();
+            lstResults.addAll(findLotteryAwards(lotteries, numberComparedCouple, numberReward));
+        }
+        return lstResults;
+    }
 }

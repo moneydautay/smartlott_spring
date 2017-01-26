@@ -34,6 +34,8 @@ public class Reward implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     private IncomeComponent incomeComponent;
 
+    private int coupleNumber = 2;
+
     public Reward() {
     }
 
@@ -88,6 +90,14 @@ public class Reward implements Serializable{
 
     public void setIncomeComponent(IncomeComponent incomeComponent) {
         this.incomeComponent = incomeComponent;
+    }
+
+    public int getCoupleNumber() {
+        return coupleNumber;
+    }
+
+    public void setCoupleNumber(int coupleNumber) {
+        this.coupleNumber = coupleNumber;
     }
 
     @Override

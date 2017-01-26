@@ -1,0 +1,77 @@
+/*
+ * @ STYLESHEET DASHBOARD
+ */
+
+#nav-dashboard{
+
+}
+
+#nav-dashboard .nav-pills>li>a{
+    background-color: #2d2f39;
+    color: #f5f5f5;
+    border-radius:0;
+}
+
+#nav-dashboard .nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover{
+    background-color: #cb0e20;
+}
+
+.profile .nav-tabs{
+    border-bottom: 1px solid #2d2f39;
+}
+
+.nav-tabs>li>a:focus,
+.nav-tabs>li>a:hover{
+    color: #f5f5f5;
+    background-color: #2d2f39;
+    border: 1px solid #2d2f39;
+}
+.profile .nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover{
+    color: #f5f5f5;
+    background-color: #2d2f39;
+    border: 1px solid #2d2f39;
+}
+
+#dashboard .tab-content{
+    padding: 15px 0;
+}
+
+.edit-icon>a .fa{
+    font-size: 34px;
+}
+.input-group-addon{
+    color: #fff;
+    background-color: #cb0e20;
+    border: 1px solid #cb0e20;
+}
+
+.table a .fa{
+    font-size: 25px;
+}
+
+#dashboard .table thead tr td{
+    text-align: center;
+    font-weight: bold;
+}
+#dashboard .form-group .col-md-2 label{
+    padding: 10px 0;
+}
+
+.edit-icon{
+    text-align: right;
+}
+.birthday-has-right-icon .form-control-feedback {
+    right: 40px;
+}
+.de-has-right-icon .form-control-feedback {
+    right: 10px;
+}
+@media (min-width: 768px) {
+    .has-right-icon .form-control-feedback {
+        right: 16px;
+    }
+}

@@ -7,8 +7,6 @@ import com.smartlott.backend.service.LotteryDialingService;
 import com.smartlott.backend.service.RewardService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -35,7 +33,6 @@ public class IncomeComponentAndRewardUtils {
 
     public void createIncomeComponentAndRewardUtils(User user){
         IncomeComponent incomeComponent1 = new IncomeComponent();
-        incomeComponent1.setJeckpots(true);
         incomeComponent1.setName("A");
         incomeComponent1.setValue(47.5);
         incomeComponent1.setCreateBy(user);
@@ -44,7 +41,6 @@ public class IncomeComponentAndRewardUtils {
         incomeComponent1 = componentService.create(incomeComponent1);
 
         IncomeComponent incomeComponent2 = new IncomeComponent();
-        incomeComponent2.setJeckpots(true);
         incomeComponent2.setName("B");
         incomeComponent2.setValue(20);
         incomeComponent2.setCreateBy(user);
@@ -53,7 +49,6 @@ public class IncomeComponentAndRewardUtils {
         incomeComponent2 = componentService.create(incomeComponent2);
 
         IncomeComponent incomeComponent3 = new IncomeComponent();
-        incomeComponent3.setJeckpots(true);
         incomeComponent3.setName("C");
         incomeComponent3.setValue(20);
         incomeComponent3.setCreateBy(user);
@@ -62,7 +57,6 @@ public class IncomeComponentAndRewardUtils {
         incomeComponent3 = componentService.create(incomeComponent3);
 
         IncomeComponent incomeComponent4 = new IncomeComponent();
-        incomeComponent4.setJeckpots(true);
         incomeComponent4.setName("D");
         incomeComponent4.setValue(5);
         incomeComponent4.setCreateBy(user);
@@ -71,7 +65,6 @@ public class IncomeComponentAndRewardUtils {
         incomeComponent4 = componentService.create(incomeComponent4);
 
         IncomeComponent incomeComponent5 = new IncomeComponent();
-        incomeComponent5.setJeckpots(true);
         incomeComponent5.setName("D");
         incomeComponent5.setValue(5);
         incomeComponent5.setCreateBy(user);

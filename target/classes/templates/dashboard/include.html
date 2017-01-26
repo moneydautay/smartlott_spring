@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<body>
+<!-- Box sell lottery -->
+<aside th:fragment="dashboard-siderbar" class="col-md-4" id="sidebar">
+    <div class="row">
+        <div id="nav-dashboard">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().equals('/dashboard')?'active':''}"><a th:href="@{/dashboard}">Dashboard</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('profile')?'active':''}"><a th:href="@{/dashboard/profile}">Profile</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mycash')?'active':''}"><a th:href="@{/dashboard/mycash}">My Cash</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mybonus')?'active':''}"><a th:href="@{/dashboard/mybonus}">My Bonus</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mylottery')?'active':''}"><a th:href="@{/dashboard/mylottery}">My Lottery</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mytransaction')?'active':''}"><a th:href="@{/dashboard/mytransaction}">My Transaction</a></li>
+                <li role="presentation" th:class="${#httpServletRequest.getRequestURI().contains('mynetwork')?'active':''}"><a th:href="@{/dashboard/mynetwork}">My Network</a></li>
+            </ul>
+        </div>
+    </div>
+</aside>
+
+
+<!-- FRAGMENT NAVTABS-->
+<ul th:fragment="profile-nav-tabs" class="nav nav-tabs">
+    <li th:class="${#httpServletRequest.getRequestURI().equals('/dashboard/profile')?'active':''}"><a th:href="@{/dashboard/profile}" aria-controls="general">Thông tin chung</a></li>
+    <li th:class="${#httpServletRequest.getRequestURI().contains('password')?'active':''}"><a th:href="@{/dashboard/profile/password}" aria-controls="password">Mật khẩu</a></li>
+    <li th:class="${#httpServletRequest.getRequestURI().contains('doc')?'active':''}"><a th:href="@{/dashboard/profile/doc}" aria-controls="doc">Tài liệu</a></li>
+    <li th:class="${#httpServletRequest.getRequestURI().contains('account')?'active':''}"><a th:href="@{/dashboard/profile/account}" aria-controls="account">Tài khoản</a></li>
+</ul>
+
+<div class="row" th:fragment="profile-notification" id="notification">
+</div>
+<div th:fragment="script-nofitication">
+<script th:inline="javascript" type="application/javascript">
+    var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/
+        jQuery(document).ready(function () {
+            //get all notifications
+            var url = /*[[@{/api/notification}]]*/;
+            var urlMain = url + "/" + userId;
+            setTimeout(function () {
+                getData(urlMain, showNotif);
+            }, 5000);
+
+            $('.close').click(function () {
+                console.log(this);
+            })
+
+        });
+
+    function showNotif(data) {
+        showNotifications('notification', data, 'alert-warning alert-dismissible');
+    }
+    /**
+     * Processed notification
+     * @param id
+     * @param type: 1: show later; 2: close
+     */
+    function processedNotif(id, type=1) {
+        var url = /*[[@{/api/notification/process}]]*/;
+        url += "/"+ id + "/" + type;
+        saveOrUpdateDataByGet(url);
+    }
+</script>
+</div>
+</body>
+</html>

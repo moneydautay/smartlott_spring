@@ -401,7 +401,6 @@ public class SmartlottApplication implements CommandLineRunner{
 
 	public void createIncomeComponentAndRewardUtils(User user){
 		IncomeComponent incomeComponent1 = new IncomeComponent();
-		incomeComponent1.setJeckpots(true);
 		incomeComponent1.setName("Hoa hồng bán hàng F1");
 		incomeComponent1.setValue(20);
 		incomeComponent1.setCreateBy(user);
@@ -410,7 +409,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent1 = componentService.create(incomeComponent1);
 
 		IncomeComponent incomeComponent2 = new IncomeComponent();
-		incomeComponent2.setJeckpots(true);
 		incomeComponent2.setName("Hoa hồng bán hàng F2");
 		incomeComponent2.setValue(5);
 		incomeComponent2.setCreateBy(user);
@@ -419,7 +417,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent2 = componentService.create(incomeComponent2);
 
 		IncomeComponent incomeComponent3 = new IncomeComponent();
-		incomeComponent3.setJeckpots(true);
+		incomeComponent3.setJackpots(true);
 		incomeComponent3.setName("Hoa hồng năng động");
 		incomeComponent3.setValue(10);
 		incomeComponent3.setCreateBy(user);
@@ -428,7 +426,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent3 = componentService.create(incomeComponent3);
 
 		IncomeComponent incomeComponent4 = new IncomeComponent();
-		incomeComponent4.setJeckpots(true);
+		incomeComponent4.setJackpots(true);
 		incomeComponent4.setName("Giải đặc biệt");
 		incomeComponent4.setValue(48);
 		incomeComponent4.setCreateBy(user);
@@ -437,7 +435,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent4 = componentService.create(incomeComponent4);
 
 		IncomeComponent incomeComponent5 = new IncomeComponent();
-		incomeComponent5.setJeckpots(true);
 		incomeComponent5.setName("Giải nhất");
 		incomeComponent5.setValue(2);
 		incomeComponent5.setCreateBy(user);
@@ -446,7 +443,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent5 = componentService.create(incomeComponent5);
 
 		IncomeComponent incomeComponent6 = new IncomeComponent();
-		incomeComponent6.setJeckpots(true);
 		incomeComponent6.setName("Giải nhì");
 		incomeComponent6.setValue(2);
 		incomeComponent6.setCreateBy(user);
@@ -455,7 +451,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent6 = componentService.create(incomeComponent6);
 
 		IncomeComponent incomeComponent7 = new IncomeComponent();
-		incomeComponent7.setJeckpots(true);
 		incomeComponent7.setName("Giải ba");
 		incomeComponent7.setValue(3);
 		incomeComponent7.setCreateBy(user);
@@ -464,7 +459,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent7 = componentService.create(incomeComponent7);
 
 		IncomeComponent incomeComponent8 = new IncomeComponent();
-		incomeComponent8.setJeckpots(true);
 		incomeComponent8.setName("Giải tư");
 		incomeComponent8.setValue(5);
 		incomeComponent8.setCreateBy(user);
@@ -474,7 +468,6 @@ public class SmartlottApplication implements CommandLineRunner{
 
 
 		IncomeComponent incomeComponent9 = new IncomeComponent();
-		incomeComponent9.setJeckpots(true);
 		incomeComponent9.setName("Quản lý web, server");
 		incomeComponent9.setValue(5);
 		incomeComponent9.setCreateBy(user);
@@ -486,23 +479,26 @@ public class SmartlottApplication implements CommandLineRunner{
 		//create reward
 		Reward jeckpots = new Reward();
 		jeckpots.setName("Jeckpots");
-		jeckpots.setValue(10000000);
+		jeckpots.setValue(1000000);
 		jeckpots.setIncomeComponent(incomeComponent4);
-		jeckpots.setDefaultNumericReward(1);
+		jeckpots.setDefaultNumericReward(0);
+		jeckpots.setCoupleNumber(6);
 		rewardService.create(jeckpots);
 
 		Reward firstReward = new Reward();
 		firstReward.setName("firstReward");
 		firstReward.setValue(1500);
 		firstReward.setIncomeComponent(incomeComponent5);
-		firstReward.setDefaultNumericReward(1);
+		firstReward.setDefaultNumericReward(0);
+		firstReward.setCoupleNumber(5);
 		rewardService.create(firstReward);
 
 		Reward secondReward = new Reward();
 		secondReward.setName("secondReward");
 		secondReward.setValue(120);
 		secondReward.setIncomeComponent(incomeComponent6);
-		secondReward.setDefaultNumericReward(1);
+		secondReward.setDefaultNumericReward(0);
+		secondReward.setCoupleNumber(4);
 		rewardService.create(secondReward);
 
 		Reward thirdReward = new Reward();
@@ -510,12 +506,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		thirdReward.setValue(20);
 		thirdReward.setIncomeComponent(incomeComponent7);
 		thirdReward.setDefaultNumericReward(10);
+		thirdReward.setCoupleNumber(3);
 		rewardService.create(thirdReward);
 		Reward fourReward = new Reward();
 		fourReward.setName("fourReward");
 		fourReward.setValue(5);
-		firstReward.setDefaultNumericReward(100);
+		firstReward.setDefaultNumericReward(10);
 		fourReward.setIncomeComponent(incomeComponent8);
+		fourReward.setCoupleNumber(2);
 		rewardService.create(fourReward);
 
 		//create level of network

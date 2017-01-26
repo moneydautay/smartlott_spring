@@ -146,6 +146,22 @@ public class Lottery implements Serializable{
                 '}';
     }
 
+    public String printCoupleLottery(int numberComparedCouple) {
+        String strCouple= "[" ;
+        if(numberComparedCouple >=6)
+            strCouple+= coupleOne + "-";
+        if(numberComparedCouple >=5)
+            strCouple+=coupleTwo + "-";
+        if(numberComparedCouple >=4)
+            strCouple+=coupleThree + "-";
+        if(numberComparedCouple >=3)
+            strCouple+=coupleFour + "-";
+        strCouple+=coupleFive + "-";
+        strCouple+=coupleSix;
+                        strCouple+="]";
+        return strCouple;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,5 +175,29 @@ public class Lottery implements Serializable{
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+    /**
+     * Compares two lotteries base on numberComparedCouple. The minimize is 2 couple
+     *
+     * @param o
+     * @param numberComparedCouple
+     * @return True or false
+     */
+    public boolean compareTwoLotteries(Object o, int numberComparedCouple) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Lottery lottery = (Lottery) o;
+        if(numberComparedCouple>=6)
+            if (!coupleOne.equals(lottery.coupleOne)) return false;
+        if(numberComparedCouple>=5)
+            if (!coupleTwo.equals(lottery.coupleTwo)) return false;
+        if(numberComparedCouple>=4)
+            if (!coupleThree.equals(lottery.coupleThree)) return false;
+        if(numberComparedCouple>=3)
+            if (!coupleFour.equals(lottery.coupleFour)) return false;
+        if (!coupleFive.equals(lottery.coupleFive)) return false;
+        return coupleSix.equals(lottery.coupleSix);
     }
 }

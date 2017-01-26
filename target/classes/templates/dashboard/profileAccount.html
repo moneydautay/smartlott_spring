@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen" />
+<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen" />
+
+<body>
+<!-- main container-->
+<div class="container">
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu" />
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header" />
+
+    <!-- Slider image-->
+    <div class="container category">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+            <li class="breadcrumb-item" ><a th:href="@{/dashboard}" th:text="#{breadcrumb.dashboard.text}">Dashbroad</a></li>
+            <li class="breadcrumb-item active" th:text="#{breadcrumb.general.info.text}">Thông tin cá nhân</li>
+        </ol>
+        <!-- NOTIFICATION -->
+        <div th:replace="dashboard/include :: profile-notification"/>
+        <div class="container" id="dashboard">
+            <div class="col-md-8 category">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="content profile">
+                    <!-- Nav tabs -->
+                    <ul th:replace="dashboard/include :: profile-nav-tabs" />
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="accountNumber">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <td>Số tài khoản</td>
+                                    <td>Loại tài khoản</td>
+                                    <td>#</td>
+                                </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                <tr>
+                                    <td>U389384</td>
+                                    <td>Perfect Money</td>
+                                    <td>
+                                        <a href=""><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                        <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr> <tr>
+                                    <td>U389384</td>
+                                    <td>Perfect Money</td>
+                                    <td>
+                                        <a href=""><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                        <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr> <tr>
+                                    <td>U389384</td>
+                                    <td>Perfect Money</td>
+                                    <td>
+                                        <a href=""><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                        <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="form-group">
+                                        <a th:href="@{/dashboard/profile/account/add}" class="btn btn-primary">Thêm tài khoản</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INCLUDE RIGHT SIDEBAR-->
+            <aside th:replace="dashboard/include :: dashboard-siderbar"/>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news" />
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment" />
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer" />
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/hashtable.js}"></script>
+<script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/customer-validator.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function($) {
+        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var url = /*[[@{/api/number-account/by-user}]]*/;
+        url+="/"+userId;
+        //get all number accounts given by userid
+        getData(url, showNumberAccountToTable);
+        
+        function showNumberAccountToTable(data) {
+            var accountNumber = $('#accountNumber tbody');
+            accountNumber.html('');
+            var urlEdit = /*[[@{/dashboard/profile/account/edit}]]*/;
+            var urlDelete = /*[[@{/dashboard/profile/account/delete}]]*/;
+            $.each(data, function (index, numAcc) {
+                var strRow = '';
+              strRow+='<tr>';
+              strRow+='<td>'+ numAcc.number+'</td>';
+              strRow+='<td>'+numAcc.numberAccountType.name+'</td>';
+              strRow+='<td>';
+              strRow+='<a href="'+urlEdit+'/'+numAcc.id+'"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>';
+              strRow+=' <a href="'+urlDelete+'/'+numAcc.id+'"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+              strRow+='</td>';
+              strRow+='</tr>';
+              accountNumber.append(strRow);
+            });
+        }
+    });
+</script>
+<div th:replace="dashboard/include :: script-nofitication"/>
+</body>
+</html>

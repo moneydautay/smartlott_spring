@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu"/>
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header"/>
+    <div class="container">
+        <div class=" category">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/checkout/{checkoutId}(checkoutId=${checkoutId})}" th:text="#{breadcrumb.lottery.checkout.text}">Checkout</a></li>
+                <li class="breadcrumb-item active" th:text="#{breadcrumb.lottery.checkout.perfectmoney.text}">Perfect Money</li>
+            </ol>
+            <div class="content">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="row col-md-6" id="checkoutDetail">
+                    <FORM th:action="@{/checkout/perfectmoney/3}" METHOD="POST">
+                        <P>
+                            <input type="hidden" name="PAYEE_ACCOUNT" value="U9007123"/>
+                            <input type="hidden" name="PAYMENT_AMOUNT" value="1"/>
+                            <input type="hidden" name="PAYMENT_UNITS" value="USD"/>
+                            <input type="hidden" name="PAYMENT_BATCH_NUM" value="680"/>
+                            <input type="hidden" name="PAYER_ACCOUNT" value="U110007"/>
+                            <input type="hidden" name="TIMESTAMPGMT" value="1212244190"/>
+                            <input type="hidden" name="ORDER_NUM" value="3"/>
+                            <input type="hidden" name="CUST_NUM" value="8"/>
+                            <input type="hidden" name="PAYMENT_ID" value="123"/>
+                            <input type="hidden"
+                                   name="V2_HASH" value="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"/>
+                        </P>
+                        <input type="submit" value="submit"/>
+                    </FORM>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news"/>
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment"/>
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer"/>
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+
+</body>
+</html>

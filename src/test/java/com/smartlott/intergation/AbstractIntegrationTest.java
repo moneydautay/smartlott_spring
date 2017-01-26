@@ -7,7 +7,7 @@ import com.smartlott.enums.RolesEnum;
 import com.smartlott.utils.UserUtils;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -15,8 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+;
 
 /**
  * Created by Mrs Hoang on 12/15/2016.
@@ -129,7 +130,7 @@ public abstract class AbstractIntegrationTest {
         incomeComponent.setCreateBy(user);
         incomeComponent.setName(name);
         incomeComponent.setDescription(description);
-        incomeComponent.setJeckpots(jeckpots);
+        incomeComponent.setJackpots(jeckpots);
         incomeComponent.setValue(value);
         return incomeComponentRepository.save(incomeComponent);
     }

@@ -27,7 +27,7 @@ public class IncomeComponent implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     private User modifyBy;
 
-    private boolean jeckpots = false;
+    private boolean jackpots = false;
 
     private double value = 0.0;
 
@@ -76,12 +76,12 @@ public class IncomeComponent implements Serializable{
         this.modifyBy = modifyBy;
     }
 
-    public boolean isJeckpots() {
-        return jeckpots;
+    public boolean isJackpots() {
+        return jackpots;
     }
 
-    public void setJeckpots(boolean jeckpots) {
-        this.jeckpots = jeckpots;
+    public void setJackpots(boolean jeckpots) {
+        this.jackpots = jeckpots;
     }
 
 
@@ -109,7 +109,7 @@ public class IncomeComponent implements Serializable{
                 ", description='" + description + '\'' +
                 ", createBy=" + createBy +
                 ", modifyBy=" + modifyBy +
-                ", jeckpots=" + jeckpots +
+                ", jeckpots=" + jackpots +
                 ", value=" + value +
                 ", enabled =" + enabled +
                 '}';
