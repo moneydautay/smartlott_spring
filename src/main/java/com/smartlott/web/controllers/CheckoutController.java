@@ -63,6 +63,9 @@ public class CheckoutController {
     @Autowired
     private LotteryDialingHasIncomeComponentService incomeComponentService;
 
+    @Autowired
+    private SecurityTokenSevice securityTokenSevice;
+
     private List<MessageDTO> messageDTOS;
 
     @RequestMapping(CHECKOUT_URL+"/{checkoutId}")
@@ -122,9 +125,6 @@ public class CheckoutController {
         model.addAttribute("messages",messageDTOS);
         model.addAttribute("transaction",transaction);
         model.addAttribute("checkoutId", checkoutId);
-
-        System.out.println("Remote address: "+request.getRemoteAddr());
-        System.out.println("Local address: "+request.getLocalAddr());
 
 
         //Get current opened lottery dialing
@@ -187,5 +187,12 @@ public class CheckoutController {
     @RequestMapping(value = CHECKOUT_URL+"/perfectmoney/frmtest")
     public String perfectMoneyFrmTest(){
         return FORM_TEST_PERFECT_MONEY_VIEW_NAME;
+    }
+
+    @RequestMapping(value = CHECKOUT_URL+"/cash/{checkoutId}")
+    public String checkoutByCash(@PathVariable long checkoutId, Model model){
+        model.addAttribute("checkoutId", checkoutId);
+        model.addAttribute("checkoutType", "cash");
+        return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
     }
 }

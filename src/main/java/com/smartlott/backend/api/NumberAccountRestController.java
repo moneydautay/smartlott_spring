@@ -4,7 +4,6 @@ import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import com.smartlott.backend.persistence.domain.backend.SecurityToken;
 import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.repositories.EmailService;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -55,12 +53,6 @@ public class NumberAccountRestController {
     private String passPhrase;
 
     @Autowired
-    private EmailService emailService;
-
-    @Value("${webmaster.email}")
-    private String webmasterEmail;
-
-    @Autowired
     private SecurityTokenSevice securityTokenSevice;
 
     @Autowired
@@ -91,15 +83,9 @@ public class NumberAccountRestController {
     public ResponseEntity<Object> create(@PathVariable long userId,@Valid @RequestBody NumberAccount numberAccount, Locale locale){
 
         List<MessageDTO> messageDTOS = new ArrayList<>();
-
-        //check security token
-        SecurityToken securityToken = securityTokenSevice.getSecurityTokenByToken(numberAccount.getSecurityToken());
-        if(securityToken == null || LocalDateTime.now(Clock.systemDefaultZone()).isAfter(securityToken.getExpiryDate())){
-            LOGGER.error("Token {} is not valid", numberAccount.getSecurityToken());
-            String message = messageSource.getMessage("security.token.invalid", new Object[]{numberAccount.getSecurityToken()} , locale);
-            messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
+        SecurityToken securityToken = securityTokenSevice.checkValidToken(numberAccount.getSecurityToken(), messageDTOS, locale);
+        if(securityToken==null)
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
-        }
 
         //Checking user exist
         User localUser = userService.findOne(userId);
@@ -118,7 +104,7 @@ public class NumberAccountRestController {
 
         //delete security token
         securityTokenSevice.remove(securityToken.getId());
-        LOGGER.debug("Removed security token {} ",securityToken.getToken());
+        LOGGER.debug("Removed security token {} ",numberAccount.getSecurityToken());
 
         //turnoff notification
         if(!localUser.isActived() && localUser.getDocumentOne() != null && localUser.getDocumentTwo() != null)
@@ -180,7 +166,7 @@ public class NumberAccountRestController {
         }
 
         //send email
-        sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
+        securityTokenSevice.sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
 
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
@@ -188,7 +174,7 @@ public class NumberAccountRestController {
     @RequestMapping(value = "/verify-delete", method = RequestMethod.POST)
     public ResponseEntity<Object> verifyDeleteNumberAccount(@Valid @RequestBody NumberAccount numberAccount, Locale locale){
         //send email
-        sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
+        securityTokenSevice.sendSecurityTokenEmail(numberAccount.getUser().getEmail(), locale);
 
         return new ResponseEntity<Object>(numberAccount, HttpStatus.OK);
     }
@@ -256,21 +242,5 @@ public class NumberAccountRestController {
     }
 
 
-    private void sendSecurityTokenEmail(String email, Locale locale){
-        SecurityToken securityToken = securityTokenSevice.createSecurityTokenForEmail(email.trim());
 
-        String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
-        String subject = messageSource.getMessage("security.token.subject.text", null, locale);
-
-        //sending mail to email
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(webmasterEmail);
-        mailMessage.setTo(email);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
-
-        emailService.sendGenericEmailMessage(mailMessage);
-        System.out.println("Sent email  with content ["+message+"] to email {"+ email+"}");
-        LOGGER.debug("Sent email  with content {} to email {}", message, email);
-    }
 }

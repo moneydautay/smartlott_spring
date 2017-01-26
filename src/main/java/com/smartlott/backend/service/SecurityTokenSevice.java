@@ -1,18 +1,24 @@
 package com.smartlott.backend.service;
 
+import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.SecurityToken;
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.repositories.EmailService;
 import com.smartlott.backend.persistence.repositories.SecurityTokenRepository;
 import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -26,6 +32,15 @@ public class SecurityTokenSevice {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${webmaster.email}")
+    private String webmasterEmail;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Value("${token.expiration.length.minutes}")
     private int tokenExpirationLengthInMinutes;
@@ -97,5 +112,35 @@ public class SecurityTokenSevice {
      */
     public void remove(long id) {
         tokenRepository.delete(id);
+    }
+
+    public void sendSecurityTokenEmail(String email, Locale locale){
+        SecurityToken securityToken = createSecurityTokenForEmail(email.trim());
+
+        String message = messageSource.getMessage("security.token.message.text", new Object[]{securityToken}, locale);
+        String subject = messageSource.getMessage("security.token.subject.text", null, locale);
+
+        //sending mail to email
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(webmasterEmail);
+        mailMessage.setTo(email);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        emailService.sendGenericEmailMessage(mailMessage);
+        System.out.println("Sent email  with content ["+message+"] to email {"+ email+"}");
+        LOGGER.debug("Sent email  with content {} to email {}", message, email);
+    }
+
+    public SecurityToken checkValidToken(String strSecurityToken, List<MessageDTO> messageDTOS, Locale locale) {
+        //check security token
+        SecurityToken securityToken = getSecurityTokenByToken(strSecurityToken);
+        if(securityToken == null || LocalDateTime.now(Clock.systemDefaultZone()).isAfter(securityToken.getExpiryDate())){
+            LOGGER.error("Token {} is not valid", securityToken);
+            String message = messageSource.getMessage("security.token.invalid", new Object[]{securityToken} , locale);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
+           return null;
+        }
+        return securityToken;
     }
 }

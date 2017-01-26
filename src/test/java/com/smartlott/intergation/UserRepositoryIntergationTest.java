@@ -20,8 +20,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -99,7 +97,14 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
     @Test
     public void updateCashUser(){
-
+        User user = userRepository.findOne(Long.valueOf(1));
+        double cash = user.getCash();
+        System.out.printf("Cash of user: "+ cash);
+        cash -= 0.01;
+        System.out.printf("Cash of user after minus 0.01: "+ cash);
+        userRepository.updateCash(user.getId(), cash);
+        User actualUser = userRepository.findOne((long)1);
+        System.out.println(actualUser.toString());
     }
 
 }

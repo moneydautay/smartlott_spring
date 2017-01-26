@@ -49,6 +49,17 @@
                         <p><span th:text="#{order.status.text}">Status</span>: <span id="statusOrder"></span></p>
                         <hr/>
                         <p class="totalOrder"><b><span th:text="#{order.total.text}">Total</span>:</b> $<span id="totalOrder"></span></p>
+                        <form th:if="${checkoutType=='cash'}" id="frmCheckoutCash" method="post" th:action="@{/api/checkout/cash}">
+                            <div class="form-group col-md-6">
+                                <label th:text="#{order.transaction.code.text}"></label>
+                                <input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" th:text="#{order.confirm.button.text}"></button>
+                                <button type="button" class="btn btn-warning" th:text="#{order.resend.security.token.text}">Resend</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -86,9 +97,25 @@
 
         var urlNumberAccountType = /*[[@{/api/number-account-type}]]*/;
 
+        $('#frmCheckoutCash').submit(function (e) {
+            e.preventDefault();
+            var urlCheckoutCash = $(this).attr('action');
+            console.log(urlCheckoutCash);
+            var transactionId = /*[[${checkoutId}]]*/;
+            var data = {};
+            data['id'] = transactionId;
+            data['securityToken'] = $('#securityToken').val();
 
+            saveOrupdateData(urlCheckoutCash, 'POST',data, showCheckoutCashSuccess);
+        });
     });
-
+    
+    function showCheckoutCashSuccess(data) {
+        showSuccess(data);
+        //clear content form cash checkout
+        $('#frmCheckoutCash').html('');
+    }
+    
     function showTransactionInfo(data) {
         data = data.content;
         console.log(data);

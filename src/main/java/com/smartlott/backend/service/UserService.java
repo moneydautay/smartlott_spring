@@ -118,4 +118,15 @@ public class UserService {
     public User getUserByIntroducedKey(String introducedKey) {
         return userRepository.findByIntroducedKey(introducedKey);
     }
+
+    /**
+     * Dedicates to update cash of user
+     *
+     * @param userId
+     * @param cash
+     */
+    @Transactional
+    public void updateCash(Long userId, double cash) {
+        userRepository.updateCash(userId, cash);
+    }
 }

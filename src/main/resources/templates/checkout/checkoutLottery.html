@@ -131,12 +131,28 @@
         }).on('success.form.fv',function (e) {
             e.preventDefault();
             var url = '';
-            if($('#accountType').val()==1)
-                url = /*[[@{/checkout/bitcoin/{checkoutId}(checkoutId=${checkoutId})}]]*/;
-            else
-                $('#frmCheckoutByPerfectMoney').submit();
+            var msgConfirm = /*[[#{order.checkout.confirm.text}]]*/;
+            if(confirm(msgConfirm)){
+                switch ($('#accountType').val()){
+                    case 1:
+                        url = /*[[@{/checkout/bitcoin/{checkoutId}(checkoutId=${checkoutId})}]]*/;
+                        break;
+                    case 2:
+                        $('#frmCheckoutByPerfectMoney').submit();
+                        break;
+                    default:
+                        var urlSendToken = /*[[@{/api/security-token/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+                        getData(urlSendToken,submitCashConfirmSecurityCode);
+
+                }
+            }
+
         });
 
+        function submitCashConfirmSecurityCode(data) {
+            var url = /*[[@{/checkout/cash/{checkoutId}(checkoutId=${checkoutId})}]]*/;
+            window.location.href = url;
+        }
 
         $('#orderCancelButton').click(function () {
             var msgConfirm = /*[[#{order.checkout.cancel.confirm.text}]]*/;
