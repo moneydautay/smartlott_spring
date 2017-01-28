@@ -2,10 +2,10 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="robots" content="index, follow">
+        <meta title="robots" content="index, follow">
         <title>aciTree demo - A treeview control with jQuery</title>
-        <meta name="description" content="A demo to show you how aciTree can be used, check the plugin page to see all the functions exposed by the API">
-        <meta name="keywords" content="aciTree, treeview, control, tree view, javascript, jQuery">
+        <meta title="description" content="A demo to show you how aciTree can be used, check the plugin page to see all the functions exposed by the API">
+        <meta title="keywords" content="aciTree, treeview, control, tree view, javascript, jQuery">
         <link rel="stylesheet" type="text/css" href="css/aciTree.css" media="all">
         <link rel="stylesheet" type="text/css" href="css/demo.css" media="all">
         <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -64,48 +64,48 @@
                 <form action="" enctype="application/x-www-form-urlencoded" method="post" target="_self">
                     <table cellspacing="0" cellpadding="10" border="0"><tr><td width="300">
                                 <p>Filter: <input type="text" id="filter" value=""> (<span style="color:blue">note</span>)</p>
-                                <p>Use Animations: <label><input type="radio" name="animate" value="1"> Yes</label>
-                                    <label><input type="radio" name="animate" value="0"> No</label></p>
-                                <p>Expand All: <label><input type="radio" name="expand" value="1"> Yes</label>
-                                    <label><input type="radio" name="expand" value="0"> No</label></p>
-                                <p>Collapse All: <label><input type="radio" name="collapse" value="1"> Yes</label>
-                                    <label><input type="radio" name="collapse" value="0"> No</label></p>
-                                <p>Unique on Open: <label><input type="radio" name="unique" value="1"> Yes</label>
-                                    <label><input type="radio" name="unique" value="0"> No</label></p>
-                                <p>Empty on Close: <label><input type="radio" name="empty" value="1"> Yes</label>
-                                    <label><input type="radio" name="empty" value="0"> No</label></p>
-                                <p>Selectable: <label><input type="radio" name="selectable" value="1"> Yes</label>
-                                    <label><input type="radio" name="selectable" value="0"> No</label></p>
-                                <p><span style="color:red">(new) </span>Multi-Selectable <label><input type="radio" name="multiSelectable" value="1"> Yes</label>
-                                    <label><input type="radio" name="multiSelectable" value="0"> No</label></p>
-                                <p>Full Row: <label><input type="radio" name="fullRow" value="1"> Yes</label>
-                                    <label><input type="radio" name="fullRow" value="0"> No</label></p>
-                                <p>Text Selection: <label><input type="radio" name="textSelection" value="1"> Enabled</label>
-                                    <label><input type="radio" name="textSelection" value="0"> Disabled</label></p>
-                                <p>Sortable: <label><input type="radio" name="sortable" value="1"> Enabled</label>
-                                    <label><input type="radio" name="sortable" value="0"> Disabled</label></p>
+                                <p>Use Animations: <label><input type="radio" title="animate" value="1"> Yes</label>
+                                    <label><input type="radio" title="animate" value="0"> No</label></p>
+                                <p>Expand All: <label><input type="radio" title="expand" value="1"> Yes</label>
+                                    <label><input type="radio" title="expand" value="0"> No</label></p>
+                                <p>Collapse All: <label><input type="radio" title="collapse" value="1"> Yes</label>
+                                    <label><input type="radio" title="collapse" value="0"> No</label></p>
+                                <p>Unique on Open: <label><input type="radio" title="unique" value="1"> Yes</label>
+                                    <label><input type="radio" title="unique" value="0"> No</label></p>
+                                <p>Empty on Close: <label><input type="radio" title="empty" value="1"> Yes</label>
+                                    <label><input type="radio" title="empty" value="0"> No</label></p>
+                                <p>Selectable: <label><input type="radio" title="selectable" value="1"> Yes</label>
+                                    <label><input type="radio" title="selectable" value="0"> No</label></p>
+                                <p><span style="color:red">(new) </span>Multi-Selectable <label><input type="radio" title="multiSelectable" value="1"> Yes</label>
+                                    <label><input type="radio" title="multiSelectable" value="0"> No</label></p>
+                                <p>Full Row: <label><input type="radio" title="fullRow" value="1"> Yes</label>
+                                    <label><input type="radio" title="fullRow" value="0"> No</label></p>
+                                <p>Text Selection: <label><input type="radio" title="textSelection" value="1"> Enabled</label>
+                                    <label><input type="radio" title="textSelection" value="0"> Disabled</label></p>
+                                <p>Sortable: <label><input type="radio" title="sortable" value="1"> Enabled</label>
+                                    <label><input type="radio" title="sortable" value="0"> Disabled</label></p>
 
-                                <p>Checkboxes: <label><input type="radio" name="checkbox" value="1"> Yes</label>
-                                    <label><input type="radio" name="checkbox" value="0"> No</label></p>
-                                <p>Chain Checkboxes: <label><input type="radio" name="checkboxChain" value="true"> Yes</label>
-                                    <label><input type="radio" name="checkboxChain" value="-1"> Update Parents</label>
-                                    <label><input type="radio" name="checkboxChain" value="1"> Update Children </label>
-                                    <label><input type="radio" name="checkboxChain" value="false"> No</label></p>
-                                <p>Checkbox Break: <label><input type="radio" name="checkboxBreak" value="1"> Yes</label>
-                                    <label><input type="radio" name="checkboxBreak" value="0"> No</label></p>
-                                <p>Checkbox-Only Click: <label><input type="radio" name="checkboxClick" value="1"> Yes</label>
-                                    <label><input type="radio" name="checkboxClick" value="0"> No</label></p>
-                                <p>Radio Buttons: <label><input type="radio" name="radio" value="1"> Yes</label>
-                                    <label><input type="radio" name="radio" value="0"> No</label></p>
-                                <p>Chain Radio Buttons: <label><input type="radio" name="radioChain" value="1"> Yes</label>
-                                    <label><input type="radio" name="radioChain" value="0"> No</label></p>
-                                <p>Radio Button Break: <label><input type="radio" name="radioBreak" value="1"> Yes</label>
-                                    <label><input type="radio" name="radioBreak" value="0"> No</label></p>
-                                <p>Radio-Only Click: <label><input type="radio" name="radioClick" value="1"> Yes</label>
-                                    <label><input type="radio" name="radioClick" value="0"> No</label></p>
+                                <p>Checkboxes: <label><input type="radio" title="checkbox" value="1"> Yes</label>
+                                    <label><input type="radio" title="checkbox" value="0"> No</label></p>
+                                <p>Chain Checkboxes: <label><input type="radio" title="checkboxChain" value="true"> Yes</label>
+                                    <label><input type="radio" title="checkboxChain" value="-1"> Update Parents</label>
+                                    <label><input type="radio" title="checkboxChain" value="1"> Update Children </label>
+                                    <label><input type="radio" title="checkboxChain" value="false"> No</label></p>
+                                <p>Checkbox Break: <label><input type="radio" title="checkboxBreak" value="1"> Yes</label>
+                                    <label><input type="radio" title="checkboxBreak" value="0"> No</label></p>
+                                <p>Checkbox-Only Click: <label><input type="radio" title="checkboxClick" value="1"> Yes</label>
+                                    <label><input type="radio" title="checkboxClick" value="0"> No</label></p>
+                                <p>Radio Buttons: <label><input type="radio" title="radio" value="1"> Yes</label>
+                                    <label><input type="radio" title="radio" value="0"> No</label></p>
+                                <p>Chain Radio Buttons: <label><input type="radio" title="radioChain" value="1"> Yes</label>
+                                    <label><input type="radio" title="radioChain" value="0"> No</label></p>
+                                <p>Radio Button Break: <label><input type="radio" title="radioBreak" value="1"> Yes</label>
+                                    <label><input type="radio" title="radioBreak" value="0"> No</label></p>
+                                <p>Radio-Only Click: <label><input type="radio" title="radioClick" value="1"> Yes</label>
+                                    <label><input type="radio" title="radioClick" value="0"> No</label></p>
 
-                                <p>Editable: <label><input type="radio" name="editable" value="1"> Yes</label>
-                                    <label><input type="radio" name="editable" value="0"> No</label></p>
+                                <p>Editable: <label><input type="radio" title="editable" value="1"> Yes</label>
+                                    <label><input type="radio" title="editable" value="0"> No</label></p>
 
                                 <p><input id="destroy" type="button" value="Destroy">
                                     <input id="init" type="button" value="Init with AJAX"></p>
@@ -113,8 +113,8 @@
                                     <input id="init_huge" type="button" value="Init Huge">
                                     <input id="clear_log" type="button" value="Clear Log"></p>
                                 <p id="selected">Select a Tree item or the Tree itself (<span style="color:red">note</span>)!</p>
-                                <p>Mode: <label><input type="radio" name="addMode" value="before"> Add Before</label>
-                                    <label><input type="radio" name="addMode" value="after" checked="checked"> Add After</label></p>
+                                <p>Mode: <label><input type="radio" title="addMode" value="before"> Add Before</label>
+                                    <label><input type="radio" title="addMode" value="after" checked="checked"> Add After</label></p>
                                 <p><input id="addFile" type="button" value="Add File">
                                     <input id="addFolder" type="button" value="Add Folder">
                                     <input id="addChilds" type="button" value="Add Children"></p>
@@ -124,17 +124,17 @@
                                     <input id="setFolder" type="button" value="Set as Folder">
                                     <input id="remove" type="button" value="Remove"></p>
                             </td><td>
-                                <p><span style="color:red">(new) </span>Size: <label><input type="radio" name="esize" value="small"> Smaller</label>
-                                    <label><input type="radio" name="esize" value="big"> Bigger</label></p>
-                                <p><span style="color:red">(new) </span>Node Button: <label><input type="radio" name="nodebtn" value="square"> Square</label>
-                                    <label><input type="radio" name="nodebtn" value="arrow"> Arrow</label></p>
-                                <p><span style="color:green">(update) </span>Show Branches: <label><input type="radio" name="branches" value="1"> Yes</label>
-                                    <label><input type="radio" name="branches" value="0"> No</label></p>
+                                <p><span style="color:red">(new) </span>Size: <label><input type="radio" title="esize" value="small"> Smaller</label>
+                                    <label><input type="radio" title="esize" value="big"> Bigger</label></p>
+                                <p><span style="color:red">(new) </span>Node Button: <label><input type="radio" title="nodebtn" value="square"> Square</label>
+                                    <label><input type="radio" title="nodebtn" value="arrow"> Arrow</label></p>
+                                <p><span style="color:green">(update) </span>Show Branches: <label><input type="radio" title="branches" value="1"> Yes</label>
+                                    <label><input type="radio" title="branches" value="0"> No</label></p>
 
-                                <p>Direction: <label><input type="radio" name="direction" value="1"> LTR</label>
-                                    <label><input type="radio" name="direction" value="0"> RTL</label></p>
-                                <p>Odd/Even Rows: <label><input type="radio" name="oddeven" value="1"> Yes</label>
-                                    <label><input type="radio" name="oddeven" value="0"> No</label></p>
+                                <p>Direction: <label><input type="radio" title="direction" value="1"> LTR</label>
+                                    <label><input type="radio" title="direction" value="0"> RTL</label></p>
+                                <p>Odd/Even Rows: <label><input type="radio" title="oddeven" value="1"> Yes</label>
+                                    <label><input type="radio" title="oddeven" value="0"> No</label></p>
                                 <p>Set Icon: <select id="setIcon"><option value="">-- choose --</option>
                                         <option value="file">File</option><option value="folder">Folder</option><option value="remove">Remove</option></select></p>
 
@@ -153,28 +153,28 @@
                                     <input id="addFolder10k" type="button" value="Add 10k Folders"></p>
                                 <p>Using 'branch': <input id="branch_open" type="button" value="Open All"> <input id="branch_close" type="button" value="Close All">
                                     <input id="branch_toggle" type="button" value="Toggle All"></p>
-                                <p>Search ID: <input type="text" name="item_id" value="/Item 1/document 1.txt" size="23"><input type="button" id="item_id_btn" value="@">
+                                <p>Search ID: <input type="text" title="item_id" value="/Item 1/document 1.txt" size="23"><input type="button" id="item_id_btn" value="@">
                                     <input id="set_visible" type="button" value="Set Visible"></p>
-                                <p>Search Params: <label><input type="checkbox" name="search_load" value="1"> Use Load</label></p>
+                                <p>Search Params: <label><input type="checkbox" title="search_load" value="1"> Use Load</label></p>
                                 <p><label>Item Content:</label>
-                                    <textarea name="item_cnt">a long item text haha this is a looooong text to be set for a item<br>with a brake...<br>more lines</textarea>
+                                    <textarea title="item_cnt">a long item text haha this is a looooong text to be set for a item<br>with a brake...<br>more lines</textarea>
                                     <input id="set_cnt" type="button" value="Set Content"></p>
                                 <p>Move Item: <input id="move_up" type="button" value="Up"> <input id="move_down" type="button" value="Down">
                                     <input id="move_first" type="button" value="First Position"> <input id="move_last" type="button" value="Last Position"></p>
 
-                                <p>Move Before/After/As Child (by ID): <input type="text" name="move" value="/document a.txt" size="18"><input type="button" id="move_btn" value="@"> <br>
+                                <p>Move Before/After/As Child (by ID): <input type="text" title="move" value="/document a.txt" size="18"><input type="button" id="move_btn" value="@"> <br>
                                     <input id="move_before" type="button" value="Move Before"> <input id="move_after" type="button" value="Move After">
                                     <input id="move_child" type="button" value="As Child"></p>
 
-                                <p>Set Index: <input type="text" name="index" value="0" size="23">
+                                <p>Set Index: <input type="text" title="index" value="0" size="23">
                                     <input id="set_index" type="button" value="Set Index"></p>
-                                <p>Swap Item (by ID): <input type="text" name="swap1" value="/document b.txt"><input type="button" id="swap1_btn" value="@"> <br> with
-                                    <input type="text" name="swap2" value="/Item 3"><input type="button" id="swap2_btn" value="@"> <input id="swap" type="button" value="Swap"></p>
+                                <p>Swap Item (by ID): <input type="text" title="swap1" value="/document b.txt"><input type="button" id="swap1_btn" value="@"> <br> with
+                                    <input type="text" title="swap2" value="/Item 3"><input type="button" id="swap2_btn" value="@"> <input id="swap" type="button" value="Swap"></p>
 
-                                <p>Cancel UI Tasks : <label><input type="radio" name="cancel_ui" value="1"> Yes</label>
-                                    <label><input type="radio" name="cancel_ui" value="0"> No</label></p>
-                                <p>Cancel User-Defined Tasks : <label><input type="radio" name="cancel_user" value="1"> Yes</label>
-                                    <label><input type="radio" name="cancel_user" value="0"> No</label></p>
+                                <p>Cancel UI Tasks : <label><input type="radio" title="cancel_ui" value="1"> Yes</label>
+                                    <label><input type="radio" title="cancel_ui" value="0"> No</label></p>
+                                <p>Cancel User-Defined Tasks : <label><input type="radio" title="cancel_user" value="1"> Yes</label>
+                                    <label><input type="radio" title="cancel_user" value="0"> No</label></p>
 
                                 <p>Serialize (see the log):
                                     <input id="serialize_checkbox" type="button" value="Checkbox">
@@ -190,7 +190,7 @@
 
             <div style="float:left"><p>Test JavaScript code performance:<br>(see the log for output)</p>
                 <textarea class="testarea" style="width:315px;height:200px">alert('children: ' + treeApi.children(null, true, true).length);</textarea>
-                <p><input type="button" name="testarea" value="Test"></p></div>
+                <p><input type="button" title="testarea" value="Test"></p></div>
 
             <p style="clear:both"><br><span style="color:red">Note</span>: the selected pink item does not have anything to do with the <i>selectable</i> option, it's there just to be able to 'select' the
                 entire tree (not only a item).<br>All item based functions are made - in this demo - to run against the pink selected item (and not the <i>real</i> selected item - when/if the
@@ -535,37 +535,37 @@
                 }
 
                 // init FORM based on options
-                $('[name=esize][value=' + (theTree.hasClass('aciTreeBig') ? 'big' : 'small') + ']').prop('checked', true);
-                $('[name=nodebtn][value=' + (theTree.hasClass('aciTreeArrow') ? 'arrow' : 'square') + ']').prop('checked', true);
-                $('[name=branches][value=' + (theTree.hasClass('aciTreeNoBranches') ? 0 : 1) + ']').prop('checked', true);
-                $('[name=animate][value=' + (options.show ? 1 : 0) + ']').prop('checked', true);
-                $('[name=expand][value=' + (options.expand ? 1 : 0) + ']').prop('checked', true);
-                $('[name=collapse][value=' + (options.collapse ? 1 : 0) + ']').prop('checked', true);
-                $('[name=empty][value=' + (options.empty ? 1 : 0) + ']').prop('checked', true);
-                $('[name=unique][value=' + (options.unique ? 1 : 0) + ']').prop('checked', true);
-                $('[name=selectable][value=' + (options.selectable ? 1 : 0) + ']').prop('checked', true);
-                $('[name=fullRow][value=' + (options.fullRow ? 1 : 0) + ']').prop('checked', true);
-                $('[name=textSelection][value=' + (options.textSelection ? 1 : 0) + ']').prop('checked', true);
-                $('[name=sortable][value=' + (options.sortable ? 1 : 0) + ']').prop('checked', true);
-                $('[name=multiSelectable][value=' + (options.multiSelectable ? 1 : 0) + ']').prop('checked', true);
+                $('[title=esize][value=' + (theTree.hasClass('aciTreeBig') ? 'big' : 'small') + ']').prop('checked', true);
+                $('[title=nodebtn][value=' + (theTree.hasClass('aciTreeArrow') ? 'arrow' : 'square') + ']').prop('checked', true);
+                $('[title=branches][value=' + (theTree.hasClass('aciTreeNoBranches') ? 0 : 1) + ']').prop('checked', true);
+                $('[title=animate][value=' + (options.show ? 1 : 0) + ']').prop('checked', true);
+                $('[title=expand][value=' + (options.expand ? 1 : 0) + ']').prop('checked', true);
+                $('[title=collapse][value=' + (options.collapse ? 1 : 0) + ']').prop('checked', true);
+                $('[title=empty][value=' + (options.empty ? 1 : 0) + ']').prop('checked', true);
+                $('[title=unique][value=' + (options.unique ? 1 : 0) + ']').prop('checked', true);
+                $('[title=selectable][value=' + (options.selectable ? 1 : 0) + ']').prop('checked', true);
+                $('[title=fullRow][value=' + (options.fullRow ? 1 : 0) + ']').prop('checked', true);
+                $('[title=textSelection][value=' + (options.textSelection ? 1 : 0) + ']').prop('checked', true);
+                $('[title=sortable][value=' + (options.sortable ? 1 : 0) + ']').prop('checked', true);
+                $('[title=multiSelectable][value=' + (options.multiSelectable ? 1 : 0) + ']').prop('checked', true);
 
-                $('[name=checkbox][value=' + (options.checkbox ? 1 : 0) + ']').prop('checked', true);
-                $('[name=radio][value=' + (options.radio ? 1 : 0) + ']').prop('checked', true);
-                $('[name=checkboxChain][value=' + valueBoolNum(options.checkboxChain) + ']').prop('checked', true);
-                $('[name=checkboxBreak][value=' + (options.checkboxBreak ? 1 : 0) + ']').prop('checked', true);
-                $('[name=checkboxClick][value=' + (options.checkboxClick ? 1 : 0) + ']').prop('checked', true);
-                $('[name=radioChain][value=' + (options.radioChain ? 1 : 0) + ']').prop('checked', true);
-                $('[name=radioBreak][value=' + (options.radioBreak ? 1 : 0) + ']').prop('checked', true);
-                $('[name=radioClick][value=' + (options.radioClick ? 1 : 0) + ']').prop('checked', true);
+                $('[title=checkbox][value=' + (options.checkbox ? 1 : 0) + ']').prop('checked', true);
+                $('[title=radio][value=' + (options.radio ? 1 : 0) + ']').prop('checked', true);
+                $('[title=checkboxChain][value=' + valueBoolNum(options.checkboxChain) + ']').prop('checked', true);
+                $('[title=checkboxBreak][value=' + (options.checkboxBreak ? 1 : 0) + ']').prop('checked', true);
+                $('[title=checkboxClick][value=' + (options.checkboxClick ? 1 : 0) + ']').prop('checked', true);
+                $('[title=radioChain][value=' + (options.radioChain ? 1 : 0) + ']').prop('checked', true);
+                $('[title=radioBreak][value=' + (options.radioBreak ? 1 : 0) + ']').prop('checked', true);
+                $('[title=radioClick][value=' + (options.radioClick ? 1 : 0) + ']').prop('checked', true);
 
                 $('#setCheckbox').attr('disabled', !options.checkbox);
                 $('#setRadio').attr('disabled', !options.radio);
-                $('[name=direction][value=' + ((theTree.attr('dir') == 'rtl') ? 0 : 1) + ']').prop('checked', true);
-                $('[name=oddeven][value=' + (theTree.hasClass('aciTreeColors') ? 1 : 0) + ']').prop('checked', true);
-                $('[name=editable][value=' + (options.editable ? 1 : 0) + ']').prop('checked', true);
+                $('[title=direction][value=' + ((theTree.attr('dir') == 'rtl') ? 0 : 1) + ']').prop('checked', true);
+                $('[title=oddeven][value=' + (theTree.hasClass('aciTreeColors') ? 1 : 0) + ']').prop('checked', true);
+                $('[title=editable][value=' + (options.editable ? 1 : 0) + ']').prop('checked', true);
 
-                $('[name=cancel_ui][value=0]').prop('checked', true);
-                $('[name=cancel_user][value=0]').prop('checked', true);
+                $('[title=cancel_ui][value=0]').prop('checked', true);
+                $('[title=cancel_user][value=0]').prop('checked', true);
 
                 // filter the tree
 
@@ -577,7 +577,7 @@
 
                 // update options
 
-                $('[name=animate]').click(function() {
+                $('[title=animate]').click(function() {
                     if ($(this).val() == 1) {
                         treeApi.option('show', {
                             props: {
@@ -604,57 +604,57 @@
                     }
                 });
 
-                $('[name=esize]').click(function() {
+                $('[title=esize]').click(function() {
                     theTree.toggleClass('aciTreeBig', $(this).val() == 'big');
                 });
 
-                $('[name=nodebtn]').click(function() {
+                $('[title=nodebtn]').click(function() {
                     theTree.toggleClass('aciTreeArrow', $(this).val() == 'arrow');
                 });
 
-                $('[name=branches]').click(function() {
+                $('[title=branches]').click(function() {
                     theTree.toggleClass('aciTreeNoBranches', $(this).val() == 0);
                 });
 
-                $('[name=checkbox]').click(function() {
+                $('[title=checkbox]').click(function() {
                     $('#setCheckbox').attr('disabled', $(this).val() != 1);
                 });
 
-                $('[name=radio]').click(function() {
+                $('[title=radio]').click(function() {
                     $('#setRadio').attr('disabled', $(this).val() != 1);
                 });
 
-                $('[name=direction]').click(function() {
+                $('[title=direction]').click(function() {
                     theTree.attr('dir', ($(this).val() == 1) ? 'ltr' : 'rtl');
                 });
 
-                $('[name=oddeven]').click(function() {
+                $('[title=oddeven]').click(function() {
                     theTree.toggleClass('aciTreeColors', $(this).val() == 1);
                 });
 
-                $('[name=expand],[name=collapse],[name=empty],[name=unique],[name=selectable],[name=fullRow],[name=textSelection],[name=sortable],[name=checkbox],[name=radio],[name=checkboxBreak],[name=radioChain],[name=radioBreak],[name=editable],[name=checkboxClick],[name=radioClick],[name=multiSelectable]').click(function() {
-                    var option = $(this).prop('name');
+                $('[title=expand],[title=collapse],[title=empty],[title=unique],[title=selectable],[title=fullRow],[title=textSelection],[title=sortable],[title=checkbox],[title=radio],[title=checkboxBreak],[title=radioChain],[title=radioBreak],[title=editable],[title=checkboxClick],[title=radioClick],[title=multiSelectable]').click(function() {
+                    var option = $(this).prop('title');
                     theTree.aciTree('option', option, $(this).val() == 1);
                     if (option == 'fullRow') {
                         theTree.toggleClass('aciTreeFullRow', $(this).val() == 1);
                     }
                 });
 
-                $('[name=checkboxChain]').click(function() {
-                    var option = $(this).prop('name');
+                $('[title=checkboxChain]').click(function() {
+                    var option = $(this).prop('title');
                     theTree.aciTree('option', option, boolNumValue($(this).val()));
-                    $('[name=checkboxBreak]').prop('disabled', $(this).val() == 'false');
+                    $('[title=checkboxBreak]').prop('disabled', $(this).val() == 'false');
                 });
 
-                $('[name=radioChain]').click(function() {
-                    $('[name=radioBreak]').prop('disabled', $(this).val() == '0');
+                $('[title=radioChain]').click(function() {
+                    $('[title=radioBreak]').prop('disabled', $(this).val() == '0');
                 });
 
-                $('[name=cancel_ui]').click(function() {
+                $('[title=cancel_ui]').click(function() {
                     cancelUi = $(this).val() == 1;
                 });
 
-                $('[name=cancel_user]').click(function() {
+                $('[title=cancel_user]').click(function() {
                     cancelUser = $(this).val() == 1;
                 });
 
@@ -662,12 +662,12 @@
 
                 // update init options based on inputs
                 function updateOptions() {
-                    $('[name=expand]:checked,[name=collapse]:checked,[name=empty]:checked,[name=unique]:checked,[name=selectable]:checked,[name=fullRow]:checked,[name=textSelection]:checked,[name=sortable]:checked,[name=checkbox]:checked,[name=radio]:checked,[name=checkboxBreak]:checked,[name=radioChain]:checked,[name=radioBreak]:checked,[name=editable]:checked,[name=checkboxClick]:checked,[name=radioClick]:checked,[name=multiSelectable]:checked').each(function() {
-                        var option = $(this).prop('name');
+                    $('[title=expand]:checked,[title=collapse]:checked,[title=empty]:checked,[title=unique]:checked,[title=selectable]:checked,[title=fullRow]:checked,[title=textSelection]:checked,[title=sortable]:checked,[title=checkbox]:checked,[title=radio]:checked,[title=checkboxBreak]:checked,[title=radioChain]:checked,[title=radioBreak]:checked,[title=editable]:checked,[title=checkboxClick]:checked,[title=radioClick]:checked,[title=multiSelectable]:checked').each(function() {
+                        var option = $(this).prop('title');
                         $.fn.aciTree.defaults[option] = $(this).val() == 1;
                     });
-                    $('[name=checkboxChain]:checked').each(function() {
-                        var option = $(this).prop('name');
+                    $('[title=checkboxChain]:checked').each(function() {
+                        var option = $(this).prop('title');
                         $.fn.aciTree.defaults[option] = boolNumValue($(this).val());
                     });
                 }
@@ -847,7 +847,7 @@
                 function newLeaf() {
                     var itemData = {
                         id: 'a_new_File_ID_' + leafIndex,
-                        label: 'File name ' + leafIndex,
+                        label: 'File title ' + leafIndex,
                         inode: false,
                         icon: 'file'
                     };
@@ -861,7 +861,7 @@
                 function newInode() {
                     var itemData = {
                         id: 'a_new_Folder_ID_' + inodeIndex,
-                        label: 'Folder name ' + inodeIndex,
+                        label: 'Folder title ' + inodeIndex,
                         inode: null,
                         open: false,
                         icon: 'folder'
@@ -872,7 +872,7 @@
 
                 // add one or more items (after or before a item)
                 function treeAddItem(item, itemData, skipLog) {
-                    var before = $('[name=addMode]:checked').val() == 'before';
+                    var before = $('[title=addMode]:checked').val() == 'before';
                     if (before) {
                         treeApi.before(item.first(), {
                             uid: (skipLog ? 'skip-log' : 'user-defined'),
@@ -912,7 +912,7 @@
                 $('#item_id_btn,#move_btn,#swap1_btn,#swap2_btn').click(function() {
                     var item = requireItem();
                     if (item) {
-                        $('input[name="' + $(this).attr('id').replace('_btn', '') + '"]').val(treeApi.getId(item));
+                        $('input[title="' + $(this).attr('id').replace('_btn', '') + '"]').val(treeApi.getId(item));
                     }
                 });
 
@@ -1543,8 +1543,8 @@
 
                 // set item visible, search by ID
                 $('#set_visible').click(function() {
-                    var id = $('[name=item_id]').val();
-                    var load = $('[name=search_load]').is(':checked');
+                    var id = $('[title=item_id]').val();
+                    var load = $('[title=search_load]').is(':checked');
                     treeApi.search(null, {
                         uid: 'user-defined',
                         success: function(item, options) {
@@ -1580,7 +1580,7 @@
 
                 // set item text content
                 $('#set_cnt').click(function() {
-                    var text = $('[name=item_cnt]').val();
+                    var text = $('[title=item_cnt]').val();
                     var item = requireItem();
                     if (item) {
                         treeApi.setLabel(item, {
@@ -1661,7 +1661,7 @@
                 $('#move_before').click(function() {
                     var item = requireItem();
                     if (item) {
-                        var move = $('[name=move]').val();
+                        var move = $('[title=move]').val();
                         treeApi.search(null, {
                             uid: 'user-defined',
                             success: function(item1, options) {
@@ -1687,7 +1687,7 @@
                 $('#move_after').click(function() {
                     var item = requireItem();
                     if (item) {
-                        var move = $('[name=move]').val();
+                        var move = $('[title=move]').val();
                         treeApi.search(null, {
                             uid: 'user-defined',
                             success: function(item1, options) {
@@ -1713,7 +1713,7 @@
                 $('#move_child').click(function() {
                     var item = requireItem();
                     if (item) {
-                        var move = $('[name=move]').val();
+                        var move = $('[title=move]').val();
                         treeApi.search(null, {
                             uid: 'user-defined',
                             success: function(item1, options) {
@@ -1740,7 +1740,7 @@
                 $('#set_index').click(function() {
                     var item = requireItem();
                     if (item) {
-                        var index = parseInt($('[name=index]').val());
+                        var index = parseInt($('[title=index]').val());
                         if (isNaN(index)) {
                             index = 0;
                         }
@@ -1759,11 +1759,11 @@
 
                 // swap items by ID (if found)
                 $('#swap').click(function() {
-                    var swap1 = $('[name=swap1]').val();
+                    var swap1 = $('[title=swap1]').val();
                     treeApi.search(null, {
                         uid: 'user-defined',
                         success: function(item1) {
-                            var swap2 = $('[name=swap2]').val();
+                            var swap2 = $('[title=swap2]').val();
                             treeApi.search(null, {
                                 uid: 'user-defined',
                                 success: function(item2) {
@@ -1812,7 +1812,7 @@
                 });
 
                 // test area
-                $('input[name=testarea]').click(function() {
+                $('input[title=testarea]').click(function() {
                     var code = $('.testarea').val();
                     var start = Date.now();
                     try {

@@ -26,7 +26,7 @@
 
 <article>
 <h2>Closebrackets Demo</h2>
-<form><textarea id="code" name="code">(function() {
+<form><textarea id="code" title="code">(function() {
   var DEFAULT_BRACKETS = "()[]{}''\"\"";
 
   CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
@@ -38,7 +38,7 @@
   });
 
   function buildKeymap(pairs) {
-    var map = {name : "autoCloseBrackets"};
+    var map = {title : "autoCloseBrackets"};
     for (var i = 0; i < pairs.length; i += 2) (function(left, right) {
       function maybeOverwrite(cm) {
         var cur = cm.getCursor(), ahead = cm.getRange(cur, CodeMirror.Pos(cur.line, cur.ch + 1));

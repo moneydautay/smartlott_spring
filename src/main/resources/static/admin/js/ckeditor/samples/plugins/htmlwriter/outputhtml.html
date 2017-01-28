@@ -10,10 +10,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<script src="../../../ckeditor.js"></script>
 	<script src="../../../samples/sample.js"></script>
 	<link href="../../../samples/sample.css" rel="stylesheet">
-	<meta name="ckeditor-sample-required-plugins" content="sourcearea">
-	<meta name="ckeditor-sample-name" content="Output HTML">
-	<meta name="ckeditor-sample-group" content="Advanced Samples">
-	<meta name="ckeditor-sample-description" content="Configuring CKEditor to produce legacy HTML 4 code.">
+	<meta title="ckeditor-sample-required-plugins" content="sourcearea">
+	<meta title="ckeditor-sample-title" content="Output HTML">
+	<meta title="ckeditor-sample-group" content="Advanced Samples">
+	<meta title="ckeditor-sample-description" content="Configuring CKEditor to produce legacy HTML 4 code.">
 </head>
 <body>
 	<h1 class="samples">
@@ -53,7 +53,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 			<label for="editor1">
 				Editor 1:
 			</label>
-			<textarea cols="80" id="editor1" name="editor1" rows="10">&lt;p&gt;This is some &lt;b&gt;sample text&lt;/b&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+			<textarea cols="80" id="editor1" title="editor1" rows="10">&lt;p&gt;This is some &lt;b&gt;sample text&lt;/b&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
 			<script>
 
 				CKEDITOR.replace( 'editor1', {
@@ -82,7 +82,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 					allowedContent:
 						'h1 h2 h3 p pre[align]; ' +
 						'blockquote code kbd samp var del ins cite q b i u strike ul ol li hr table tbody tr td th caption; ' +
-						'img[!src,alt,align,width,height]; font[!face]; font[!family]; font[!color]; font[!size]; font{!background-color}; a[!href]; a[!name]',
+						'img[!src,alt,align,width,height]; font[!face]; font[!family]; font[!color]; font[!size]; font{!background-color}; a[!href]; a[!title]',
 
 					/*
 					 * Core styles.
@@ -130,14 +130,14 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 					 * Styles combo.
 					 */
 					stylesSet: [
-						{ name: 'Computer Code', element: 'code' },
-						{ name: 'Keyboard Phrase', element: 'kbd' },
-						{ name: 'Sample Text', element: 'samp' },
-						{ name: 'Variable', element: 'var' },
-						{ name: 'Deleted Text', element: 'del' },
-						{ name: 'Inserted Text', element: 'ins' },
-						{ name: 'Cited Work', element: 'cite' },
-						{ name: 'Inline Quotation', element: 'q' }
+						{ title: 'Computer Code', element: 'code' },
+						{ title: 'Keyboard Phrase', element: 'kbd' },
+						{ title: 'Sample Text', element: 'samp' },
+						{ title: 'Variable', element: 'var' },
+						{ title: 'Deleted Text', element: 'del' },
+						{ title: 'Inserted Text', element: 'ins' },
+						{ title: 'Cited Work', element: 'cite' },
+						{ title: 'Inline Quotation', element: 'q' }
 					],
 
 					on: {

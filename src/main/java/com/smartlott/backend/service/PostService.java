@@ -1,0 +1,85 @@
+package com.smartlott.backend.service;
+
+import com.smartlott.backend.persistence.domain.backend.Post;
+import com.smartlott.backend.persistence.repositories.PostRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * Created by greenlucky on 1/27/17.
+ */
+@Service
+@Transactional(readOnly = true)
+public class PostService {
+
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostService.class);
+
+    @Autowired
+    private PostRepository postRepository;
+
+    /**
+     *
+     * @param post
+     * @return
+     */
+    @Transactional
+    public Post create(Post post){
+        return postRepository.save(post);
+    }
+
+    /**
+     * updates post
+     * @param post
+     * @return a post after update
+     */
+    public Post update(Post post){
+        return postRepository.save(post);
+    }
+
+    /**
+     * Deletes post by postId or nothing if postId not found
+     *
+     * @param postId
+     */
+    public void delete(long postId){
+        postRepository.delete(postId);
+    }
+
+    /**
+     * Gets a post by post id or null if not found
+     * @param postId
+     * @return A post or null if not found
+     */
+    public Post getOne(long postId){
+        return postRepository.findOne(postId);
+    }
+
+    /**
+     * Retrieves all post or null if not exist
+     * @return a list of post
+     */
+    public List<Post> getAll(){
+        return postRepository.findAll();
+    }
+
+    /**
+     * Retrieves a page of al post or null of post
+     * @param pageable
+     * @return A page of all post
+     */
+    public Page<Post> getAll(Pageable pageable){
+        return postRepository.findAll(pageable);
+    }
+
+    public boolean exist(int postId) {
+        return postRepository.exists(Long.valueOf(postId));
+    }
+}

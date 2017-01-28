@@ -27,14 +27,14 @@
 <h2>Q mode</h2>
 
 
-<div><textarea id="code" name="code">
+<div><textarea id="code" title="code">
 / utilities to quickly load a csv file - for more exhaustive analysis of the csv contents see csvguess.q
 / 2009.09.20 - updated to match latest csvguess.q 
 
 / .csv.colhdrs[file] - return a list of colhdrs from file
 / info:.csv.info[file] - return a table of information about the file
 / columns are: 
-/	c - column name; ci - column index; t - load type; mw - max width; 
+/	c - column title; ci - column index; t - load type; mw - max width;
 /	dchar - distinct characters in values; rule - rule that caught the type
 /	maybe - needs checking, _could_ be say a date, but perhaps just a float?
 / .csv.info0[file;onlycols] - like .csv.info except that it only analyses <onlycols>

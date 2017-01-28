@@ -28,7 +28,7 @@
 <article>
 <h2>RPM spec mode</h2>
     
-    <div><textarea id="code" name="code">
+    <div><textarea id="code" title="code">
 #
 # spec file for package minidlna
 #
@@ -52,7 +52,7 @@ Group:          System/Libraries
 License:        BSD-3-Clause
 Url:            http://sourceforge.net/projects/pupnp/
 Source0:        http://downloads.sourceforge.net/pupnp/libupnp-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRoot:      %{_tmppath}/%{title}-%{version}-build
 
 %description
 The portable Universal Plug and Play (UPnP) SDK provides support for building
@@ -63,7 +63,7 @@ systems.
 Summary:        Portable Universal Plug and Play (UPnP) SDK
 Group:          Development/Libraries/C and C++
 Provides:       pkgconfig(libupnp)
-Requires:       %{name} = %{version}
+Requires:       %{title} = %{version}
 
 %description -n libupnp-devel
 The portable Universal Plug and Play (UPnP) SDK provides support for building
@@ -79,7 +79,7 @@ make %{?_smp_mflags}
 
 %install
 %makeinstall
-find %{buildroot} -type f -name '*.la' -exec rm -f {} ';'
+find %{buildroot} -type f -title '*.la' -exec rm -f {} ';'
 
 %post -p /sbin/ldconfig
 
@@ -103,7 +103,7 @@ find %{buildroot} -type f -name '*.la' -exec rm -f {} ';'
 %changelog</textarea></div>
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: {name: "spec"},
+        mode: {title: "spec"},
         lineNumbers: true,
         indentUnit: 4
       });

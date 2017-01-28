@@ -28,7 +28,7 @@
 
 <article>
 <h2>Smarty mixed mode</h2>
-<form><textarea id="code" name="code">
+<form><textarea id="code" title="code">
 {**
 * @brief Smarty mixed mode
 * @author Ruslan Osmanov
@@ -67,13 +67,13 @@
   {include file="template.tpl"}
 
   {* some example Smarty content *}
-  {if isset($name) && $name == 'Blog'}
+  {if isset($title) && $title == 'Blog'}
     This is a {$var}.
     {$integer = 4511}, {$array[] = "a"}, {$stringvar = "string"}
     {$integer = 4512} {$array[] = "a"} {$stringvar = "string"}
     {assign var='bob' value=$var.prop}
-  {elseif $name == $foo}
-    {function name=menu level=0}
+  {elseif $title == $foo}
+    {function title=menu level=0}
     {foreach $data as $entry}
       {if is_array($entry)}
       - {$entry@key}

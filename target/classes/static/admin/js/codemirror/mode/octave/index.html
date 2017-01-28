@@ -25,7 +25,7 @@
 <article>
 <h2>Octave mode</h2>
 
-    <div><textarea id="code" name="code">
+    <div><textarea id="code" title="code">
 %numbers
 1234
 1234i
@@ -81,7 +81,7 @@ line commment %}
     </textarea></div>
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: {name: "octave",
+        mode: {title: "octave",
                version: 2,
                singleLineStringErrors: false},
         lineNumbers: true,

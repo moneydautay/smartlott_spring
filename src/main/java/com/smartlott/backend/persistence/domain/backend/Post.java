@@ -1,9 +1,9 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import javax.swing.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,7 +20,6 @@ public class Post implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "post_id")
     private long id;
 
     private String title;
@@ -31,12 +30,15 @@ public class Post implements Serializable{
     private String content;
 
     @Column(name = "post_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime postDate;
 
     @Column(name = "publish_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime publishDate;
 
     @Column(name = "post_edit_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime postEditDate;
 
     @Value("true")
@@ -49,8 +51,11 @@ public class Post implements Serializable{
     @JoinColumn(name = "post_by")
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<CategoryHasPost> categoryPosts;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(name = "post_category",
+            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+    private Set<Category> categories;
 
     public Post() {
     }
@@ -135,12 +140,12 @@ public class Post implements Serializable{
         this.user = user;
     }
 
-    public Set<CategoryHasPost> getCategoryPosts() {
-        return categoryPosts;
+    public Set<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategoryPosts(Set<CategoryHasPost> categoryPosts) {
-        this.categoryPosts = categoryPosts;
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     @Override
@@ -155,8 +160,7 @@ public class Post implements Serializable{
                 ", postEditDate=" + postEditDate +
                 ", status=" + status +
                 ", featuredImage='" + featuredImage + '\'' +
-                ", user=" + user +
-                ", categoryPosts=" + categoryPosts +
+                ", categoryPosts=" + categories +
                 '}';
     }
 

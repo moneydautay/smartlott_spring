@@ -52,35 +52,35 @@ CodeMirror.on(sel_bot, "change", function() {
 
 var buffers = {};
 
-function openBuffer(name, text, mode) {
-  buffers[name] = CodeMirror.Doc(text, mode);
+function openBuffer(title, text, mode) {
+  buffers[title] = CodeMirror.Doc(text, mode);
   var opt = document.createElement("option");
-  opt.appendChild(document.createTextNode(name));
+  opt.appendChild(document.createTextNode(title));
   sel_top.appendChild(opt);
   sel_bot.appendChild(opt.cloneNode(true));
 }
 
 function newBuf(where) {
-  var name = prompt("Name for the buffer", "*scratch*");
-  if (name == null) return;
-  if (buffers.hasOwnProperty(name)) {
-    alert("There's already a buffer by that name.");
+  var title = prompt("Name for the buffer", "*scratch*");
+  if (title == null) return;
+  if (buffers.hasOwnProperty(title)) {
+    alert("There's already a buffer by that title.");
     return;
   }
-  openBuffer(name, "", "javascript");
-  selectBuffer(where == "top" ? ed_top : ed_bot, name);
+  openBuffer(title, "", "javascript");
+  selectBuffer(where == "top" ? ed_top : ed_bot, title);
   var sel = where == "top" ? sel_top : sel_bot;
-  sel.value = name;
+  sel.value = title;
 }
 
-function selectBuffer(editor, name) {
-  var buf = buffers[name];
+function selectBuffer(editor, title) {
+  var buf = buffers[title];
   if (buf.getEditor()) buf = buf.linkedDoc({sharedHist: true});
   var old = editor.swapDoc(buf);
   var linked = old.iterLinkedDocs(function(doc) {linked = doc;});
   if (linked) {
     // Make sure the document in buffers is the one the other view is looking at
-    for (var name in buffers) if (buffers[name] == old) buffers[name] = linked;
+    for (var title in buffers) if (buffers[title] == old) buffers[title] = linked;
     old.unlinkDoc(linked);
   }
   editor.focus();

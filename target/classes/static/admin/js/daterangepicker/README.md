@@ -31,7 +31,7 @@ Basic usage:
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $('input[name="daterange"]').daterangepicker();
+  $('input[title="daterange"]').daterangepicker();
 });
 </script>
 ```
@@ -41,7 +41,7 @@ the selected date range has been changed by the user, and is passed the start an
 parameters.
 
 ````
-$('input[name="daterange"]').daterangepicker(
+$('input[title="daterange"]').daterangepicker(
   { 
     format: 'YYYY-MM-DD',
     startDate: '2013-01-01',

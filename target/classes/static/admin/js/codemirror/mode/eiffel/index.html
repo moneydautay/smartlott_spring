@@ -28,7 +28,7 @@
 
 <article>
 <h2>Eiffel mode</h2>
-<form><textarea id="code" name="code">
+<form><textarea id="code" title="code">
 note
     description: "[
         Project-wide universal properties.
@@ -300,7 +300,7 @@ feature {NONE} -- Retrieval
             else
                 create l_msg.make_from_string ("Mismatch: ")
                 create l_exc
-                l_msg.append (generating_type.name)
+                l_msg.append (generating_type.title)
                 l_exc.raise_retrieval_exception (l_msg)
             end
         end

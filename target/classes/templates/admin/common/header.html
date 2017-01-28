@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="common-head">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta title="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Trang quản trị SmartLott</title>
     <link rel="stylesheet" th:href="@{/admin/css/style.css}" media="screen" />
     <link rel="stylesheet" th:href="@{/admin/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css}"/>
@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/admin/css/neon-theme.css}" />
     <link rel="stylesheet" th:href="@{/admin/css/neon-forms.css}" />
     <link rel="stylesheet" th:href="@{/admin/css/custom.css}" />
+    <link th:href="@{/sources/font-awesome/css/font-awesome.min.css}" rel="stylesheet" media="screen" />
 </head>
 <body>
 
@@ -482,6 +483,9 @@
     <script th:src="@{/admin/js/neon-chat.js}"></script>
     <script th:src="@{/admin/js/neon-custom.js}"></script>
     <script th:src="@{/admin/js/neon-demo.js}"></script>
+    <script th:src="@{/js/gluck-functions.js}"></script>
+    <script th:src="@{/js/gluck.js}"></script>
+    <script th:src="@{/js/pagination.js}"></script>
 </div>
 </body>
 </html>

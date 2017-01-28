@@ -28,7 +28,7 @@
 
 <article>
 <h2>XML Autocomplete Demo</h2>
-<form><textarea id="code" name="code"><!-- write some xml below -->
+<form><textarea id="code" title="code"><!-- write some xml below -->
 </textarea></form>
 
     <p>Press <strong>ctrl-space</strong>, or type a '<' character to
@@ -61,13 +61,13 @@
         },
         animal: {
           attrs: {
-            name: null,
+            title: null,
             isduck: ["yes", "no"]
           },
           children: ["wings", "feet", "body", "head", "tail"]
         },
         plant: {
-          attrs: {name: null},
+          attrs: {title: null},
           children: ["leaves", "stem", "flowers"]
         },
         wings: dummy, feet: dummy, body: dummy, head: dummy, tail: dummy,

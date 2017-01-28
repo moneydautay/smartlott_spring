@@ -45,3 +45,35 @@ function setActivePagiItem(url, callBack) {
     //get all bonus
     getData(url, callBack);
 }
+/**
+ * Show pagination
+ * @param data
+ */
+function showPagination(data) {
+    //show pagination
+    var pagination = $('.pagination');
+    pagination.html('');
+    var strPrevious = '<li class="previous">';
+    strPrevious += ' <a href="#" aria-label="Previous">';
+    strPrevious += '<span aria-hidden="true">«</span>';
+    strPrevious += '</a>';
+    strPrevious += '</li>';
+    pagination.append(strPrevious);
+    totalPages = data.totalPages;
+    /*<![CDATA[*/
+    for(var i=0 ; i < totalPages ; i++){
+        var strNum = '';
+        strNum += '<li id="el_'+i+'" class="el_item" page="'+i+'"><a href="#" >'+(i+1)+'</a></li>';
+        pagination.append(strNum);
+    }
+    /*]]>*/
+    var strNext = '<li class="next">';
+    strNext += ' <a href="#" aria-label="Next">';
+    strNext += '<span aria-hidden="true">»</span>';
+    strNext += '</a>';
+    strNext += '</li>';
+    pagination.append(strNext);
+    currentPage = data.number;
+    //select active
+    $('#el_'+currentPage).addClass('active');
+}

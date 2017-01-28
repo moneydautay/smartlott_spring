@@ -164,8 +164,8 @@
       a <a href="http://en.wikipedia.org/wiki/MIME">MIME</a> type
       associated with the mode. Alternatively, it may be an object
       containing configuration options for the mode, with
-      a <code>name</code> property that names the mode (for
-      example <code>{name: "javascript", json: true}</code>). The demo
+      a <code>title</code> property that names the mode (for
+      example <code>{title: "javascript", json: true}</code>). The demo
       pages for each mode contain information about what configuration
       parameters the mode supports. You can ask CodeMirror which modes
       and MIME types have been defined by inspecting
@@ -176,7 +176,7 @@
 
       <dt id="option_theme"><code><strong>theme</strong>: string</code></dt>
       <dd>The theme to style the editor with. You must make sure the
-      CSS file defining the corresponding <code>.cm-s-[name]</code>
+      CSS file defining the corresponding <code>.cm-s-[title]</code>
       styles is loaded (see
       the <a href="../theme/"><code>theme</code></a> directory in the
       distribution). The default is <code>"default"</code>, for which
@@ -449,7 +449,7 @@
     events can be registed with the <a href="#on"><code>on</code></a>
     and <a href="#off"><code>off</code></a> methods on the objects
     that the event fires on. To fire your own events,
-    use <code>CodeMirror.signal(target, name, args...)</code>,
+    use <code>CodeMirror.signal(target, title, args...)</code>,
     where <code>target</code> is a non-DOM-node object.</p>
 
     <p>An editor instance fires the following events.
@@ -503,9 +503,9 @@
       <dd>Will be fired when the cursor or selection moves, or any
       change is made to the editor content.</dd>
 
-      <dt id="event_keyHandled"><code><strong>"keyHandled"</strong> (instance: CodeMirror, name: string, event: Event)</code></dt>
+      <dt id="event_keyHandled"><code><strong>"keyHandled"</strong> (instance: CodeMirror, title: string, event: Event)</code></dt>
       <dd>Fired after a key is handled through a
-      keymap. <code>name</code> is the name of the handled key (for
+      keymap. <code>title</code> is the title of the handled key (for
       example <code>"Ctrl-X"</code> or <code>"'q'"</code>),
       and <code>event</code> is the DOM <code>keydown</code>
       or <code>keypress</code> event.</dd>
@@ -610,7 +610,7 @@
       <dt id="event_doc_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (doc: CodeMirror.Doc, selection: {head, anchor})</code></dt>
       <dd>Equivalent to
       the <a href="#event_beforeSelectionChange">event by the same
-      name</a> as fired on editor instances.</dd>
+      title</a> as fired on editor instances.</dd>
     </dl>
 
     <p>Line handles (as returned by, for
@@ -682,7 +682,7 @@
     is an object mapping strings that identify the keys to functions
     that implement their functionality.</p>
 
-    <p>Keys are identified either by name or by character.
+    <p>Keys are identified either by title or by character.
     The <code>CodeMirror.keyNames</code> object defines names for
     common keys and associates them with their key codes. Examples of
     names defined here are <code>Enter</code>, <code>F5</code>,
@@ -1037,7 +1037,7 @@
     <dl>
       <dt id="setOption"><code><strong>cm.setOption</strong>(option: string, value: any)</code></dt>
       <dd>Change the configuration of the editor. <code>option</code>
-      should the name of an <a href="#config">option</a>,
+      should the title of an <a href="#config">option</a>,
       and <code>value</code> should be a valid value for that
       option.</dd>
       <dt id="getOption"><code><strong>cm.getOption</strong>(option: string) → any</code></dt>
@@ -1060,7 +1060,7 @@
       <dd>Disable a keymap added
       with <a href="#addKeyMap"><code>addKeyMap</code></a>. Either
       pass in the keymap object itself, or a string, which will be
-      compared against the <code>name</code> property of the active
+      compared against the <code>title</code> property of the active
       keymaps.</dd>
 
       <dt id="addOverlay"><code><strong>cm.addOverlay</strong>(mode: string|object, ?options: object)</code></dt>
@@ -1080,7 +1080,7 @@
       <dt id="removeOverlay"><code><strong>cm.removeOverlay</strong>(mode: string|object)</code></dt>
       <dd>Pass this the exact value passed for the <code>mode</code>
       parameter to <a href="#addOverlay"><code>addOverlay</code></a>,
-      or a string that corresponds to the <code>name</code> propery of
+      or a string that corresponds to the <code>title</code> propery of
       that value, to remove an overlay again.</dd>
 
       <dt id="on"><code><strong>cm.on</strong>(type: string, func: (...args))</code></dt>
@@ -1188,7 +1188,7 @@
     <dl>
       <dt id="markText"><code><strong>doc.markText</strong>(from: {line, ch}, to: {line, ch}, ?options: object) → TextMarker</code></dt>
       <dd>Can be used to mark a range of text with a specific CSS
-      class name. <code>from</code> and <code>to</code> should
+      class title. <code>from</code> and <code>to</code> should
       be <code>{line, ch}</code> objects. The <code>options</code>
       parameter is optional. When given, it should be an object that
       may contain the following configuration options:
@@ -1318,14 +1318,14 @@
       the <a href="#option_gutters">gutter</a> with the given ID.</dd>
 
       <dt id="addLineClass"><code><strong>cm.addLineClass</strong>(line: integer|LineHandle, where: string, class: string) → LineHandle</code></dt>
-      <dd>Set a CSS class name for the given line. <code>line</code>
+      <dd>Set a CSS class title for the given line. <code>line</code>
       can be a number or a line handle. <code>where</code> determines
       to which element this class should be applied, can can be one
       of <code>"text"</code> (the text element, which lies in front of
       the selection), <code>"background"</code> (a background element
       that will be behind the selection), or <code>"wrap"</code> (the
       wrapper node that wraps all of the line's elements, including
-      gutter elements). <code>class</code> should be the name of the
+      gutter elements). <code>class</code> should be the title of the
       class to apply.</dd>
 
       <dt id="removeLineClass"><code><strong>cm.removeLineClass</strong>(line: integer|LineHandle, where: string, class: string) → LineHandle</code></dt>
@@ -1555,7 +1555,7 @@
       directly determines the keys that are used to look up the helper
       values (it may be either a single string, or an array of
       strings). Failing that, the mode's <code>helperType</code>
-      property and finally the mode's name are used.</dd>
+      property and finally the mode's title are used.</dd>
       <dd>For example, the JavaScript mode has a
       property <code>fold</code> containing <code>"brace"</code>. When
       the <code>brace-fold</code> addon is loaded, that defines a
@@ -1620,8 +1620,8 @@
       given an argument), or sets the overwrite mode to a specific
       state (when given an argument).</dd>
 
-      <dt id="execCommand"><code><strong>cm.execCommand</strong>(name: string)</code></dt>
-      <dd>Runs the <a href="#commands">command</a> with the given name on the editor.</dd>
+      <dt id="execCommand"><code><strong>cm.execCommand</strong>(title: string)</code></dt>
+      <dd>Runs the <a href="#commands">command</a> with the given title on the editor.</dd>
 
       <dt id="posFromIndex"><code><strong>doc.posFromIndex</strong>(index: integer) → {line, ch}</code></dt>
       <dd>Calculates and returns a <code>{line, ch}</code> object for a
@@ -1689,19 +1689,19 @@
       properties to modify defaults (though this won't affect editors
       that have already been created).</dd>
 
-      <dt id="defineExtension"><code><strong>CodeMirror.defineExtension</strong>(name: string, value: any)</code></dt>
+      <dt id="defineExtension"><code><strong>CodeMirror.defineExtension</strong>(title: string, value: any)</code></dt>
       <dd>If you want to define extra methods in terms of the
       CodeMirror API, it is possible to
       use <code>defineExtension</code>. This will cause the given
       value (usually a method) to be added to all CodeMirror instances
       created from then on.</dd>
 
-      <dt id="defineDocExtension"><code><strong>CodeMirror.defineDocExtension</strong>(name: string, value: any)</code></dt>
+      <dt id="defineDocExtension"><code><strong>CodeMirror.defineDocExtension</strong>(title: string, value: any)</code></dt>
       <dd>Like <a href="#defineExtenstion"><code>defineExtension</code></a>,
       but the method will be added to the interface
       for <a href="#Doc"><code>Doc</code></a> objects instead.</dd>
 
-      <dt id="defineOption"><code><strong>CodeMirror.defineOption</strong>(name: string,
+      <dt id="defineOption"><code><strong>CodeMirror.defineOption</strong>(title: string,
       default: any, updateFunc: function)</code></dt>
       <dd>Similarly, <code>defineOption</code> can be used to define new options for
       CodeMirror. The <code>updateFunc</code> will be called with the
@@ -1717,8 +1717,8 @@
       (with the instance as argument) whenever a new CodeMirror instance
       is initialized.</dd>
 
-      <dt id="registerHelper"><code><strong>CodeMirror.registerHelper</strong>(type: string, name: string, value: helper)</code></dt>
-      <dd>Registers a helper value with the given <code>name</code> in
+      <dt id="registerHelper"><code><strong>CodeMirror.registerHelper</strong>(type: string, title: string, value: helper)</code></dt>
+      <dd>Registers a helper value with the given <code>title</code> in
       the given namespace (<code>type</code>). This is used to define
       functionality that may be looked up by mode. Will create (if it
       doesn't already exist) a property on the <code>CodeMirror</code>
@@ -1728,7 +1728,7 @@
       myFoo)</code>, the value <code>CodeMirror.hint.foo</code> will
       point to <code>myFoo</code>.</dd>
 
-      <dt id="registerGlobalHelper"><code><strong>CodeMirror.registerGlobalHelper</strong>(type: string, name: string, predicate: fn(mode, CodeMirror), value: helper)</code></dt>
+      <dt id="registerGlobalHelper"><code><strong>CodeMirror.registerGlobalHelper</strong>(type: string, title: string, predicate: fn(mode, CodeMirror), value: helper)</code></dt>
       <dd>Acts
       like <a href="#registerHelper"><code>registerHelper</code></a>,
       but also registers this helper as 'global', meaning that it will
@@ -2074,7 +2074,7 @@
         <dt><code><strong>displayText</strong>: string</code></dt>
         <dd>The text that should be displayed in the menu.</dd>
         <dt><code><strong>className</strong>: string</code></dt>
-        <dd>A CSS class name to apply to the completion's line in the
+        <dd>A CSS class title to apply to the completion's line in the
         menu.</dd>
         <dt><code><strong>render</strong>: fn(Element, self, data)</code></dt>
         <dd>A method used to create the DOM structure for showing the
@@ -2242,7 +2242,7 @@
       set <code>CodeMirror.modeURL</code> to a string that mode paths
       can be constructed from, for
       example <code>"mode/%N/%N.js"</code>—the <code>%N</code>'s will
-      be replaced with the mode name. Also
+      be replaced with the mode title. Also
       defines <code>CodeMirror.autoLoadMode(instance, mode)</code>,
       which will ensure the given mode is loaded and cause the given
       editor instance to refresh its mode when the loading
@@ -2342,9 +2342,9 @@
     <p id="defineMode">The mode script should
     call <code><strong>CodeMirror.defineMode</strong></code> to
     register itself with CodeMirror. This function takes two
-    arguments. The first should be the name of the mode, for which you
+    arguments. The first should be the title of the mode, for which you
     should use a lowercase string, preferably one that is also the
-    name of the files that define the mode (i.e. <code>"xml"</code> is
+    title of the files that define the mode (i.e. <code>"xml"</code> is
     defined in <code>xml.js</code>). The second argument should be a
     function that, given a CodeMirror configuration object (the thing
     passed to the <code>CodeMirror</code> function) and an optional
@@ -2579,7 +2579,7 @@
     object properties from external code.
     The <code><strong>CodeMirror.extendMode</strong></code> function
     can be used to add properties to mode objects produced for a
-    specific mode. Its first argument is the name of the mode, its
+    specific mode. Its first argument is the title of the mode, its
     second an object that specifies the properties that should be
     added. This is mostly useful to add utilities that can later be
     looked up through <a href="#getMode"><code>getMode</code></a>.</p>

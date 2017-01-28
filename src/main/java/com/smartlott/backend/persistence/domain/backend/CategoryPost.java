@@ -1,78 +1,56 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
  */
 @Entity
-@Table(name = "category_post")
-public class CategoryPost {
+public class CategoryPost implements Serializable{
+
+    /** The Serial Version UID for Serializable classes */
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    private String name;
-
-    private String description;
-
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category categoryPost;
 
     public CategoryPost() {
     }
 
-    public CategoryPost(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public CategoryPost(Post post, Category categoryPost) {
+        this.post = post;
+        this.categoryPost = categoryPost;
     }
 
-    public int getId() {
-        return id;
+    public Post getPost() {
+        return post;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
-    public String getName() {
-        return name;
+    public Category getCategoryPost() {
+        return categoryPost;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryPost(Category categoryPost) {
+        this.categoryPost = categoryPost;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 
     @Override
     public String toString() {
         return "CategoryPost{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", post=" + post +
+                ", categoryPost=" + categoryPost +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CategoryPost that = (CategoryPost) o;
-
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
     }
 }

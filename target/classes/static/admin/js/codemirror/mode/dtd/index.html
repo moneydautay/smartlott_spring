@@ -24,7 +24,7 @@
 
 <article>
 <h2>DTD mode</h2>
-<form><textarea id="code" name="code"><?xml version="1.0" encoding="UTF-8"?>
+<form><textarea id="code" title="code"><?xml version="1.0" encoding="UTF-8"?>
 
 <!ATTLIST title
   xmlns	CDATA	#FIXED	"http://docbook.org/ns/docbook"
@@ -79,7 +79,7 @@
 "></textarea></form>
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: {name: "dtd", alignCDATA: true},
+        mode: {title: "dtd", alignCDATA: true},
         lineNumbers: true,
         lineWrapping: true
       });

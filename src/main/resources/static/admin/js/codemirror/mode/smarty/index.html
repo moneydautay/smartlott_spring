@@ -24,17 +24,17 @@
 
 <article>
 <h2>Smarty mode</h2>
-<form><textarea id="code" name="code">
+<form><textarea id="code" title="code">
 {extends file="parent.tpl"}
 {include file="template.tpl"}
 
 {* some example Smarty content *}
-{if isset($name) && $name == 'Blog'}
+{if isset($title) && $title == 'Blog'}
   This is a {$var}.
   {$integer = 451}, {$array[] = "a"}, {$stringvar = "string"}
   {assign var='bob' value=$var.prop}
-{elseif $name == $foo}
-  {function name=menu level=0}
+{elseif $title == $foo}
+  {function title=menu level=0}
     {foreach $data as $entry}
       {if is_array($entry)}
         - {$entry@key}
@@ -56,17 +56,17 @@
     <br />
 
 	<h3>Smarty 2, custom delimiters</h3>
-    <form><textarea id="code2" name="code2">
+    <form><textarea id="code2" title="code2">
 {--extends file="parent.tpl"--}
 {--include file="template.tpl"--}
 
 {--* some example Smarty content *--}
-{--if isset($name) && $name == 'Blog'--}
+{--if isset($title) && $title == 'Blog'--}
   This is a {--$var--}.
   {--$integer = 451--}, {--$array[] = "a"--}, {--$stringvar = "string"--}
   {--assign var='bob' value=$var.prop--}
-{--elseif $name == $foo--}
-  {--function name=menu level=0--}
+{--elseif $title == $foo--}
+  {--function title=menu level=0--}
     {--foreach $data as $entry--}
       {--if is_array($entry)--}
         - {--$entry@key--}
@@ -82,7 +82,7 @@
       var editor = CodeMirror.fromTextArea(document.getElementById("code2"), {
         lineNumbers: true,
         mode: {
-          name: "smarty",
+          title: "smarty",
           leftDelimiter: "{--",
           rightDelimiter: "--}"
         }
@@ -93,7 +93,7 @@
 
 	<h3>Smarty 3</h3>
 
-	<textarea id="code3" name="code3">
+	<textarea id="code3" title="code3">
 Nested tags {$foo={counter one=1 two={inception}}+3} are now valid in Smarty 3.
 
 <script>

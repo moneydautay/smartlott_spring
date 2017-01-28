@@ -9,10 +9,10 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript">
 
-function gup( name )
+function gup( title )
 {
-	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
-	var regexS = '[\\?&]' + name + '=([^&#]*)' ;
+	title = title.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
+	var regexS = '[\\?&]' + title + '=([^&#]*)' ;
 	var regex = new RegExp( regexS ) ;
 	var results = regex.exec( window.location.href ) ;
 

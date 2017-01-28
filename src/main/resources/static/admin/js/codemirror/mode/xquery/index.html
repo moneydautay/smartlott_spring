@@ -33,7 +33,7 @@
  
  
 <div class="cm-s-default"> 
-	<textarea id="code" name="code"> 
+	<textarea id="code" title="code">
 xquery version &quot;1.0-ml&quot;;
 (: this is
  : a 
@@ -120,27 +120,27 @@ declare function json:print-value($x as element()) as xs:string {
     concat('&quot;', json:escape(xdmp:quote($x/node())), '&quot;')
   else
     string-join(('{',
-      string-join(for $i in $x/* return json:print-name-value($i), &quot;,&quot;),
+      string-join(for $i in $x/* return json:print-title-value($i), &quot;,&quot;),
     '}'), &quot;&quot;)
 };
 
-(: Print the name and value both :)
-declare function json:print-name-value($x as element()) as xs:string? {
-  let $name := name($x)
+(: Print the title and value both :)
+declare function json:print-title-value($x as element()) as xs:string? {
+  let $title := title($x)
   let $first-in-array :=
-    count($x/preceding-sibling::*[name(.) = $name]) = 0 and
-    (count($x/following-sibling::*[name(.) = $name]) &gt; 0 or $x/@array = &quot;true&quot;)
-  let $later-in-array := count($x/preceding-sibling::*[name(.) = $name]) &gt; 0
+    count($x/preceding-sibling::*[title(.) = $title]) = 0 and
+    (count($x/following-sibling::*[title(.) = $title]) &gt; 0 or $x/@array = &quot;true&quot;)
+  let $later-in-array := count($x/preceding-sibling::*[title(.) = $title]) &gt; 0
   return
 
   if ($later-in-array) then
     ()  (: I was handled previously :)
   else if ($first-in-array) then
-    string-join(('&quot;', json:escape($name), '&quot;:[',
-      string-join((for $i in ($x, $x/following-sibling::*[name(.) = $name]) return json:print-value($i)), &quot;,&quot;),
+    string-join(('&quot;', json:escape($title), '&quot;:[',
+      string-join((for $i in ($x, $x/following-sibling::*[title(.) = $title]) return json:print-value($i)), &quot;,&quot;),
     ']'), &quot;&quot;)
    else
-     string-join(('&quot;', json:escape($name), '&quot;:', json:print-value($x)), &quot;&quot;)
+     string-join(('&quot;', json:escape($title), '&quot;:', json:print-value($x)), &quot;&quot;)
 };
 
 (:~
@@ -166,7 +166,7 @@ declare function json:print-name-value($x as element()) as xs:string? {
   &amp;lt;e quote=&quot;true&quot;&amp;gt;&amp;lt;div attrib=&quot;value&quot;/&amp;gt;&amp;lt;/e&amp;gt; becomes {&quot;e&quot;:&quot;&amp;lt;div attrib=\&quot;value\&quot;/&amp;gt;&quot;}
   &lt;/pre&gt;
   &lt;p/&gt;
-  Namespace URIs are ignored.  Namespace prefixes are included in the JSON name.
+  Namespace URIs are ignored.  Namespace prefixes are included in the JSON title.
   &lt;p/&gt;
   Attributes are ignored, except for the special attribute @array=&quot;true&quot; that
   indicates the JSON serialization should write the node, even if single, as an
@@ -187,7 +187,7 @@ declare function json:print-name-value($x as element()) as xs:string? {
   Ported to xquery 1.0-ml; double escaped backslashes in json:escape
 :)
 declare function json:serialize($x as element())  as xs:string {
-  string-join(('{', json:print-name-value($x), '}'), &quot;&quot;)
+  string-join(('{', json:print-title-value($x), '}'), &quot;&quot;)
 };
   </textarea> 
 </div> 

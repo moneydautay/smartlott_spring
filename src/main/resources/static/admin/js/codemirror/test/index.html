@@ -146,8 +146,8 @@
         progressRan.nodeValue = count;
         output.innerHTML = '';
         document.getElementById("testground").innerHTML = "<form>" +
-          "<textarea id=\"code\" name=\"code\"></textarea>" +
-          "<input type=submit value=ok name=submit>" +
+          "<textarea id=\"code\" title=\"code\"></textarea>" +
+          "<input type=submit value=ok title=submit>" +
           "</form>";
         runTests(displayTest);
       }
@@ -159,11 +159,11 @@
         status.nodeValue = message;
         status.parentNode.className = className;
       }
-      function addOutput(name, className, code){
+      function addOutput(title, className, code){
         var newOutput = document.createElement("dl");
         var newTitle = document.createElement("dt");
         newTitle.className = className;
-        newTitle.appendChild(document.createTextNode(name));
+        newTitle.appendChild(document.createTextNode(title));
         newOutput.appendChild(newTitle);
         var newMessage = document.createElement("dd");
         newMessage.innerHTML = code;
@@ -171,24 +171,24 @@
         newOutput.appendChild(newMessage);
         output.appendChild(newOutput);
       }
-      function displayTest(type, name, customMessage) {
+      function displayTest(type, title, customMessage) {
         var message = "???";
         if (type != "done" && type != "skipped") ++count;
         progress.style.width = (count * (progress.parentNode.clientWidth - 2) / totalTests) + "px";
         progressRan.nodeValue = count;
         if (type == "ok") {
-          message = "Test '" + name + "' succeeded";
+          message = "Test '" + title + "' succeeded";
           if (!verbose) customMessage = false;
         } else if (type == "skipped") {
-          message = "Test '" + name + "' skipped";
+          message = "Test '" + title + "' skipped";
           ++skipped;
           if (!verbose) customMessage = false;
         } else if (type == "expected") {
-          message = "Test '" + name + "' failed as expected";
+          message = "Test '" + title + "' failed as expected";
           if (!verbose) customMessage = false;
         } else if (type == "error" || type == "fail") {
           ++failed;
-          message = "Test '" + name + "' failed";
+          message = "Test '" + title + "' failed";
         } else if (type == "done") {
           if (failed) {
             type += " fail";
@@ -210,7 +210,7 @@
         if (verbose && !customMessage)  customMessage = message;
         setStatus(message, type);
         if (customMessage && customMessage.length > 0) {
-          addOutput(name, type, customMessage);
+          addOutput(title, type, customMessage);
         }
       }
     </script>

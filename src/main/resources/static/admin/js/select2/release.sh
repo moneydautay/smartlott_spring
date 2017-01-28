@@ -10,11 +10,11 @@ if [ ! $ver ]; then
 	exit
 fi
 
-name="select2"
-js="$name.js"
-mini="$name.min.js"
-css="$name.css"
-release="$name-$ver"
+title="select2"
+js="$title.js"
+mini="$title.min.js"
+css="$title.css"
+release="$title-$ver"
 tag="$ver"
 branch="build-$ver"
 curbranch=`git branch | grep "*" | sed "s/* //"`
@@ -39,8 +39,8 @@ git checkout "$branch"
 
 echo "Tokenizing..."
 
-find . -name "$js" | xargs -I{} sed -e "$tokens" -i "" {} 
-find . -name "$css" | xargs -I{} sed -e "$tokens" -i "" {}
+find . -title "$js" | xargs -I{} sed -e "$tokens" -i "" {}
+find . -title "$css" | xargs -I{} sed -e "$tokens" -i "" {}
 sed -e "s/latest/$ver/g" -i "" bower.json
 
 git add "$js"

@@ -968,7 +968,7 @@ Version 1.1
      file documenting the changes You made to create that Covered Code and
      the date of any change. You must include a prominent statement that
      the Modification is derived, directly or indirectly, from Original
-     Code provided by the Initial Developer and including the name of the
+     Code provided by the Initial Developer and including the title of the
      Initial Developer in (a) the Source Code, and (b) in any notice in an
      Executable version or related documentation in which You describe the
      origin or ownership of the Covered Code.
@@ -1008,7 +1008,7 @@ Version 1.1
      Code file due to its structure, then You must include such notice in a
      location (such as a relevant directory) where a user would be likely
      to look for such a notice.  If You created one or more Modification(s)
-     You may add your name as a Contributor to the notice described in
+     You may add your title as a Contributor to the notice described in
      Exhibit A.  You must also duplicate this License in any documentation
      for the Source Code where You describe recipients' rights or ownership
      rights relating to Covered Code.  You may choose to offer, and to
@@ -1093,7 +1093,7 @@ Version 1.1
      license (except to note that your license differs from this License)
      and (b) otherwise make it clear that Your version of the license
      contains terms which differ from the Mozilla Public License and
-     Netscape Public License. (Filling in the name of the Initial
+     Netscape Public License. (Filling in the title of the Initial
      Developer, Original Code or Contributor in the notice described in
      Exhibit A shall not of themselves be deemed to be modifications of
      this License.)

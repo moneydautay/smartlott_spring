@@ -7,9 +7,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <head>
 	<title>Toolbar Configuration &mdash; CKEditor Sample</title>
 	<meta charset="utf-8">
-	<meta name="ckeditor-sample-name" content="Toolbar Configurations">
-	<meta name="ckeditor-sample-group" content="Advanced Samples">
-	<meta name="ckeditor-sample-description" content="Configuring CKEditor to display full or custom toolbar layout.">
+	<meta title="ckeditor-sample-title" content="Toolbar Configurations">
+	<meta title="ckeditor-sample-group" content="Advanced Samples">
+	<meta title="ckeditor-sample-description" content="Configuring CKEditor to display full or custom toolbar layout.">
 	<script src="../../../ckeditor.js"></script>
 	<link href="../../../samples/sample.css" rel="stylesheet">
 </head>
@@ -38,10 +38,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<pre class="samples">
 CKEDITOR.replace( <em>'textarea_id'</em>, {
 	<strong>toolbar:</strong> [
-		{ name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', '-', 'Templates' ] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
-		[ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],			// Defines toolbar group without name.
+		{ title: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', '-', 'Templates' ] },	// Defines toolbar group with title (used to create voice label) and items in 3 subgroups.
+		[ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],			// Defines toolbar group without title.
 		'/',																					// Line break - next group will be placed in new line.
-		{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] }
+		{ title: 'basicstyles', items: [ 'Bold', 'Italic' ] }
 	]
 });</pre>
 
@@ -60,11 +60,11 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 		<pre class="samples">
 CKEDITOR.replace( <em>'textarea_id'</em>, {
 	<strong>toolbarGroups:</strong> [
-		{ name: 'document',	   groups: [ 'mode', 'document' ] },			// Displays document group with its two subgroups.
- 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			// Group's name will be used to create voice label.
+		{ title: 'document',	   groups: [ 'mode', 'document' ] },			// Displays document group with its two subgroups.
+ 		{ title: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			// Group's title will be used to create voice label.
  		'/',																// Line break - next group will be placed in new line.
- 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
- 		{ name: 'links' }
+ 		{ title: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+ 		{ title: 'links' }
 	]
 
 	// NOTE: Remember to leave 'toolbar' property with the default value (null).
@@ -74,7 +74,7 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 	<div id="currentToolbar" style="display: none">
 		<h2 class="samples">Current toolbar configuration</h2>
 		<p>Below you can see editor with current toolbar definition.</p>
-		<textarea cols="80" id="editorCurrent" name="editorCurrent" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+		<textarea cols="80" id="editorCurrent" title="editorCurrent" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
 		<pre id="editorCurrentCfg" class="samples"></pre>
 	</div>
 
@@ -85,7 +85,7 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 			<strong>Note</strong>: To create editor instance with full toolbar you don't have to set anything.
 			Just leave <code>toolbar</code> and <code>toolbarGroups</code> with the default, <code>null</code> values.
 		</p>
-		<textarea cols="80" id="editorFull" name="editorFull" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+		<textarea cols="80" id="editorFull" title="editorFull" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
 		<pre id="editorFullCfg" class="samples"></pre>
 	</div>
 
@@ -100,9 +100,9 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 
 	CKEDITOR.on( 'instanceReady', function( evt ) {
 		var editor = evt.editor,
-			editorCurrent = editor.name == 'editorCurrent',
+			editorCurrent = editor.title == 'editorCurrent',
 			defaultToolbar = !( editor.config.toolbar || editor.config.toolbarGroups ),
-			pre = CKEDITOR.document.getById( editor.name + 'Cfg' ),
+			pre = CKEDITOR.document.getById( editor.title + 'Cfg' ),
 			output = '';
 
 		if ( editorCurrent ) {
@@ -168,8 +168,8 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 		if ( !printGroups && !group.items )
 			return;
 
-		if ( group.name )
-			output.push( 'name: \'' + group.name + '\'' );
+		if ( group.title )
+			output.push( 'title: \'' + group.title + '\'' );
 
 		if ( group.groups )
 			output.push( 'groups: ' + dumpToolbarItems( group.groups ) );
@@ -195,7 +195,7 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 				if ( item.type == CKEDITOR.UI_SEPARATOR )
 					names.push( '-' );
 				else
-					names.push( buttonsNames[ item.name ] );
+					names.push( buttonsNames[ item.title ] );
 			}
 		}
 
@@ -205,10 +205,10 @@ CKEDITOR.replace( <em>'textarea_id'</em>, {
 	// Creates { 'lowercased': 'LowerCased' } buttons names hash.
 	function createButtonsNamesHash( items ) {
 		var hash = {},
-			name;
+			title;
 
-		for ( name in items ) {
-			hash[ items[ name ].name ] = name;
+		for ( title in items ) {
+			hash[ items[ title ].title ] = title;
 		}
 
 		return hash;

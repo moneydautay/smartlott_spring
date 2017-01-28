@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/common/header :: common-head"></head>
 <link rel="stylesheet" th:href="@{/css/bootstrap-datetimepicker.min.css}"/>
-<meta name="description" content="Trang quản trị SmartLott"/>
-<!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
 <body>
 <div class="page-container">
     <!--INCLUDE SIDEBAR-->
@@ -41,7 +41,7 @@
                 <div class="form-group col-xs-12 col-md-6">
                     <label for="fromDate" th:text="#{admin.lottery.dialing.table.from.date.text}"></label>
                     <div class="input-group date" data-provide="datepicker" id="fromDateFormat">
-                        <input type="text" id="fromDate" name="fromDate" class="form-control"/>
+                        <input type="text" id="fromDate" title="fromDate" class="form-control"/>
                         <div class="input-group-addon">
                             <span class="glyphicon glyphicon-th"></span>
                         </div>
@@ -51,7 +51,7 @@
                 <div class="form-group col-xs-12 col-md-6">
                     <label for="toDate" th:text="#{admin.lottery.dialing.table.to.date.text}"></label>
                     <div class="input-group date" data-provide="datepicker" id="toDateFormat">
-                        <input type="text" id="toDate" name="toDate" class="form-control"/>
+                        <input type="text" id="toDate" title="toDate" class="form-control"/>
                         <div class="input-group-addon">
                             <span class="glyphicon glyphicon-th"></span>
                         </div>
@@ -65,7 +65,7 @@
                         <span th:if="${lotteryDialingId!= null}" th:text="#{admin.lottery.dialing.closing.button.text}">Close</span>
                     </button>
                 </div>
-                <input type="hidden" th:if="${lotteryDialingId!= null}" id="lotteryDialingId" name="lotteryDialingId" th:value="*{lotteryDialingId}"/>
+                <input type="hidden" th:if="${lotteryDialingId!= null}" id="lotteryDialingId" title="lotteryDialingId" th:value="*{lotteryDialingId}"/>
             </form>
 
         </div>

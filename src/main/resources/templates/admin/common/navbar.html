@@ -28,7 +28,6 @@
             </a>
 
         </div>
-
     </header>
 
     <ul id="main-menu" class="">
@@ -37,7 +36,7 @@
         <!-- Search Bar -->
         <li id="search">
             <form method="get" action="">
-                <input type="text" name="q" class="search-input" placeholder="Search something..."/>
+                <input type="text" title="q" class="search-input" placeholder="Search something..."/>
                 <button type="submit">
                     <i class="entypo-search"></i>
                 </button>
@@ -73,6 +72,32 @@
                     <a th:href="@{/stl-admin/lottery/lottery-dialing}">
                         <i class="entypo-flow-parallel"></i>
                         <span th:text="#{admin.lottery.dialing.text}">Lottery Dialing</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/post')?'active opened':''}">
+            <a th:href="@{/stl-admin/post}">
+                <i class="entypo-gauge"></i>
+                <span th:text="#{admin.post.text}"></span>
+            </a>
+            <ul>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/post/all')?'active':''}">
+                    <a th:href="@{/stl-admin/post/all}">
+                        <i class="entypo-flow-parallel"></i>
+                        <span th:text="#{admin.post.all.text}">All post</span>
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('add')?'active':''}">
+                    <a th:href="@{/stl-admin/post/add}">
+                        <i class="entypo-flow-parallel"></i>
+                        <span th:text="#{admin.post.add.text}">Add post</span>
+                    </a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('category')?'active':''}">
+                    <a th:href="@{/stl-admin/post/category}">
+                        <i class="entypo-flow-parallel"></i>
+                        <span th:text="#{admin.post.category.text}">Category</span>
                     </a>
                 </li>
             </ul>

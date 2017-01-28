@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/post}">Post</a>
+            </li>
+            <li class="active">
+                <strong>Category</strong>
+            </li>
+        </ol>
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+
+        <h2>Post Management</h2>
+
+        <div class="row">
+            <table class="table responsive" id="table-content">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="navigaion">
+                <nav aria-label="Page navigation">
+                     <ul class="pagination">
+                    </ul>
+                </nav>
+            </div>
+            <a th:href="@{/stl-admin/post/category/add}" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                Add category
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var urlGetAddCategory= /*[[@{/api/category/all}]]*/;
+        //get data
+        getData(urlGetAddCategory,appendData,showMessages);
+
+    });
+
+    function appendData(data) {
+        var area = $('#table-content tbody');
+        var urlEdit = /*[[@{/stl-admin/post/category/edit/}]]*/;
+        var urlDel = /*[[@{/stl-admin/post/category/delete/}]]*/;
+        area.html('');
+        $.each(data.content, function (i, item) {
+            var _str = '<tr id="row_'+item.id+'">';
+            _str+='<td>';
+            _str+= item.id;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= item.title;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= item.description;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= '<a href="'+urlEdit+item.id+'" alt=""><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+            _str+= '<a href="'+urlDel+item.id+'" alt=""><i class="fa fa-trash" aria-hidden="true"></i></a>';
+            _str+='</td>';
+
+            _str+='</tr>';
+            area.append(_str);
+
+            showPagination(data);
+        });
+    }
+</script>
+</body>
+</html>

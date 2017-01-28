@@ -30,7 +30,7 @@
     file.</p>
 
     <form id="form" action="http://marijnhaverbeke.nl/uglifyjs" method="post">
-      <input type="hidden" id="download" name="download" value="codemirror-compressed.js"/>
+      <input type="hidden" id="download" title="download" value="codemirror-compressed.js"/>
       <p>Version: <select id="version" onchange="setVersion(this);" style="padding: 1px;">
         <option value="http://codemirror.net/">HEAD</option>
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=3.21.0;f=">3.21</option>
@@ -76,7 +76,7 @@
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=beta1;f=">beta1</option>
       </select></p>
 
-      <select multiple="multiple" size="20" name="code_url" style="width: 40em;" class="field" id="files">
+      <select multiple="multiple" size="20" title="code_url" style="width: 40em;" class="field" id="files">
         <optgroup label="CodeMirror Library">
           <option value="http://codemirror.net/lib/codemirror.js" selected>codemirror.js</option>
         </optgroup>
@@ -214,7 +214,7 @@
         <button type="submit">Compress</button> with <a href="http://github.com/mishoo/UglifyJS/">UglifyJS</a>
       </p>
 
-      <p>Custom code to add to the compressed file:<textarea name="js_code" style="width: 100%; height: 15em;" class="field"></textarea></p>
+      <p>Custom code to add to the compressed file:<textarea title="js_code" style="width: 100%; height: 15em;" class="field"></textarea></p>
     </form>
 
     <script type="text/javascript">

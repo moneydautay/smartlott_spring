@@ -41,7 +41,7 @@ for (var i = 2; i < process.argv.length; ++i) {
   } else if (arg == "--help") {
     help(true);
   } else if (arg[0] != "-") {
-    files.push({name: arg, re: new RegExp("(?:\\/|^)" + arg + (/\.js$/.test(arg) ? "$" : "\\.js$"))});
+    files.push({title: arg, re: new RegExp("(?:\\/|^)" + arg + (/\.js$/.test(arg) ? "$" : "\\.js$"))});
   } else help(false);
 }
 
@@ -69,7 +69,7 @@ if (!local && !blob) help(false);
 
 if (files.length) {
   console.log("Some speficied files were not found: " +
-              files.map(function(a){return a.name;}).join(", "));
+              files.map(function(a){return a.title;}).join(", "));
   process.exit(1);
 }
   

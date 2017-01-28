@@ -147,7 +147,6 @@ function getData(url, callBack=null, errorCallBack=null){
                 callBack(data);
         },
         error: function (e) {
-            console.log(e);
             if(errorCallBack!=null)
                 errorCallBack(JSON.parse(e.responseText));
         },
