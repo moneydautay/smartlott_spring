@@ -6,6 +6,8 @@ import com.smartlott.backend.persistence.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,5 +130,13 @@ public class UserService {
     @Transactional
     public void updateCash(Long userId, double cash) {
         userRepository.updateCash(userId, cash);
+    }
+
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public Page<User> getByRole(String roleName, Pageable pageable) {
+        return userRepository.findByUserRolesRoleName(roleName, pageable);
     }
 }

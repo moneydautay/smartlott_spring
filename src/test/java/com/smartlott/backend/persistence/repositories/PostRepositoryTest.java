@@ -19,8 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 /**
  * Created by greenlucky on 1/27/17.
@@ -52,22 +51,18 @@ public class PostRepositoryTest {
 
         User user = userRepository.findOne(Long.valueOf(1));
 
-        Set<Category> categoryPosts = new HashSet<>();
 
         Category category = new Category();
         category.setTitle(testName.getMethodName());
         category.setDescription(testName.getMethodName());
 
-        //category = categoryPostRepository.save(category);
-
-        categoryPosts.add(category);
 
         //create post
         Post post = new Post();
 
         post.setTitle(testName.getMethodName());
         post.setSlug(testName.getMethodName());
-        post.setCategories(categoryPosts);
+        post.setCategories(Arrays.asList(category));
         post.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
         post.setUser(user);
 
@@ -85,22 +80,18 @@ public class PostRepositoryTest {
     public void testGetPostByCategory() throws Exception{
         User user = userRepository.findOne(Long.valueOf(1));
 
-        Set<Category> categoryPosts = new HashSet<>();
-
         Category category = new Category();
         category.setTitle(testName.getMethodName());
         category.setDescription(testName.getMethodName());
 
         category = categoryPostRepository.save(category);
 
-        categoryPosts.add(category);
-
         //create post
         Post post = new Post();
 
         post.setTitle(testName.getMethodName());
         post.setSlug(testName.getMethodName());
-        post.setCategories(categoryPosts);
+        post.setCategories(Arrays.asList(category));
         post.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
         post.setUser(user);
 
@@ -110,15 +101,13 @@ public class PostRepositoryTest {
 
         Category category1 = categoryPostRepository.findOne(1);
 
-        categoryPosts = new HashSet<>();
-        categoryPosts.add(category1);
         Post post1 = new Post();
 
         post1.setTitle(testName.getMethodName());
         post1.setSlug(testName.getMethodName()+"1");
         post1.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
         post1.setUser(user);
-        post1.setCategories(categoryPosts);
+        post1.setCategories(Arrays.asList(category1));
         post1 = postService.create(post1);
 
         PageRequest pageRequest = new PageRequest(0,10);

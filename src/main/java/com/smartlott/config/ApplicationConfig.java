@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableJpaRepositories(basePackages =  "com.smartlott.backend.persistence.repositories")
-@EnableElasticsearchRepositories(basePackages =  "com.smartlott.backend.persistence.elasticsearch")
+@EnableElasticsearchRepositories(basePackages =  "com.smartlott.backend.persistence.repositories.elasticsearch")
 @EnableTransactionManagement
 @PropertySource("file:///${user.home}/.gluck/smartlott/application-common.properties")
 public class ApplicationConfig {

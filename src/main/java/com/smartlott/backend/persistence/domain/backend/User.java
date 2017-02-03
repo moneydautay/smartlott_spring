@@ -17,9 +17,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Mr Lam on 12/14/2016.
@@ -123,6 +121,11 @@ public class User implements Serializable, UserDetails{
 
     @Column(name = "introduced_key", updatable = false)
     private String introducedKey;
+
+    @JoinColumn(updatable = false)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<UserCash> userCashes;
+
 
     public User() {
     }
@@ -307,6 +310,14 @@ public class User implements Serializable, UserDetails{
 
     public void setIntroducedKey(String introducedKey) {
         this.introducedKey = introducedKey;
+    }
+
+    public List<UserCash> getUserCashes() {
+        return userCashes;
+    }
+
+    public void setUserCashes(List<UserCash> userCashes) {
+        this.userCashes = userCashes;
     }
 
     @Override

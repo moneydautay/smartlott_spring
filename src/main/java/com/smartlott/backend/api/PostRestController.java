@@ -2,8 +2,10 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.Post;
+import com.smartlott.backend.persistence.domain.elastic.PostElastic;
 import com.smartlott.backend.service.I18NService;
 import com.smartlott.backend.service.PostService;
+import com.smartlott.backend.service.elasticsearch.PostElasticService;
 import com.smartlott.enums.MessageType;
 import com.smartlott.utils.PageRequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class PostRestController {
 
     @Autowired
     private I18NService i18NService;
+
+    @Autowired
+    private PostElasticService postElasticService;
 
     private List<MessageDTO> messageDTOS;
 
@@ -90,6 +95,10 @@ public class PostRestController {
                     i18NService.getMessage("admin.post.error.add.text", locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
+        System.out.println(post);
+        //add post elastice search
+        postElasticService.create(post);
+
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.post.success.add.text", post.getTitle(),locale)));
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
@@ -121,6 +130,9 @@ public class PostRestController {
         localPost.setPostEditDate(LocalDateTime.now(Clock.systemDefaultZone()));
         if(post.isStatus())
             localPost.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        //update elastic post search
+        postElasticService.update(post);
 
         postService.update(localPost);
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
@@ -185,5 +197,26 @@ public class PostRestController {
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage(msg, String.valueOf(result),locale)));
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    public ResponseEntity<Object> searchPost(
+            @RequestParam(value = "title",required = false) String title,
+            @RequestParam(value = "catid", required = false, defaultValue = "-1") int catid,
+            Pageable pageable, Locale locale){
+        messageDTOS = new ArrayList<>();
+        Page<PostElastic> results = null;
+        if(catid != -1)
+            results = postElasticService.searchByTitleAndCategoriesId(title, catid, PageRequestUtils.createPageRequest(pageable));
+        else
+            results = postElasticService.searchByTitle(title,PageRequestUtils.createPageRequest(pageable));
+
+        if(results.getTotalElements() == 0){
+            messageDTOS.add(new MessageDTO(MessageType.WARNING,
+                    i18NService.getMessage("admin.post.error.search.not.found.text", String.valueOf(title) ,locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<Object>(results, HttpStatus.OK);
     }
 }

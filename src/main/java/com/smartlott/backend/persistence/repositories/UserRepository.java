@@ -1,6 +1,9 @@
 package com.smartlott.backend.persistence.repositories;
 
 import com.smartlott.backend.persistence.domain.backend.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -60,4 +63,8 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Modifying
     @Query("update User u set u.cash = :cash where u.id = :userId")
     public void updateCash(@Param("userId") long userId, @Param("cash") double cash);
+
+    Page<User> findAll(Pageable pageable);
+
+    Page<User> findByUserRolesRoleName(String role, Pageable pageable);
 }

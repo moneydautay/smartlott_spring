@@ -149,3 +149,12 @@ function showSuccessAction(data) {
 }
 
 
+/**
+ * check all or uncheck table
+ */
+$('#selectAll').change(function () {
+    var checked = false;
+    if($(this).is(':checked'))
+        checked = true;
+    $('input[name="_id"]').prop('checked',checked);
+})

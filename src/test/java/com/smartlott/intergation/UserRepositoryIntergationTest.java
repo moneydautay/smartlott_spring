@@ -17,6 +17,8 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -105,6 +107,13 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         userRepository.updateCash(user.getId(), cash);
         User actualUser = userRepository.findOne((long)1);
         System.out.println(actualUser.toString());
+    }
+
+    @Test
+    public void getUserByRoleName() throws Exception{
+        String ROLE_NAME = "ROLE_CUSTOMER";
+        Page<User> users = userRepository.findByUserRolesRoleName(ROLE_NAME, new PageRequest(0,10));
+        System.out.println(users.getContent());
     }
 
 }

@@ -43,16 +43,14 @@
                     </div>
                 </form>
             </div>
+            <form id="filterPost" method="GET" th:action="@{/stl-admin/post/all}">
             <div class="form-group col-md-3 col-xs-12">
-                <form id="filterPost" method="GET" th:action="@{/api/post/category}">
-                    <select id="categories" name="categories" class="form-control"></select>
-                </form>
+                    <select id="categories" name="catid" class="form-control"></select>
             </div>
             <div class="form-group col-md-4 col-xs-12 navbar-right">
-                <form id="searchPost" method="GET" th:action="@{/api/post/search}">
-                    <input type="text" id="title" name="title" class="form-control" placeholder="Search post"/>
-                </form>
+                    <input type="text" id="title" name="title" class="form-control" placeholder="Search post" th:value="${title}"/>
             </div>
+            </form>
         </div>
 
         <div class="row">
@@ -93,31 +91,37 @@
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
         var urlPostAll = /*[[@{/api/post/all}]]*/;
-
-        //get data
-        getData(urlPostAll, appendData);
+        var urlPostCl = /*[[@{/stl-admin/post/all}]]*/;
+        //set value to category selectbox
+        var catId = /*[[${catid}]]*/;
+        var title = /*[[${title}]]*/;
 
         //get category
         //load category
         var urlGetDataCategory = /*[[@{/api/category/all}]]*/;
         getData(urlGetDataCategory, showCategories);
 
+        if(catId != null){
+            setTimeout(function () {
+                $('#categories').val(catId);
+            },200)
+        }
 
         //filter by categories
         $('#categories').change(function () {
-            var id = $(this).val();
-            var urlPost = /*[[@{/api/post/category/}]]*/;
-            if(id == -1)
-            //get data
-                getData(urlPostAll, appendData, showErrors);
-            else{
-                urlPost+=id;
-                getData(urlPost, appendData, showErrors);
-            }
+            doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
         });
+
+        $('#filterPost').submit(function (e) {
+            e.preventDefault();
+            doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
+        })
 
         //do action
         doActionPost();
+
+        var urlPost = /*[[@{/api/post/search}]]*/;
+        doSearchPost(urlPostAll, urlPost, catId, title, appendData);
 
         //select all post
         $('#selectAll').change(function () {
@@ -137,9 +141,8 @@
             var msgErrorSizeZero = /*[[#{admin.post.action.size.zero.text}]]*/;
 
             var action = $('#action').val();
-            console.log(action);
-            var data = [];
 
+            var data = [];
             //do nothing
             if(action == -1)
                 return;
@@ -171,12 +174,7 @@
                     //do change status
                     changeStatus(data, status);
                 }
-
             }
-
-
-
-
         });
     }
 

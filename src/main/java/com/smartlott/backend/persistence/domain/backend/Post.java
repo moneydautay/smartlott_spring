@@ -3,14 +3,11 @@ package com.smartlott.backend.persistence.domain.backend;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
@@ -19,7 +16,6 @@ import java.util.Set;
 @Table(name = "post")
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
-@Document(indexName = "blog", type = "post")
 public class Post implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
@@ -57,12 +53,11 @@ public class Post implements Serializable{
     @JoinColumn(name = "post_by")
     private User user;
 
-    @Field(type = FieldType.Nested)
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "post_category",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
-    private Set<Category> categories;
+    private List<Category> categories;
 
     private String excerpt;
 
@@ -149,11 +144,11 @@ public class Post implements Serializable{
         this.user = user;
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
