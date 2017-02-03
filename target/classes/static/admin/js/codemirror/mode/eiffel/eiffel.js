@@ -50,7 +50,7 @@ CodeMirror.defineMode("eiffel", function() {
     'separate',
     'invariant',
     'inherit',
-    'indexing',
+    'elasticsearch',
     'feature',
     'expanded',
     'deferred',

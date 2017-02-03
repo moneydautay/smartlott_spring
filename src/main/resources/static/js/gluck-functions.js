@@ -118,4 +118,34 @@ function getCurrentDate(seperate='-') {
     return day +seperate+ month + seperate +year;
 }
 
+var slug = function(str) {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+
+    // remove accents, swap ñ for n, etc
+    var from = "ãàáäâấăắằẽèéëêếìíïîõòóöôơớởùúüûưứñç·/_,:;";
+    var to   = "aaaaaaaaaeeeeeeiiiioooooooouuuuuunc------";
+    for (var i=0, l=from.length ; i<l ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+};
+
+
+/**
+ * Shows success function and reload page
+ * @param data
+ */
+function showSuccessAction(data) {
+    showSuccess(data);
+    setTimeout(function () {
+        window.location.reload();
+    },1000);
+}
+
 

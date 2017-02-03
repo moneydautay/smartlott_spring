@@ -29,10 +29,9 @@
         <!--Message area-->
         <div class="row" id="messageArea"></div>
 
-        <h2>Post Management</h2>
-
+        <h2>Category Management</h2>
         <div class="row">
-            <table class="table responsive" id="table-content">
+            <table class="table responsive" id="tableContent">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -73,7 +72,7 @@
     });
 
     function appendData(data) {
-        var area = $('#table-content tbody');
+        var area = $('#tableContent tbody');
         var urlEdit = /*[[@{/stl-admin/post/category/edit/}]]*/;
         var urlDel = /*[[@{/stl-admin/post/category/delete/}]]*/;
         area.html('');

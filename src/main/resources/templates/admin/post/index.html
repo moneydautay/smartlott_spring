@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>Post</strong>
+            </li>
+        </ol>
+
+        <h2>Post Management</h2>
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+        <div class="row">
+            <div class="form-group col-md-4 col-xs-12">
+                <form id="actionPost" method="GET" th:action="@{/api/post/category}">
+                    <div class="col-md-8 col-xs-12">
+                        <select id="action" name="action" class="form-control">
+                            <option value="-1">Action</option>
+                            <option value="1" th:text="#{admin.button.delete.text}">Delete</option>
+                            <option value="2" th:text="#{admin.post.button.publish.text}">Publish</option>
+                            <option value="3" th:text="#{admin.post.status.unpublish.text}">Unpublish</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <button type="submit" class="form-control btn btn-primary" >Do</button>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group col-md-3 col-xs-12">
+                <form id="filterPost" method="GET" th:action="@{/api/post/category}">
+                    <select id="categories" name="categories" class="form-control"></select>
+                </form>
+            </div>
+            <div class="form-group col-md-4 col-xs-12 navbar-right">
+                <form id="searchPost" method="GET" th:action="@{/api/post/search}">
+                    <input type="text" id="title" name="title" class="form-control" placeholder="Search post"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table responsive" id="tableContent">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/></th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Post by</th>
+                        <th>Published</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="navigaion">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                    </ul>
+                </nav>
+            </div>
+            <a th:href="@{/stl-admin/post/add}" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                Thêm post
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var urlPostAll = /*[[@{/api/post/all}]]*/;
+
+        //get data
+        getData(urlPostAll, appendData);
+
+        //get category
+        //load category
+        var urlGetDataCategory = /*[[@{/api/category/all}]]*/;
+        getData(urlGetDataCategory, showCategories);
+
+
+        //filter by categories
+        $('#categories').change(function () {
+            var id = $(this).val();
+            var urlPost = /*[[@{/api/post/category/}]]*/;
+            if(id == -1)
+            //get data
+                getData(urlPostAll, appendData, showErrors);
+            else{
+                urlPost+=id;
+                getData(urlPost, appendData, showErrors);
+            }
+        });
+
+        //do action
+        doActionPost();
+
+        //select all post
+        $('#selectAll').change(function () {
+            var checked = false;
+           if($(this).is(':checked'))
+                checked = true;
+            $('input[name="_id"]').prop('checked',checked);
+        })
+
+    });
+
+    function doActionPost() {
+        $('#actionPost').submit(function (e) {
+            e.preventDefault();
+            var msgConfirmDelete = /*[[#{admin.post.delete.confirm.text}]]*/;
+            var msgConfirmChangeStatus = /*[[#{admin.post.change.status.confirm.text}]]*/;
+            var msgErrorSizeZero = /*[[#{admin.post.action.size.zero.text}]]*/;
+
+            var action = $('#action').val();
+            console.log(action);
+            var data = [];
+
+            //do nothing
+            if(action == -1)
+                return;
+            //gets all checked
+            var sizeData = 0;
+            $('input[name=_id]:checked','#tableContent').each(function (index,_id) {
+                data[index]=_id.value;
+                sizeData++;
+            });
+
+            //checks data equals zero to return nothing
+            if(0 >= sizeData){
+                alert(msgErrorSizeZero);
+                return;
+            }
+
+            //action delete
+            if(action == 1){
+                if(confirm(msgConfirmDelete))
+                    deletePosts(data);
+            }else{
+                //change status of posts
+                if(confirm(msgConfirmChangeStatus)){
+                    //status publish
+                    var status = true;
+                    //status unpublish
+                    if(action==3)
+                        status = false;
+                    //do change status
+                    changeStatus(data, status);
+                }
+
+            }
+
+
+
+
+        });
+    }
+
+    /**
+     * Deletes datas
+     * @param data
+     */
+    function deletePosts(data) {
+        var urlDeletePosts = /*[[@{/api/post/delete}]]*/;
+        console.log(data);
+        saveOrupdateData(urlDeletePosts,'DELETE',data,showSuccessAction,showErrors);
+    }
+
+    /**
+     * Deletes datas
+     * @param data
+     */
+    function changeStatus(data,status=true) {
+        var urlChangeStatusPost = /*[[@{/api/post/change-status/}]]*/;
+        urlChangeStatusPost+=status;
+        saveOrupdateData(urlChangeStatusPost,'PUT',data,showSuccessAction,showErrors);
+    }
+
+    function appendData(data) {
+        var area = $('#tableContent tbody');
+        area.html('');
+        $.each(data.content, function (i, item) {
+            var _str = '<tr id="row_'+item.id+'">';
+            var urlEdit = /*[[@{/stl-admin/post/edit/}]]*/;
+            var urlDel = /*[[@{/stl-admin/post/delete/}]]*/;
+            urlEdit+=item.id;
+            urlDel+=item.id;
+            _str+='<td>';
+            _str+= '<input type="checkbox" class="_id" name="_id" value="'+item.id+'"/>';
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= '<a href="'+urlEdit+'" title="edit">'+item.title+'</a>';
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= concateCategoris(item.categories);
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= (item.user != null) ? item.user.username:'';
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= item.status;
+            _str+='</td>';
+
+            _str+='<td>';
+            _str+= '<a href="'+urlEdit+'" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+            _str+= '<a href="'+urlDel+'" title="delete"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+            _str+='</td>';
+
+            _str+='</tr>';
+            area.append(_str);
+
+            showPagination(data);
+        });
+    }
+
+    function concateCategoris(categories) {
+        var strCat = '';
+        var urlCat = /*[[@{/stl-admin/post/category/edit/}]]*/;
+        $.each(categories, function (index, category) {
+            if(index > 0)
+                strCat+=", ";
+            urlCat+=category.id;
+            strCat += '<a href="'+urlCat+'">'+category.title+'</a>';
+        });
+        return strCat;
+    }
+
+    function showCategories(data){
+        var selectCategory = $('#categories');
+        selectCategory.html();
+        var strOption = '<option value="-1">';
+        strOption +="Category";
+        strOption += '</option>';
+        selectCategory.append(strOption);
+        $.each(data.content,function (index, category) {
+            strOption = '<option value="'+category.id+'">';
+            strOption +=category.title;
+            strOption += '</option>';
+            selectCategory.append(strOption);
+        });
+    }
+
+</script>
+</body>
+</html>

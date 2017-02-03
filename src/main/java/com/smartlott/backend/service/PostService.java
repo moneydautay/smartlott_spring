@@ -40,6 +40,7 @@ public class PostService {
      * @param post
      * @return a post after update
      */
+    @Transactional
     public Post update(Post post){
         return postRepository.save(post);
     }
@@ -49,6 +50,7 @@ public class PostService {
      *
      * @param postId
      */
+    @Transactional
     public void delete(long postId){
         postRepository.delete(postId);
     }
@@ -70,6 +72,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Page<Post> getByCategoryId(int categoryId, Pageable pageable){
+        return postRepository.findByCategories_Id(categoryId, pageable);
+    }
+
     /**
      * Retrieves a page of al post or null of post
      * @param pageable
@@ -79,7 +85,40 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
+    /**
+     * Gets A post by slug given by slug
+     *
+     * @param slug
+     * @return a slug or null if not exist
+     */
+    public Post getBySlug(String slug){
+        return postRepository.findBySlug(slug);
+    }
+
+    /**
+     * Checks exist post given by post id
+     * @param postId
+     * @return True if post exist post id or null if not exist
+     */
     public boolean exist(int postId) {
         return postRepository.exists(Long.valueOf(postId));
+    }
+
+    public boolean existSlug(String slug) {
+        Post post = postRepository.findBySlug(slug);
+        System.out.println(post);
+        if(post != null)
+            return true;
+        return false;
+    }
+
+    @Transactional
+    public int delete(List<Long> postIds){
+        return postRepository.delete(postIds);
+    }
+
+    @Transactional
+    public int changeStatus(List<Long> postIds, boolean status){
+        return postRepository.changeStatus(postIds, status);
     }
 }

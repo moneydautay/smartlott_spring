@@ -1,7 +1,11 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
-import org.springframework.beans.factory.annotation.Value;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +17,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "post")
+@DynamicUpdate(value = true)
+@SelectBeforeUpdate(value = true)
+@Document(indexName = "blog", type = "post")
 public class Post implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
@@ -29,7 +36,7 @@ public class Post implements Serializable{
 
     private String content;
 
-    @Column(name = "post_date")
+    @Column(name = "post_date", updatable = false)
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime postDate;
 
@@ -41,8 +48,7 @@ public class Post implements Serializable{
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime postEditDate;
 
-    @Value("true")
-    private boolean status;
+    private boolean status=true;
 
     @Column(name = "featured_image")
     private String featuredImage;
@@ -51,11 +57,14 @@ public class Post implements Serializable{
     @JoinColumn(name = "post_by")
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Category.class)
+    @Field(type = FieldType.Nested)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "post_category",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     private Set<Category> categories;
+
+    private String excerpt;
 
     public Post() {
     }
@@ -148,6 +157,14 @@ public class Post implements Serializable{
         this.categories = categories;
     }
 
+    public String getExcerpt() {
+        return excerpt;
+    }
+
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -155,6 +172,7 @@ public class Post implements Serializable{
                 ", title='" + title + '\'' +
                 ", slug='" + slug + '\'' +
                 ", content='" + content + '\'' +
+                ", excerpt='" + excerpt + '\'' +
                 ", postDate=" + postDate +
                 ", publishDate=" + publishDate +
                 ", postEditDate=" + postEditDate +

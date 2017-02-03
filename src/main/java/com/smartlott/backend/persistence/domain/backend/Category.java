@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -22,7 +24,8 @@ public class Category implements Serializable{
 
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     private Set<Post> posts;
 
     public Category() {

@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,13 +36,13 @@ public class PostRestController {
 
     private List<MessageDTO> messageDTOS;
 
-    @RequestMapping("/all")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<Object> getAllPost(Pageable pageable, Locale locale){
         messageDTOS = new ArrayList<>();
 
         PageRequest pageRequest = PageRequestUtils.createPageRequest(pageable);
 
-        Page<Post> posts = postService.getAll(pageable);
+        Page<Post> posts = postService.getAll(pageRequest);
 
         if(posts.getTotalPages() == 0){
             messageDTOS.add(new MessageDTO(MessageType.WARNING,
@@ -52,7 +54,7 @@ public class PostRestController {
     }
 
     @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getCategory(@PathVariable int postId, Locale locale){
+    public ResponseEntity<Object> getPost(@PathVariable int postId, Locale locale){
         messageDTOS = new ArrayList<>();
 
         Post post = postService.getOne(postId);
@@ -67,10 +69,22 @@ public class PostRestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Object> createCategory(@RequestBody Post post, Locale locale){
+    public ResponseEntity<Object> createPost(@RequestBody Post post, Locale locale){
         messageDTOS = new ArrayList<>();
 
+        post.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        if(post.isStatus())
+            post.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        //check unique slug
+        if(postService.existSlug(post.getSlug())){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.post.error.duplicate.slug.text", locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
         post = postService.create(post);
+
         if(post.getId() == 0){
             messageDTOS.add(new MessageDTO(MessageType.ERROR,
                     i18NService.getMessage("admin.post.error.add.text", locale)));
@@ -82,22 +96,40 @@ public class PostRestController {
     }
 
     @RequestMapping(value = "/{postId}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> updateCategory(@PathVariable int postId, @RequestBody Post category, Locale locale){
+    public ResponseEntity<Object> updatePost(@PathVariable int postId, @RequestBody Post post, Locale locale){
         messageDTOS = new ArrayList<>();
-
-        if(!postService.exist(postId)){
+        Post localPost = postService.getOne(postId);
+        if(localPost == null){
             messageDTOS.add(new MessageDTO(MessageType.ERROR,
                     i18NService.getMessage("admin.post.error.post.id.not.found.text", String.valueOf(postId) ,locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
-        postService.update(category);
+
+        //check unique slug
+        if(postService.existSlug(post.getSlug()) && !localPost.getSlug().equals(post.getSlug())){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.post.error.duplicate.slug.text", locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        localPost.setCategories(post.getCategories());
+        localPost.setTitle(post.getTitle());
+        localPost.setSlug(post.getSlug());
+        localPost.setContent(post.getContent());
+        localPost.setStatus(post.isStatus());
+        localPost.setFeaturedImage(post.getFeaturedImage());
+        localPost.setPostEditDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        if(post.isStatus())
+            localPost.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        postService.update(localPost);
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.post.success.update.text", String.valueOf(postId),locale)));
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{postId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteCategory(@PathVariable int postId, Locale locale){
+    public ResponseEntity<Object> deletePost(@PathVariable int postId, Locale locale){
         messageDTOS = new ArrayList<>();
 
         if(!postService.exist(postId)){
@@ -107,7 +139,51 @@ public class PostRestController {
         }
         postService.delete(postId);
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
-                i18NService.getMessage("g", String.valueOf(postId),locale)));
+                i18NService.getMessage("admin.post.success.delete.text", String.valueOf(postId),locale)));
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
+    }
+
+    /**
+     * Gets a post given by category id or null if not exist
+     * @param categoryId
+     * @param pageable
+     * @param locale
+     * @return A post or null if not exist
+     */
+    @RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getPostsByCategoryId(@PathVariable int categoryId, Pageable pageable,Locale locale){
+        messageDTOS = new ArrayList<>();
+
+        PageRequest pageRequest = PageRequestUtils.createPageRequest(pageable);
+        Page<Post> posts = postService.getByCategoryId(categoryId, pageRequest);
+
+        if(posts.getTotalPages() == 0){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.post.error.of.category.not.found.text", String.valueOf(categoryId) ,locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        return new ResponseEntity<Object>(posts,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deletes(@RequestBody List<Long> postIds, Locale locale){
+        messageDTOS = new ArrayList<>();
+        int resutl = postService.delete(postIds);
+        messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
+                i18NService.getMessage("admin.post.success.deletes.text", String.valueOf(resutl),locale)));
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/change-status/{status}", method = RequestMethod.PUT)
+    public ResponseEntity<Object> deletes(@PathVariable boolean status, @RequestBody List<Long> postIds, Locale locale){
+        messageDTOS = new ArrayList<>();
+        int result = postService.changeStatus(postIds, status);
+        String msg = "admin.post.success.status.to.publish.text";
+        if(status==false)
+            msg = "admin.post.success.status.to.unpublish.text";
+        messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
+                i18NService.getMessage(msg, String.valueOf(result),locale)));
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }
 }

@@ -13,6 +13,7 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -90,7 +91,7 @@ public class PostRepositoryTest {
         category.setTitle(testName.getMethodName());
         category.setDescription(testName.getMethodName());
 
-        //category = categoryPostRepository.save(category);
+        category = categoryPostRepository.save(category);
 
         categoryPosts.add(category);
 
@@ -104,10 +105,25 @@ public class PostRepositoryTest {
         post.setUser(user);
 
         post = postService.create(post);
-
+        System.out.println(post);
         Assert.assertNotNull(post.getId());
 
-        PageRequest pageRequest = new PageRequest(1,10);
+        Category category1 = categoryPostRepository.findOne(1);
+
+        categoryPosts = new HashSet<>();
+        categoryPosts.add(category1);
+        Post post1 = new Post();
+
+        post1.setTitle(testName.getMethodName());
+        post1.setSlug(testName.getMethodName()+"1");
+        post1.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        post1.setUser(user);
+        post1.setCategories(categoryPosts);
+        post1 = postService.create(post1);
+
+        PageRequest pageRequest = new PageRequest(0,10);
+        Page<Post> posts = postService.getByCategoryId(1, pageRequest);
+        System.out.println(posts.getContent());
     }
 
 }

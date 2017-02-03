@@ -5,10 +5,16 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
+import org.elasticsearch.node.NodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -18,10 +24,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableJpaRepositories(basePackages =  "com.smartlott.backend.persistence.repositories")
+@EnableElasticsearchRepositories(basePackages =  "com.smartlott.backend.persistence.elasticsearch")
 @EnableTransactionManagement
 @PropertySource("file:///${user.home}/.gluck/smartlott/application-common.properties")
 public class ApplicationConfig {
-
+    
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationConfig.class);
+    
     @Value("${aws.s3.profile}")
     private String awsProfileName;
 
@@ -36,5 +46,16 @@ public class ApplicationConfig {
         s3Client.setRegion(region);
 
         return  s3Client;
+    }
+
+
+    @Bean
+    public NodeBuilder nodeBuilder() {
+        return new NodeBuilder();
+    }
+
+    @Bean
+    public ElasticsearchOperations elasticsearchTemplate() {
+        return new ElasticsearchTemplate(nodeBuilder().local(true).node().client());
     }
 }

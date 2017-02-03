@@ -15,9 +15,9 @@ public class PostCategoryController {
 
     public static final String POST_CATEGORY_URL = "stl-admin/post/category";
 
-    private static final String POST_CATEGORY_VIEW_NAME = "/admin/theme/post/category/index";
+    private static final String POST_CATEGORY_VIEW_NAME = "/admin/post/category/index";
 
-    private static final String ADD_POST_CATEGORY_VIEW_NAME = "/admin/theme/post/category/addCategory";
+    private static final String ADD_POST_CATEGORY_VIEW_NAME = "/admin/post/category/addCategory";
 
     @RequestMapping("")
     public String getAllCategory(){
