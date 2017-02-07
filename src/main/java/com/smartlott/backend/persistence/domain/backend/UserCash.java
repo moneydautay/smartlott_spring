@@ -21,6 +21,8 @@ public class UserCash {
 
     double value=0.0;
 
+    private boolean enabled = true;
+
     public UserCash() {
     }
 
@@ -59,5 +61,39 @@ public class UserCash {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCash{" +
+                "id=" + id +
+                ", user=" + user +
+                ", cash=" + cash +
+                ", value=" + value +
+                ", enabled=" + enabled +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserCash userCash = (UserCash) o;
+
+        return id == userCash.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

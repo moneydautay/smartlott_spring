@@ -26,6 +26,8 @@ public class TransactionType implements Serializable{
     @Length(max = 255)
     private String description;
 
+    private boolean autoHandle = false;
+
     public TransactionType() {
     }
 
@@ -38,6 +40,7 @@ public class TransactionType implements Serializable{
         this.id = typeEnum.getId();
         this.name = typeEnum.getName();
         this.description = typeEnum.getDescription();
+        this.autoHandle = typeEnum.isAutoHandle();
     }
 
 
@@ -65,12 +68,22 @@ public class TransactionType implements Serializable{
         this.description = description;
     }
 
+
+    public boolean isAutoHandle() {
+        return autoHandle;
+    }
+
+    public void setAutoHandle(boolean autoHandle) {
+        this.autoHandle = autoHandle;
+    }
+
     @Override
     public String toString() {
         return "TransactionType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", autoHandle=" + autoHandle +
                 '}';
     }
 

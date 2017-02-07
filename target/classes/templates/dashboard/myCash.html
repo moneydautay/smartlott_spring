@@ -115,6 +115,7 @@
 
         var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
         var username = /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/;
+
         var url = /*[[@{/api/number-account/by-user}]]*/;
         url+="/"+userId;
         //get all number accounts given by userid

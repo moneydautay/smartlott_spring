@@ -4,23 +4,24 @@ package com.smartlott.enums;
  * Created by greenlucky on 1/1/17.
  */
 public enum TransactionTypeEnum {
-    Withdraw(1,"Withdraw","This is withdraw transaction",0.1),
-    BuyingLottery(2,"Buying lottery", "This is buying lottery",.1);
+    Withdraw(1,"Withdraw","This is withdraw transaction", false),
+    BuyingLottery(2,"Buying lottery", "This is buying lottery", true),
+    BuyInvestmentPackage(3,"Investment package","This is buying investment package", true);
 
     private  int id;
     private String name;
     private String description;
-    private  double feesWithdraw =0;
+    private boolean autoHandle = false;
 
     TransactionTypeEnum(){
 
     }
 
-    TransactionTypeEnum(int id, String name, String description, double fees) {
+    TransactionTypeEnum(int id, String name, String description, boolean autoHandle) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.feesWithdraw = fees;
+        this.autoHandle = autoHandle;
     }
 
     public int getId() {
@@ -35,11 +36,7 @@ public enum TransactionTypeEnum {
         return description;
     }
 
-    public double getFeesWithdraw() {
-        return feesWithdraw;
-    }
-
-    public void setFeesWithdraw(double feesWithdraw) {
-        this.feesWithdraw = feesWithdraw;
+    public boolean isAutoHandle() {
+        return autoHandle;
     }
 }
