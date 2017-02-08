@@ -274,9 +274,11 @@ public class SmartlottApplication implements CommandLineRunner{
 	public void createTransactionType(){
 		TransactionType type1= new TransactionType(TransactionTypeEnum.Withdraw);
 		TransactionType type2= new TransactionType(TransactionTypeEnum.BuyingLottery);
+		TransactionType type3= new TransactionType(TransactionTypeEnum.BuyInvestmentPackage);
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
+		transactionTypeService.createNew(type3);
 	}
 
 	public void createBonusForUser(User user){

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -54,6 +55,7 @@ public class Transaction implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "transaction_status_id")
     private TransactionStatus transactionStatus;
+
 
     @Transient
     private String securityToken;
