@@ -124,7 +124,7 @@
     function showLotteryDialingErrors(errors) {
         var messageArea = $('#messageArea');
         $.each(errors, function (index, error) {
-            messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+            messageArea.append(createMessage(error.message,'alert-danger alert-dismissible'));
         });
 
         $('#frmAddLotteryDialing').html('');

@@ -1,14 +1,9 @@
 package com.smartlott.intergation;
 
 import com.smartlott.SmartlottApplication;
-import com.smartlott.backend.persistence.domain.backend.Address;
-import com.smartlott.backend.persistence.domain.backend.Password;
-import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.domain.backend.UserRole;
-import com.smartlott.backend.persistence.repositories.AddressRepository;
-import com.smartlott.backend.persistence.repositories.PasswordRepository;
-import com.smartlott.backend.persistence.repositories.UserRepository;
-import com.smartlott.backend.persistence.repositories.UserRoleRepository;
+import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.repositories.*;
+import com.smartlott.enums.InvestmentPackageEnum;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,12 +11,16 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,6 +28,7 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SmartlottApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
     @Autowired
@@ -43,6 +43,8 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private InvestmentPackageRepository packageRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -115,5 +117,12 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         Page<User> users = userRepository.findByUserRolesRoleName(ROLE_NAME, new PageRequest(0,10));
         System.out.println(users.getContent());
     }
+
+    @Test
+    public void getUserInvestment() throws Exception{
+        User user = userRepository.findOne(Long.valueOf(1));
+        System.out.println(user.getUserInvestment());
+    }
+
 
 }

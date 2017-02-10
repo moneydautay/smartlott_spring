@@ -1,8 +1,12 @@
 package com.smartlott.backend.service;
 
+import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
 import com.smartlott.backend.persistence.domain.backend.Password;
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.domain.backend.UserInvestment;
+import com.smartlott.backend.persistence.repositories.UserInvestmentRepository;
 import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.smartlott.enums.InvestmentPackageEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -30,6 +35,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserInvestmentRepository investmentRepository;
 
 
     @Autowired
@@ -62,20 +70,21 @@ public class UserService {
     public User createUser(User user){
 
         String encryptPassword = passwordEncoder.encode(user.getPassword());
-
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         Set<Password> passwords = new HashSet<>();
         passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemDefaultZone()), user));
         user.setPassword(encryptPassword);
 
         user.setPasswords(passwords);
-        user.setCreateDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        user.setCreateDate(now);
 
-        //set introduced key
-        byte[] charKey = user.getUsername().getBytes();
-        String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-","").substring(0,8);
-        user.setIntroducedKey(introducedKey);
 
         user = userRepository.save(user);
+
+        //add basic user investment package is CUSTOMER
+        InvestmentPackage customerPackage = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
+
+        addInvestmentPackage(user.getId(), customerPackage, now);
 
         return user;
     }
@@ -138,5 +147,33 @@ public class UserService {
 
     public Page<User> getByRole(String roleName, Pageable pageable) {
         return userRepository.findByUserRolesRoleName(roleName, pageable);
+    }
+
+    @Transactional
+    public void addInvestmentPackage(long id, InvestmentPackage investmentPackage, LocalDateTime from) {
+
+        User user = userRepository.findOne(id);
+
+        UserInvestment userInvestment = new UserInvestment();
+        userInvestment.setUser(user);
+        userInvestment.setInvestmentPackage(investmentPackage);
+        userInvestment.setFromDate(from);
+        if(investmentPackage.isLimitTime())
+            userInvestment.setToDate(from.plusDays(investmentPackage.getDurationTime()));
+
+
+        investmentRepository.save(userInvestment);
+
+        //add user introduced key if not exist
+        if(investmentPackage.getLevelNetwork() > 0 && user.getIntroducedKey() == null) {
+            userRepository.updateIntroducedKey(user.getId(), createIntroducedKey(user.getUsername()));
+        }
+    }
+
+    private String createIntroducedKey(String username){
+        //set introduced key
+        byte[] charKey = username.getBytes();
+        String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-","").substring(0,8);
+        return introducedKey;
     }
 }

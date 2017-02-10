@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface UserRepository extends CrudRepository<User, Long>{
 
-
     /**
      *Returns a User given by a Username and null if not found
      * @param username
@@ -67,4 +66,9 @@ public interface UserRepository extends CrudRepository<User, Long>{
     Page<User> findAll(Pageable pageable);
 
     Page<User> findByUserRolesRoleName(String role, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.introducedKey = :introducedKey where  u.id = :userId")
+    void updateIntroducedKey(@Param("userId") long userId,@Param("introducedKey") String introducedKey);
 }

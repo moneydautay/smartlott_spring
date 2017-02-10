@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,7 +38,6 @@ public class User implements Serializable, UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
     private long id;
 
     @Email(message = "Email.user.email")
@@ -126,6 +126,12 @@ public class User implements Serializable, UserDetails{
     @OneToMany(fetch = FetchType.LAZY)
     private List<UserCash> userCashes;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserInvestment> userInvestments = new HashSet<>();
+
+    @Transient
+    private UserInvestment userInvestment;
 
     public User() {
     }
@@ -318,6 +324,31 @@ public class User implements Serializable, UserDetails{
 
     public void setUserCashes(List<UserCash> userCashes) {
         this.userCashes = userCashes;
+    }
+
+    public Set<UserInvestment> getUserInvestments() {
+        return userInvestments;
+    }
+
+    public void setUserInvestments(Set<UserInvestment> userInvestments) {
+        this.userInvestments = userInvestments;
+    }
+
+    public UserInvestment getUserInvestment() {
+        UserInvestment investmentPackage = null;
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
+        Iterator<UserInvestment> userInvestmentIterator = userInvestments.iterator();
+        while (userInvestmentIterator.hasNext()) {
+            UserInvestment next = userInvestmentIterator.next();
+            if((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
+                    && next.isEnabled()){
+                if(investmentPackage == null)
+                    investmentPackage = next;
+                else if(investmentPackage.getInvestmentPackage().getLevelNetwork() < next.getInvestmentPackage().getLevelNetwork())
+                    investmentPackage = next;
+            }
+        }
+        return investmentPackage;
     }
 
     @Override

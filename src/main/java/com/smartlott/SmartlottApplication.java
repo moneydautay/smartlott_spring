@@ -13,10 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @SpringBootApplication
@@ -85,6 +82,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private LotteryDialingHasIncomeComponentService incomeComponentService;
 
+	@Autowired
+	private InvestmentPackageService packageService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -96,6 +96,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//Create number account type
 		CreateNumberAccountType();
+
+		//add default package
+		addInvestmentPackage();
 
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
 		NumberAccountType pm = numberAccountTypeService.getOne(2);
@@ -128,10 +131,13 @@ public class SmartlottApplication implements CommandLineRunner{
 		user.setUserRoles(userRoles);
 		user.setActived(true);
 		user.setCash(1200);
+
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
 
+		InvestmentPackage agentPackage = new InvestmentPackage(InvestmentPackageEnum.AGENT);
+		userService.addInvestmentPackage(user.getId(), agentPackage, LocalDateTime.now(Clock.systemDefaultZone()));
 
 		//`createNotificationForNewUser(user);
 
@@ -164,7 +170,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		createLotDialHasIncome();
 
 		//createCusts(user);
-
 
 	}
 
@@ -548,5 +553,26 @@ public class SmartlottApplication implements CommandLineRunner{
 		}
 	}
 
+
+	public void addInvestmentPackage() {
+
+		InvestmentPackage investmentPackage1 = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
+		InvestmentPackage investmentPackage2 = new InvestmentPackage(InvestmentPackageEnum.AGENT);
+		InvestmentPackage investmentPackage3 = new InvestmentPackage(InvestmentPackageEnum.INVEST);
+		InvestmentPackage investmentPackage4 = new InvestmentPackage(InvestmentPackageEnum.PROINVEST);
+		InvestmentPackage investmentPackage5 = new InvestmentPackage(InvestmentPackageEnum.SLIVERINVEST);
+		InvestmentPackage investmentPackage6 = new InvestmentPackage(InvestmentPackageEnum.GOLDINVEST);
+		InvestmentPackage investmentPackage7 = new InvestmentPackage(InvestmentPackageEnum.PLATIUMINVEST);
+		InvestmentPackage investmentPackage8 = new InvestmentPackage(InvestmentPackageEnum.DIAMONDINVEST);
+
+		packageService.create(investmentPackage1);
+		packageService.create(investmentPackage2);
+		packageService.create(investmentPackage3);
+		packageService.create(investmentPackage4);
+		packageService.create(investmentPackage5);
+		packageService.create(investmentPackage6);
+		packageService.create(investmentPackage7);
+		packageService.create(investmentPackage8);
+	}
 
 }

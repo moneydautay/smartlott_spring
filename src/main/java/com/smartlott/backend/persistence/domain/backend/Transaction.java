@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +57,14 @@ public class Transaction implements Serializable{
     @JoinColumn(name = "transaction_status_id")
     private TransactionStatus transactionStatus;
 
+    @ManyToMany(cascade =
+            CascadeType.DETACH,
+            targetEntity = InvestmentPackage.class)
+    @JoinTable(name = "transaction_investment_detail",
+            joinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "investment_package_id", referencedColumnName = "id")
+    )
+    private List<InvestmentPackage> investmentPackages = new ArrayList<>();
 
     @Transient
     private String securityToken;
@@ -142,6 +151,14 @@ public class Transaction implements Serializable{
 
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
+    }
+
+    public List<InvestmentPackage> getInvestmentPackages() {
+        return investmentPackages;
+    }
+
+    public void setInvestmentPackages(List<InvestmentPackage> investmentPackages) {
+        this.investmentPackages = investmentPackages;
     }
 
     @Override

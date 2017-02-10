@@ -217,7 +217,7 @@ function changePassword(username,frmId=null) {
             console.log(data);
             var messageArea = $('#messageArea');
             messageArea.html('');
-            messageArea.append(showMessage(data[0].message+' <span id="timeCountDown">1</span>s', 'alert-success', true));
+            messageArea.append(createMessage(data[0].message+' <span id="timeCountDown">1</span>s', 'alert-success', true));
             //clear all notified message
             $('#frmPassword').data('formValidation').resetForm();
             //auto direct to dashboard
@@ -293,7 +293,7 @@ function updateUser() {
         success: function(data) {
             var messageArea = $('#messageArea');
             messageArea.html('');
-            messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
+            messageArea.append(createMessage("Cập nhật thông tin thành công", 'alert-success', true));
             //clear all notified message
             $('#frmProfile').data('formValidation').resetForm();
         },
@@ -334,7 +334,7 @@ function uploadDoc(frmId, nameFunction=null){
 
             var messageArea = $('#messageArea');
             messageArea.html('');
-            messageArea.append(showMessage("Cập nhật thông tin thành công", 'alert-success', true));
+            messageArea.append(createMessage("Cập nhật thông tin thành công", 'alert-success', true));
             //clear all notified message
             $('.frmDoc').data('formValidation').resetForm();
             if(nameFunction != null)

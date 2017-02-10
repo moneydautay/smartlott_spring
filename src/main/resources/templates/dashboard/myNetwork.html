@@ -27,6 +27,7 @@
         </ol>
         <!-- NOTIFICATION -->
         <div th:replace="dashboard/include :: profile-notification"/>
+
         <div class="container" id="dashboard">
             <div class="col-md-8 category">
                 <div class="row" id="messageArea">
@@ -103,6 +104,11 @@
 <script th:src="@{/js/gluck.js}"></script>
 <script th:src="@{/js/pagination.js}"></script>
 <script th:inline="javascript" type="application/javascript">
+
+    var msgBuyAgentInvestmentPackage = /*[[#{mynetwork.buy.upgrade.investment.package.text}]]*/;
+
+
+
     jQuery(document).ready(function ($) {
         /*<![CDATA[*/
         var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
@@ -164,11 +170,17 @@
      * @param data
      */
     function showIntroducedLink(data) {
-        var introducedLink = $('#introducedLink');
-        var urlIntroduction = /*[[@{/register}]]*/;
-        urlIntroduction += "?introkey="+data.introducedKey;
-        introducedLink.attr('href',urlIntroduction);
-        introducedLink.html(urlIntroduction);
+        var introducedKey = data.introducedKey;
+        if(introducedKey != null) {
+            var introducedLink = $('#introducedLink');
+            var urlIntroduction = /*[[@{/register}]]*/;
+            urlIntroduction += "?introkey=" + data.introducedKey;
+            introducedLink.attr('href', urlIntroduction);
+            introducedLink.html(urlIntroduction);
+        }else{
+            console.log(msgBuyAgentInvestmentPackage);
+            var msg = showMessage(msgBuyAgentInvestmentPackage,'alert-warning', false);
+        }
     }
 </script>
 <div th:replace="dashboard/include :: script-nofitication"/>

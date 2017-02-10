@@ -10,7 +10,7 @@
  * @returns {string}
  */
 
-function showMessage(message, type, xButton=true) {
+function createMessage(message, type, xButton=true) {
     var strError = '';
     strError += '<div class="alert '+type+'" role="alert">';
     if(xButton) {
@@ -26,6 +26,11 @@ function showMessage(message, type, xButton=true) {
     return strError;
 }
 
+function showMessage(msg, type, xButton=true) {
+    var messageArea = $('#messageArea');
+    messageArea.html(createMessage(msg, type, xButton));
+}
+
 function showMessages(data) {
     var messageArea = $('#messageArea');
 
@@ -33,11 +38,11 @@ function showMessages(data) {
     $.each(data, function (index, msg) {
         var messageType = msg.messageType;
         if(messageType.$name == 'SUCCESS' || messageType == 'SUCCESS')
-            messageArea.append(showMessage(msg.message,'alert-success alert-dismissible'));
+            messageArea.append(createMessage(msg.message,'alert-success alert-dismissible'));
         else if (messageType.$name == 'WARNING' || messageType == 'WARNING')
-            messageArea.append(showMessage(msg.message,'alert-warning alert-dismissible'));
+            messageArea.append(createMessage(msg.message,'alert-warning alert-dismissible'));
         else
-            messageArea.append(showMessage(msg.message,'alert-danger alert-dismissible'));
+            messageArea.append(createMessage(msg.message,'alert-danger alert-dismissible'));
     });
 }
 
@@ -49,7 +54,7 @@ function showSuccess(data) {
     var messageArea = $('#messageArea');
     messageArea.html('');
     $.each(data, function (index, msg) {
-        messageArea.append(showMessage(msg.message,'alert-success alert-dismissible'));
+        messageArea.append(createMessage(msg.message,'alert-success alert-dismissible'));
     });
 }
 
@@ -61,7 +66,7 @@ function showErrors(errors) {
     var messageArea = $('#messageArea');
     messageArea.html('');
     $.each(errors, function (index, error) {
-        messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+        messageArea.append(createMessage(error.message,'alert-danger alert-dismissible'));
     });
 }
 

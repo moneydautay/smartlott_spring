@@ -224,7 +224,7 @@
                     msg = 'Xóa thành công số tài khoản: ';
                 }
             }
-            var message = showMessage(msg+data.number, 'alert-success', true);
+            var message = createMessage(msg+data.number, 'alert-success', true);
             var messageArea = $('#messageArea');
             messageArea.html('');
             messageArea.append(message);
@@ -242,7 +242,7 @@
             var messageArea = $('#messageArea');
             messageArea.html('');
             $.each(errors, function (index, error) {
-                messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+                messageArea.append(createMessage(error.message,'alert-danger alert-dismissible'));
             });
 
 
@@ -258,7 +258,7 @@
             var messageArea = $('#messageArea');
             messageArea.html('');
             $.each(errors, function (index, error) {
-                messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+                messageArea.append(createMessage(error.message,'alert-danger alert-dismissible'));
             });
 
             $('#frmNumberAccount')
@@ -271,7 +271,7 @@
         function sentTokenSuccessfully(data){
             var msg  = 'Vui lòng kiểm tra email nhập mã xác nhận vào ô Mã xác nhận bên dưới ';
 
-            var message = showMessage(msg, 'alert-warning', false);
+            var message = createMessage(msg, 'alert-warning', false);
             var messageArea = $('#messageArea');
             messageArea.html('');
             messageArea.append(message);

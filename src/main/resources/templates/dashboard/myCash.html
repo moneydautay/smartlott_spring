@@ -227,7 +227,7 @@
     function sentTokenSuccessfully(data){
         var msg  = 'Vui lòng kiểm tra email nhập mã xác nhận vào ô Mã xác nhận bên dưới ';
 
-        var message = showMessage(msg, 'alert-warning', false);
+        var message = createMessage(msg, 'alert-warning', false);
         var messageArea = $('#messageArea');
         messageArea.html('');
         messageArea.append(message);
@@ -256,7 +256,7 @@
         var messageArea = $('#messageArea');
         messageArea.html('');
         $.each(errors, function (index, error) {
-            messageArea.append(showMessage(error.message,'alert-danger alert-dismissible'));
+            messageArea.append(createMessage(error.message,'alert-danger alert-dismissible'));
         });
 
         $('#frmWithDraw')
@@ -301,7 +301,7 @@
     function showWithdrawSuccessFully(data) {
         var msg  = 'Đã gửi yêu cầu rút tiền thành công. Chúng tôi sẽ xử lý trong thời gian sớm nhất. Xin cảm ơn';
 
-        var message = showMessage(msg, 'alert-success', true);
+        var message = createMessage(msg, 'alert-success', true);
         var messageArea = $('#messageArea');
         messageArea.html('');
         messageArea.append(message);
