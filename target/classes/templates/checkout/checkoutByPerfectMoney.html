@@ -49,17 +49,7 @@
                         <p><span th:text="#{order.status.text}">Status</span>: <span id="statusOrder"></span></p>
                         <hr/>
                         <p class="totalOrder"><b><span th:text="#{order.total.text}">Total</span>:</b> $<span id="totalOrder"></span></p>
-                        <form th:if="${checkoutType=='cash'}" id="frmCheckoutCash" method="post" th:action="@{/api/checkout/cash}">
-                            <div class="form-group col-md-6">
-                                <label th:text="#{order.transaction.code.text}"></label>
-                                <input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="form-group">
-                                <button class="btn btn-primary" th:text="#{order.confirm.button.text}"></button>
-                                <button type="button" class="btn btn-warning" th:text="#{order.resend.security.token.text}">Resend</button>
-                            </div>
-                        </form>
+
                     </div>
                 </div>
             </div>
@@ -83,24 +73,25 @@
 <script th:src="@{/sources/jquery.countdown-2.2.0/jquery.countdown.min.js}"></script>
 <script th:src="@{/js/gluck-functions.js}"></script>
 <script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/js/checkout.js}"></script>
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function ($) {
+
+        var urlNumberAccountType = /*[[@{/api/number-account-type}]]*/;
+        var urlGetTransaction = /*[[@{/api/transaction/{transactionId}(transactionId=${checkoutId})}]]*/;
         //get message
         var messages = /*[[${messages}]]*/;
-        console.log(messages);
+
         if(messages != null)
             showMessages(messages);
 
-        var urlGetTransaction = /*[[@{/api/transaction/{transactionId}(transactionId=${checkoutId})}]]*/;
+        getData(urlGetTransaction, innerShowTransactionInfo, showCheckoutErrors);
 
-        getData(urlGetTransaction, showTransactionInfo, showCheckoutErrors);
-
-        var urlNumberAccountType = /*[[@{/api/number-account-type}]]*/;
 
         $('#frmCheckoutCash').submit(function (e) {
             e.preventDefault();
             var urlCheckoutCash = $(this).attr('action');
-            console.log(urlCheckoutCash);
+
             var transactionId = /*[[${checkoutId}]]*/;
             var data = {};
             data['id'] = transactionId;
@@ -109,51 +100,10 @@
             saveOrupdateData(urlCheckoutCash, 'POST',data, showCheckoutCashSuccess);
         });
     });
-    
-    function showCheckoutCashSuccess(data) {
-        showSuccess(data);
-        //clear content form cash checkout
-        $('#frmCheckoutCash').html('');
-    }
-    
-    function showTransactionInfo(data) {
-        data = data.content;
-        console.log(data);
-        $('#orderNumber').html(data.id);
-        var lotteryDetails = data.lotteryDetails;
-        var orderDetail = $('#orderDetail');
-        $.each(lotteryDetails, function (index, lottery) {
-            var strNumberLottery = lottery.lottery.coupleOne + '-' + lottery.lottery.coupleTwo
-                +'-'+lottery.lottery.coupleThree+'-'+lottery.lottery.coupleFour
-                +'-'+lottery.lottery.coupleFive+'-'+lottery.lottery.coupleSix;
-            var price = lottery.lottery.lotteryType.price;
-            strRow = '<tr>';
-            strRow+='<td>'+(index+1)+'</td>';
-            strRow+='<td>#'+(lottery.id)+'</td>';
-            strRow+='<td>'+strNumberLottery+'</td>';
-            strRow+='<td class="text-right">$'+price+'</td>';
-            strRow+='</tr>';
-            orderDetail.append(strRow);
-        });
+
+    function innerShowTransactionInfo(data) {
         var msgProvisional = /*[[#{order.provisional.price.text}]]*/;
-        //total
-        strTotal = '<tr>';
-        strTotal += '<td colspan="3" class="text-center" >'+msgProvisional+'</td>';
-        strTotal += '<td class="text-right">';
-        strTotal += '$'+data.amount;
-        strTotal += '</td>';
-        strTotal += '</tr>';
-        orderDetail.append(strTotal);
-        $('#buydate').html(data.createdDate);
-        $('#discount').html(0);
-        $('#feesOther').html(0);
-        $('#statusOrder').html(data.transactionStatus.name);
-        $('#totalOrder').html(data.amount);
-
-    }
-
-    function showCheckoutErrors(data) {
-        showMessages(data);
+        showTransactionInfo(data, msgProvisional);
     }
 
 </script>

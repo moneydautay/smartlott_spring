@@ -73,7 +73,6 @@ public class LotteryDetail {
         return "LotteryDetail{" +
                 "id=" + id +
                 ", lottery=" + lottery +
-                ", transaction=" + transaction +
                 ", ipAddress='" + ipAddress + '\'' +
                 '}';
     }

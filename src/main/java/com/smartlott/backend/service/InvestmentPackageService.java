@@ -1,6 +1,8 @@
 package com.smartlott.backend.service;
 
+import com.smartlott.backend.persistence.domain.backend.Cash;
 import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
+import com.smartlott.backend.persistence.domain.backend.InvestmentPackageCash;
 import com.smartlott.backend.persistence.repositories.InvestmentPackageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,14 +23,18 @@ public class InvestmentPackageService {
     @Autowired
     private InvestmentPackageRepository packageRepository;
 
+    public InvestmentPackageService(InvestmentPackageRepository investmentPackageRepository) {
+    }
+
     /**
      * Creates new investment package given by investment package
+     *
      * @param investmentPackage
      * @return A investment package after created
      * @see InvestmentPackage
      */
     @Transactional
-    public InvestmentPackage create(InvestmentPackage investmentPackage){
+    public InvestmentPackage create(InvestmentPackage investmentPackage) {
         return packageRepository.save(investmentPackage);
     }
 
@@ -101,5 +108,22 @@ public class InvestmentPackageService {
     public Page<InvestmentPackage> getAll(boolean enabled,Pageable pageable) {
         return packageRepository.findByEnabled(enabled, pageable);
     }
+
+    /**
+     * Adds list investment package cashes to investment package given by invpId (investmentPackageId) and list of investmentPackageCashes
+     *
+     * @param invpId
+     * @param investmentPackageCashes
+     * @return InvestmentPackage after added
+     */
+    @Transactional
+    public InvestmentPackage addInvestmentPackageCash(int invpId, List<InvestmentPackageCash> investmentPackageCashes) {
+
+        InvestmentPackage investmentPackage = packageRepository.findOne(invpId);
+        investmentPackage.setInvestmentPackageCashes(investmentPackageCashes);
+
+        return packageRepository.save(investmentPackage);
+    }
+
 
 }

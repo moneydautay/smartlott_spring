@@ -2,6 +2,7 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
+import com.smartlott.enums.CashEnum;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.TransactionStatusEnum;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +58,10 @@ public class CheckoutRestController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserCashService userCashService;
+
+
     private List<MessageDTO> messageDTOS;
 
     @RequestMapping(value = "/cash", method = RequestMethod.POST)
@@ -75,20 +82,19 @@ public class CheckoutRestController {
         //Minus cash of user
         User user = localTransaction.getOfUser();
 
-        LOGGER.info("User {} before update cash: {} ",user.getId(), user.getCash());
 
-        double cash = user.getCash();
-        cash -= localTransaction.getAmount();
-        userService.updateCash(user.getId(), cash);
 
-        LOGGER.info("User {} after update cash: {} ",user.getId(), cash);
+        UserCash userCash = userCashService.update(transaction.getUserCashId(), -localTransaction.getAmount());
 
         System.out.println("Updating transaction");
 
         LOGGER.info("Updating transaction {} ", localTransaction);
+
         //status susscess
         TransactionStatus status = new TransactionStatus(TransactionStatusEnum.SUCCESS);
         localTransaction.setTransactionStatus(status);
+        localTransaction.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        localTransaction.setHandleBy(user);
 
         //update transaction tion
         localTransaction = transactionService.update(localTransaction);
@@ -111,7 +117,7 @@ public class CheckoutRestController {
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),localTransaction.getAmount());
 
         //save bonus for ancestor of user
-        bonusService.saveBonousOfUser(localTransaction.getOfUser(), localTransaction.getAmount());
+        double bonusValue = bonusService.saveBonousOfUser(localTransaction.getOfUser(), localTransaction.getAmount());
 
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }

@@ -55,7 +55,7 @@ public class NetworkService {
     }
 
     /**
-     * Finds all ancestor given by user, level, currentLevel or null if not exist
+     * Finds all ancestor given by user, level, currentLevel or null if not exist.
      *
      * @param user
      * @param level number of level want control network. Example Cust A introduces Cust B
@@ -74,10 +74,10 @@ public class NetworkService {
         User localUser = userService.findOne(user.getIntroducedBy().getId());
 
         //get network level
-        NetworkLevel networkLevel = networkLevelService.getOne(currentLevel);
+        NetworkLevel networkLevel = new NetworkLevel(currentLevel);
 
         //add network level to list
-        networks.add(new Network(user, localUser,networkLevel));
+        networks.add(new Network(user, localUser, networkLevel));
         level--;
         currentLevel++;
         if(level > 0)
@@ -86,7 +86,7 @@ public class NetworkService {
     }
 
     /**
-     * Finds all ancestor of user's ancestor user given by user, level, currentLevel or null if not exist
+     * Finds all ancestor of user's ancestor user given by user, level, currentLevel or null if not exist.
      *
      * @param user
      * @param level number of level want control network. Example Cust A introduces Cust B

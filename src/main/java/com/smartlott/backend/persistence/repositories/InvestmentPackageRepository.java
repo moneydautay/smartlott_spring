@@ -21,4 +21,5 @@ public interface InvestmentPackageRepository extends PagingAndSortingRepository<
     List<InvestmentPackage> findByEnabled(boolean enabled);
 
     Page<InvestmentPackage> findByEnabled(boolean enabled, Pageable pageable);
+    
 }

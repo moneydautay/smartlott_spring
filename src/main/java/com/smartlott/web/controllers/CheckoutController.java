@@ -37,6 +37,7 @@ public class CheckoutController {
     public static final String CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME = "/checkout/checkoutByPerfectMoney";
     public static final String CHECKOUT_BY_PERFECT_MONEY_ERROR_VIEW_NAME = "/checkout/checkoutByPerfectMoneyError";
     public static final String FORM_TEST_PERFECT_MONEY_VIEW_NAME = "/checkout/formTestPerfectMoney";
+    public static final String CHECKOUT_BY_CASH_VIEW_NAME = "/checkout/checkoutByCash";
 
     @Autowired
     private TransactionService transactionService;
@@ -193,6 +194,6 @@ public class CheckoutController {
     public String checkoutByCash(@PathVariable long checkoutId, Model model){
         model.addAttribute("checkoutId", checkoutId);
         model.addAttribute("checkoutType", "cash");
-        return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
+        return CHECKOUT_BY_CASH_VIEW_NAME;
     }
 }

@@ -29,8 +29,6 @@ public class TransactionService {
      */
     @Transactional
     public Transaction createNew(Transaction transaction){
-        if(transaction.getTransactionType().isAutoHandle())
-            transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
         return transactionRepository.save(transaction);
     }
 

@@ -77,11 +77,11 @@ public class SecurityTokenRestController {
         mailMessage.setText(message);
 
         emailService.sendGenericEmailMessage(mailMessage);
-        System.out.println("Sent token "+securityToken+"to email "+localUser.getEmail());
+        System.out.println("Sent token " + securityToken + "to email "+localUser.getEmail());
         LOGGER.debug("Sent email  with content {} to email {}", message, localUser.getEmail());
 
-        return new ResponseEntity<Object>(securityToken, HttpStatus.OK);
+        messages.add(new MessageDTO(MessageType.SUCCESS, i18NService.getMessage("order.transaction.resend.security.token.success.text", localUser.getEmail(), locale)));
+
+        return new ResponseEntity<Object>(messages, HttpStatus.OK);
     }
-
-
 }

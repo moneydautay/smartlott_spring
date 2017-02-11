@@ -5,6 +5,8 @@ import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.domain.backend.UserCash;
 import com.smartlott.backend.persistence.repositories.CashRepository;
 import com.smartlott.backend.persistence.repositories.UserCashRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class UserCashService {
+    
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserCashService.class);
 
     @Autowired
     private UserCashRepository userCashRepository;
@@ -61,10 +66,14 @@ public class UserCashService {
      */
     @Transactional
     public UserCash update(long userId, int cashId, double value){
-        UserCash userCash = userCashRepository.findByUserIdAndCashId(userId, cashId);
-        userCash.setValue(value);
+        UserCash userCash = userCashRepository.findByUserIdAndCashIdAndEnabled(userId, cashId,true);
+        double currentCash = userCash.getValue();
+        currentCash += value;
+        userCash.setValue(currentCash);
         return userCashRepository.save(userCash);
     }
+
+
 
     public UserCash createUtils(long userId, int cashId, double value) {
         User user = new User();
@@ -75,6 +84,36 @@ public class UserCashService {
         userCash.setUser(user);
         userCash.setCash(cash);
         userCash.setValue(value);
+        return userCash;
+    }
+
+    public List<UserCash> getAll() {
+
+        return userCashRepository.findAll();
+    }
+
+
+    public List<UserCash> getUserCashByUserId(long userId) {
+        return userCashRepository.findByUserIdAndEnabled(userId, true);
+    }
+
+    public UserCash getUserCashByUserCashId(long userCashId) {
+        return userCashRepository.findOne(userCashId);
+    }
+
+    public UserCash update(long userCashId, double v) {
+
+        UserCash userCash = userCashRepository.findOne(userCashId);
+
+        LOGGER.info("User {} cash {} before update cash: {} ",userCash.getUser().getId(), userCash.getCash().getName(), userCash.getValue());
+        
+        double currentCash = userCash.getValue();
+        currentCash += v;
+        userCash.setValue(currentCash);
+        userCash = userCashRepository.save(userCash);
+
+        LOGGER.info("User {} cash {} after update cash: {} ",userCash.getUser().getId(), userCash.getCash().getName(), userCash.getValue());
+
         return userCash;
     }
 }

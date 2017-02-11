@@ -35,4 +35,9 @@ public class CashService {
     public List<Cash> getAll(){
         return cashRepository.findAll();
     }
+
+    @Transactional
+    public void creates(List<Cash> cashes) {
+        cashRepository.save(cashes);
+    }
 }
