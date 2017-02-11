@@ -20,32 +20,22 @@ import static org.junit.Assert.*;
 /**
  * Created by Mrs Hoang on 09/02/2017.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SmartlottApplication.class)
 public class UserServiceTest {
 
-    @Autowired
     private UserService userService;
 
 
     @Before
     public void before() throws Exception{
-        Assert.assertNotNull(userService);
+        userService = new UserService();
     }
 
     @Test
     public void test() throws Exception{
-        InvestmentPackage investmentPackage = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
-
-        User user = userService.findOne(Long.valueOf(1));
-
-        LocalDateTime from = LocalDateTime.now(Clock.systemDefaultZone());
-
-        userService.addInvestmentPackage(user.getId(), investmentPackage, from);
-
-        User aspectUser = userService.findOne(Long.valueOf(1));
-
-        System.out.println(aspectUser.getUserInvestments());
+        String introducedKey = userService.createIntroducedKey("admin");
+        System.out.println(introducedKey);
+        introducedKey = userService.createIntroducedKey("greenlucky");
+        System.out.println(introducedKey);
     }
 
 }

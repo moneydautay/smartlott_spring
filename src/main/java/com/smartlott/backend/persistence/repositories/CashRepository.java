@@ -13,4 +13,6 @@ import java.util.List;
 public interface CashRepository extends CrudRepository<Cash,Integer>{
 
     List<Cash> findAll();
+
+    List<Cash> findByEnabled(boolean e);
 }

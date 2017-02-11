@@ -72,7 +72,8 @@ public class UserRestController {
     private int level;
 
     /**
-     * Get numeric members in system has role given by roleId
+     * Get numeric members in system has role given by roleId.
+     *
      * @param roleId
      * @return A numeric members
      */
@@ -86,7 +87,8 @@ public class UserRestController {
     }
 
     /**
-     * Create a new user
+     * Create a new user.
+     *
      * @param user
      * @param locale current locale get by browser
      * @return A User or error if email or username is not valid
@@ -138,27 +140,20 @@ public class UserRestController {
 
         LOGGER.info("User {} has been created and logged to application ", user);
 
-        int currentLevel = 1;
-        NetworkLevel networkLevel = networkLevelService.getOne(1);
-        //add user to network of introduced
-        networks.add(new Network(user, user.getIntroducedBy(),networkLevel));
-
         //find ancestor of ancestor user
-        networks.addAll(networkService.findAncestor(user, user.getIntroducedBy(),(--level),(++currentLevel)));
+        networks.addAll(networkService.findAncestor(user, level, 1));
 
         //create network of user
         networkService.createNetworks(networks);
 
         LOGGER.debug("Created networks {} for user", networks, user);
 
-        //set notification for new user
-        setNotification(user);
-
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     /**
-     * Update infomation for user
+     * Update information for user.
+     *
      * @param user
      * @param locale
      * @return New information of user or Message and HttpStatus error if not found
@@ -181,7 +176,8 @@ public class UserRestController {
 
 
     /**
-     * Get user by username
+     * Get user by username.
+     *
      * @param username given by user
      * @param locale current locale given by browser
      * @return A user
@@ -200,7 +196,8 @@ public class UserRestController {
     }
 
     /**
-     * Change password
+     * Change password.
+     *
      * @param userPassword
      * @param locale
      * @return
@@ -281,13 +278,14 @@ public class UserRestController {
     }
 
     public void setNotification(User user){
+
         NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
         NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
         NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
         NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);
 
         //add notification after create new user;
-        Notification notif1= new Notification();
+        Notification notif1 = new Notification();
         notif1.setContent("Welcome to Smartlott");
         notif1.setUser(user);
         notif1.setNotificationType(type5);
@@ -295,7 +293,7 @@ public class UserRestController {
         notificationService.create(notif1);
         LOGGER.info("Add notification {} for user {}", notif1, user);
 
-        Notification notif2= new Notification();
+        Notification notif2 = new Notification();
         notif2.setContent("Please update your information before buy lottery");
         notif2.setUser(user);
         notif2.setNotificationType(type1);
@@ -303,7 +301,7 @@ public class UserRestController {
         notificationService.create(notif2);
         LOGGER.info("Add notification {} for user {}", notif2, user);
 
-        Notification notif3= new Notification();
+        Notification notif3 = new Notification();
         notif3.setContent("Please upload your bill of bank or bill or electricity or water to varify your address");
         notif3.setUser(user);
         notif3.setNotificationType(type3);
@@ -311,7 +309,7 @@ public class UserRestController {
         notificationService.create(notif3);
         LOGGER.info("Add notification {} for user {}", notif3, user);
 
-        Notification notif4= new Notification();
+        Notification notif4 = new Notification();
         notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
         notif4.setUser(user);
         notif4.setNotificationType(type4);

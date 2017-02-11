@@ -3,7 +3,9 @@ package com.smartlott.intergation;
 import com.smartlott.SmartlottApplication;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.repositories.*;
+import com.smartlott.backend.service.UserService;
 import com.smartlott.enums.InvestmentPackageEnum;
+import com.smartlott.utils.UserUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,9 +29,11 @@ import java.util.List;
  * Created by Mrs Hoang on 12/15/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SmartlottApplication.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -57,12 +61,17 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     }
 
     @Test
+    public void create() throws Exception{
+        User user = UserUtils.createCustUser(testName.getMethodName(), testName.getMethodName()+"@gmail.com");
+        userService.createUser(user);
+    }
+
+    @Test
     public void testFindUserByEmail() throws Exception{
 
         Address address = createAddress(testName);
 
         Assert.assertNotNull(address);
-
 
         String email = testName.getMethodName()+"@gmail.com";
         createCustUser(testName);

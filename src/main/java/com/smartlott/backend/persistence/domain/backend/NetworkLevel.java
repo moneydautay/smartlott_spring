@@ -26,6 +26,10 @@ public class NetworkLevel implements Serializable{
     public NetworkLevel() {
     }
 
+    public NetworkLevel(int id) {
+        this.id = id;
+    }
+
     public NetworkLevel(int id, String name, String description, IncomeComponent incomeComponent) {
         this.id = id;
         this.name = name;

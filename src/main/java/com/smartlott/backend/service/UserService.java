@@ -1,15 +1,13 @@
 package com.smartlott.backend.service;
 
-import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
-import com.smartlott.backend.persistence.domain.backend.Password;
-import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.domain.backend.UserInvestment;
-import com.smartlott.backend.persistence.repositories.UserInvestmentRepository;
-import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.amazonaws.services.dynamodbv2.xspec.L;
+import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.repositories.*;
 import com.smartlott.enums.InvestmentPackageEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -38,6 +33,18 @@ public class UserService {
 
     @Autowired
     private UserInvestmentRepository investmentRepository;
+
+    @Autowired
+    private CashRepository cashRepository;
+
+    @Autowired
+    private UserCashRepository userCashRepository;
+
+    @Autowired
+    private InvestmentPackageRepository investmentPackageRepository;
+
+    @Value("${default.investment.package}")
+    private int defaultInvestmentPackage;
 
 
     @Autowired
@@ -78,17 +85,19 @@ public class UserService {
         user.setPasswords(passwords);
         user.setCreateDate(now);
 
-
+        //reset introducedKey to null
+        user.setIntroducedKey(null);
+        //save user
         user = userRepository.save(user);
 
-        //add basic user investment package is CUSTOMER
-        InvestmentPackage customerPackage = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
+        //add cash to user
+        addCashToUser(user);
 
-        addInvestmentPackage(user.getId(), customerPackage, now);
+        //add basic user investment package is CUSTOMER
+        addInvestmentPackage(user, defaultInvestmentPackage, now);
 
         return user;
     }
-
 
     /**
      * Find user by id
@@ -141,6 +150,10 @@ public class UserService {
         userRepository.updateCash(userId, cash);
     }
 
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
     public Page<User> getAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
@@ -150,9 +163,9 @@ public class UserService {
     }
 
     @Transactional
-    public void addInvestmentPackage(long id, InvestmentPackage investmentPackage, LocalDateTime from) {
+    public void addInvestmentPackage(User user, int investmentPackageId, LocalDateTime from) {
 
-        User user = userRepository.findOne(id);
+        InvestmentPackage investmentPackage = investmentPackageRepository.findOne(investmentPackageId);
 
         UserInvestment userInvestment = new UserInvestment();
         userInvestment.setUser(user);
@@ -160,7 +173,6 @@ public class UserService {
         userInvestment.setFromDate(from);
         if(investmentPackage.isLimitTime())
             userInvestment.setToDate(from.plusDays(investmentPackage.getDurationTime()));
-
 
         investmentRepository.save(userInvestment);
 
@@ -170,10 +182,21 @@ public class UserService {
         }
     }
 
-    private String createIntroducedKey(String username){
+    public String createIntroducedKey(String username){
         //set introduced key
         byte[] charKey = username.getBytes();
         String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-","").substring(0,8);
         return introducedKey;
+    }
+
+    /**
+     * Add cash to user
+     * @param user
+     */
+    private void addCashToUser(User user) {
+        //get all cash
+        List<Cash> cashes = cashRepository.findByEnabled(true);
+        cashes.forEach(ru->userCashRepository.save(new UserCash(user, ru, 10)));
+
     }
 }

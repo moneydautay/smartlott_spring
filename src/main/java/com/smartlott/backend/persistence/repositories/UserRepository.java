@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Created by Mrs Hoang on 12/15/2016.
@@ -33,7 +35,6 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @return A user given by a email and null if not found
      */
     public User findByEmail(String email);
-
 
     /**
      * Find user by username and password
@@ -62,6 +63,8 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Modifying
     @Query("update User u set u.cash = :cash where u.id = :userId")
     public void updateCash(@Param("userId") long userId, @Param("cash") double cash);
+
+    List<User> findAll();
 
     Page<User> findAll(Pageable pageable);
 

@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -13,7 +15,8 @@ public class UserCash {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @ManyToOne
@@ -29,6 +32,12 @@ public class UserCash {
     public UserCash(User user, Cash cash) {
         this.user = user;
         this.cash = cash;
+    }
+
+    public UserCash(User user, Cash cash, double value) {
+        this.user = user;
+        this.cash = cash;
+        this.value = value;
     }
 
     public long getId() {
@@ -73,13 +82,13 @@ public class UserCash {
 
     @Override
     public String toString() {
-        return "UserCash{" +
-                "id=" + id +
-                ", user=" + user +
-                ", cash=" + cash +
-                ", value=" + value +
-                ", enabled=" + enabled +
-                '}';
+        return "UserCash{"
+                + "id=" + id
+                + ", user=" + user
+                + ", cash=" + cash
+                + ", value=" + value
+                + ", enabled=" + enabled
+                + '}';
     }
 
     @Override

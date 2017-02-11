@@ -2,9 +2,12 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.enums.InvestmentPackageEnum;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +24,7 @@ public class InvestmentPackage implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @NotNull
     private String name;
 
     private String description;
@@ -35,9 +39,9 @@ public class InvestmentPackage implements Serializable {
 
     int durationTime = 0;
 
-  /*  @JsonIgnore
-    @ManyToMany(mappedBy = "investmentPackages", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Transaction> transactions;*/
+    @OneToMany(mappedBy = "investmentPackage", fetch = FetchType.EAGER)
+    private List<InvestmentPackageCash> investmentPackageCashes;
+
 
     public InvestmentPackage() {
     }
@@ -116,13 +120,13 @@ public class InvestmentPackage implements Serializable {
         this.durationTime = durationTime;
     }
 
-    /*  public List<Transaction> getTransactions() {
-        return transactions;
+    public List<InvestmentPackageCash> getInvestmentPackageCashes() {
+        return investmentPackageCashes;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }*/
+    public void setInvestmentPackageCashes(List<InvestmentPackageCash> investmentPackageCashes) {
+        this.investmentPackageCashes = investmentPackageCashes;
+    }
 
     @Override
     public String toString() {

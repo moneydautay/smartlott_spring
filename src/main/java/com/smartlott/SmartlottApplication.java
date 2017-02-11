@@ -85,6 +85,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private InvestmentPackageService packageService;
 
+	@Autowired
+	private CashService cashService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -99,6 +102,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//add default package
 		addInvestmentPackage();
+
+		//add cash
+		createCash();
 
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
 		NumberAccountType pm = numberAccountTypeService.getOne(2);
@@ -136,8 +142,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
 
-		InvestmentPackage agentPackage = new InvestmentPackage(InvestmentPackageEnum.AGENT);
-		userService.addInvestmentPackage(user.getId(), agentPackage, LocalDateTime.now(Clock.systemDefaultZone()));
+		/*InvestmentPackage agentPackage = new InvestmentPackage(InvestmentPackageEnum.AGENT);
+		userService.addInvestmentPackage(user.getId(), agentPackage, LocalDateTime.now(Clock.systemDefaultZone()));*/
 
 		//`createNotificationForNewUser(user);
 
@@ -164,12 +170,12 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//create new Income component and reward
 
-		//createIncomeComponentAndRewardUtils(user);
+		createIncomeComponentAndRewardUtils(user);
 
 		//create new Lottery dialing has income component
 		createLotDialHasIncome();
 
-		//createCusts(user);
+		createCusts(user);
 
 	}
 
@@ -299,46 +305,13 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		Role custRole = new Role(RolesEnum.CUSTOMER);
 
-		String name = "customerA";
-		User localUserA = UserUtils.createCustUser(name, name + "@smartlott.com");
-		localUserA.setPassword("123456");
-
 		Set<UserRole> userRoles = new HashSet<>();
-		userRoles.add(new UserRole(custRole, localUserA));
+		for(int i = 1; i <= 8; i++) {
 
-		localUserA.setUserRoles(userRoles);
-		localUserA.setActived(true);
-		localUserA.setCash(100);
-		localUserA.setIntroducedBy(user);
+			User accestor = null;
 
-		LOGGER.debug("Creating user with username {} and email {}", localUserA.getUsername(), localUserA.getEmail());
-		localUserA = userService.createUser(localUserA);
-		LOGGER.info("User {} has been created", localUserA);
-
-		NetworkLevel level1 = networkLevelService.getOne(1);
-
-		//add network
-		networks.add(new Network(localUserA, user,level1));
-
-		name = "customerB";
-		User localUserB = UserUtils.createCustUser(name, name + "@smartlott.com");
-		localUserB.setPassword("123456");
-		userRoles = new HashSet<>();
-		userRoles.add(new UserRole(custRole, localUserB));
-		localUserB.setUserRoles(userRoles);
-		localUserB.setActived(true);
-		localUserB.setCash(100);
-		localUserB.setIntroducedBy(user);
-
-		LOGGER.debug("Creating user with username {} and email {}", localUserB.getUsername(), localUserB.getEmail());
-		localUserB = userService.createUser(localUserB);
-		LOGGER.info("User {} has been created", localUserB);
-
-		//add network
-		networks.add(new Network(localUserB, user,level1));
-
-		for(int i = 0; i < 5; i++) {
-			name = "customer" + i;
+			NetworkLevel level = networkLevelService.getOne(1);
+			String name = "customer" + i;
 			User localUser = UserUtils.createCustUser(name, name + "@smartlott.com");
 			localUser.setPassword("123456");
 			userRoles = new HashSet<>();
@@ -346,36 +319,24 @@ public class SmartlottApplication implements CommandLineRunner{
 			localUser.setUserRoles(userRoles);
 			localUser.setActived(true);
 			localUser.setCash(100);
-			localUser.setIntroducedBy(localUserA);
 
-			LOGGER.debug("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());
+			if(i == 1) {
+				accestor = user;
+				localUser.setIntroducedBy(user);
+			}
+			else{
+				accestor = userService.findOne((i));
+				localUser.setIntroducedBy(accestor);
+			}
+
+			LOGGER.info("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());
 			localUser = userService.createUser(localUser);
 			LOGGER.info("User {} has been created", localUser);
 
-			//add network
-			networks.add(new Network(localUser, localUserA,level1));
-			networks.addAll(networkService.findAncestor(localUser, localUserA,1,2));
+			networks.addAll(networkService.findAncestor(localUser ,7, 1));
 		}
 
-		for(int i = 6; i < 11; i++) {
-			name = "customer" + i;
-			User localUser = UserUtils.createCustUser(name, name + "@smartlott.com");
-			localUser.setPassword("123456");
-			userRoles = new HashSet<>();
-			userRoles.add(new UserRole(custRole, localUser));
-			localUser.setUserRoles(userRoles);
-			localUser.setActived(true);
-			localUser.setCash(100);
-			localUser.setIntroducedBy(localUserB);
 
-			LOGGER.debug("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());
-			localUser = userService.createUser(localUser);
-			LOGGER.info("User {} has been created", localUser);
-
-			//add network
-			networks.add(new Network(localUser, localUserB,level1));
-			networks.addAll(networkService.findAncestor(localUser, localUserB,1,2));
-		}
 		networkService.createNetworks(networks);
 	}
 
@@ -419,7 +380,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		IncomeComponent incomeComponent2 = new IncomeComponent();
 		incomeComponent2.setName("Hoa hồng bán hàng F2");
-		incomeComponent2.setValue(5);
+		incomeComponent2.setValue(2);
 		incomeComponent2.setCreateBy(user);
 		incomeComponent2.setEnabled(true);
 		incomeComponent2.setDescription("Hoa hồng bán hàng F2");
@@ -427,69 +388,105 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		IncomeComponent incomeComponent3 = new IncomeComponent();
 		incomeComponent3.setJackpots(true);
-		incomeComponent3.setName("Hoa hồng năng động");
-		incomeComponent3.setValue(10);
+		incomeComponent3.setName("Hoa hồng bán hàng F3");
+		incomeComponent3.setValue(2);
 		incomeComponent3.setCreateBy(user);
 		incomeComponent3.setEnabled(true);
-		incomeComponent3.setDescription("Hoa hồng năng động");
+		incomeComponent3.setDescription("Hoa hồng bán hàng F2");
 		incomeComponent3 = componentService.create(incomeComponent3);
 
 		IncomeComponent incomeComponent4 = new IncomeComponent();
 		incomeComponent4.setJackpots(true);
-		incomeComponent4.setName("Giải đặc biệt");
-		incomeComponent4.setValue(48);
+		incomeComponent4.setName("Hoa hồng bán hàng F4");
+		incomeComponent4.setValue(2);
 		incomeComponent4.setCreateBy(user);
 		incomeComponent4.setEnabled(true);
-		incomeComponent4.setDescription("D");
+		incomeComponent4.setDescription("Hoa hồng bán hàng F4");
 		incomeComponent4 = componentService.create(incomeComponent4);
 
 		IncomeComponent incomeComponent5 = new IncomeComponent();
-		incomeComponent5.setName("Giải nhất");
+		incomeComponent5.setJackpots(true);
+		incomeComponent5.setName("Hoa hồng bán hàng F5");
 		incomeComponent5.setValue(2);
 		incomeComponent5.setCreateBy(user);
 		incomeComponent5.setEnabled(true);
-		incomeComponent5.setDescription("Giải nhất");
+		incomeComponent5.setDescription("Hoa hồng bán hàng F5");
 		incomeComponent5 = componentService.create(incomeComponent5);
 
 		IncomeComponent incomeComponent6 = new IncomeComponent();
-		incomeComponent6.setName("Giải nhì");
+		incomeComponent6.setJackpots(true);
+		incomeComponent6.setName("Hoa hồng bán hàng F6");
 		incomeComponent6.setValue(2);
 		incomeComponent6.setCreateBy(user);
 		incomeComponent6.setEnabled(true);
-		incomeComponent6.setDescription("Giải nhì");
+		incomeComponent6.setDescription("Hoa hồng bán hàng F6");
 		incomeComponent6 = componentService.create(incomeComponent6);
 
 		IncomeComponent incomeComponent7 = new IncomeComponent();
-		incomeComponent7.setName("Giải ba");
-		incomeComponent7.setValue(3);
+		incomeComponent7.setJackpots(true);
+		incomeComponent7.setName("Hoa hồng bán hàng F7");
+		incomeComponent7.setValue(2);
 		incomeComponent7.setCreateBy(user);
 		incomeComponent7.setEnabled(true);
-		incomeComponent7.setDescription("Giải ba");
+		incomeComponent7.setDescription("Hoa hồng bán hàng F7");
 		incomeComponent7 = componentService.create(incomeComponent7);
 
-		IncomeComponent incomeComponent8 = new IncomeComponent();
-		incomeComponent8.setName("Giải tư");
-		incomeComponent8.setValue(5);
-		incomeComponent8.setCreateBy(user);
-		incomeComponent8.setEnabled(true);
-		incomeComponent8.setDescription("Giải tư");
-		incomeComponent8 = componentService.create(incomeComponent8);
 
+		IncomeComponent ja = new IncomeComponent();
+		ja.setJackpots(true);
+		ja.setName("Giải đặc biệt");
+		ja.setValue(46);
+		ja.setCreateBy(user);
+		ja.setEnabled(true);
+		ja.setDescription("D");
+		ja = componentService.create(ja);
 
-		IncomeComponent incomeComponent9 = new IncomeComponent();
-		incomeComponent9.setName("Quản lý web, server");
-		incomeComponent9.setValue(5);
-		incomeComponent9.setCreateBy(user);
-		incomeComponent9.setEnabled(true);
-		incomeComponent9.setDescription("Quản lý web, server");
-		incomeComponent9 = componentService.create(incomeComponent9);
+		IncomeComponent oneth = new IncomeComponent();
+		oneth.setName("Giải nhất");
+		oneth.setValue(3);
+		oneth.setCreateBy(user);
+		oneth.setEnabled(true);
+		oneth.setDescription("Giải nhất");
+		oneth = componentService.create(oneth);
+
+		IncomeComponent second = new IncomeComponent();
+		second.setName("Giải nhì");
+		second.setValue(3);
+		second.setCreateBy(user);
+		second.setEnabled(true);
+		second.setDescription("Giải nhì");
+		second = componentService.create(second);
+
+		IncomeComponent third = new IncomeComponent();
+		third.setName("Giải ba");
+		third.setValue(4);
+		third.setCreateBy(user);
+		third.setEnabled(true);
+		third.setDescription("Giải ba");
+		third = componentService.create(third);
+
+		IncomeComponent four = new IncomeComponent();
+		four.setName("Giải tư");
+		four.setValue(4);
+		four.setCreateBy(user);
+		four.setEnabled(true);
+		four.setDescription("Giải tư");
+		four = componentService.create(four);
+
+		IncomeComponent five = new IncomeComponent();
+		five.setName("Quản lý web, server");
+		five.setValue(5);
+		five.setCreateBy(user);
+		five.setEnabled(true);
+		five.setDescription("Quản lý web, server");
+		five = componentService.create(five);
 
 
 		//create reward
 		Reward jeckpots = new Reward();
 		jeckpots.setName("Jeckpots");
 		jeckpots.setValue(1000000);
-		jeckpots.setIncomeComponent(incomeComponent4);
+		jeckpots.setIncomeComponent(ja);
 		jeckpots.setDefaultNumericReward(0);
 		jeckpots.setCoupleNumber(6);
 		rewardService.create(jeckpots);
@@ -497,7 +494,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		Reward firstReward = new Reward();
 		firstReward.setName("firstReward");
 		firstReward.setValue(1500);
-		firstReward.setIncomeComponent(incomeComponent5);
+		firstReward.setIncomeComponent(oneth);
 		firstReward.setDefaultNumericReward(0);
 		firstReward.setCoupleNumber(5);
 		rewardService.create(firstReward);
@@ -505,7 +502,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		Reward secondReward = new Reward();
 		secondReward.setName("secondReward");
 		secondReward.setValue(120);
-		secondReward.setIncomeComponent(incomeComponent6);
+		secondReward.setIncomeComponent(second);
 		secondReward.setDefaultNumericReward(0);
 		secondReward.setCoupleNumber(4);
 		rewardService.create(secondReward);
@@ -513,7 +510,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		Reward thirdReward = new Reward();
 		thirdReward.setName("thirdReward");
 		thirdReward.setValue(20);
-		thirdReward.setIncomeComponent(incomeComponent7);
+		thirdReward.setIncomeComponent(third);
 		thirdReward.setDefaultNumericReward(10);
 		thirdReward.setCoupleNumber(3);
 		rewardService.create(thirdReward);
@@ -521,19 +518,39 @@ public class SmartlottApplication implements CommandLineRunner{
 		fourReward.setName("fourReward");
 		fourReward.setValue(5);
 		firstReward.setDefaultNumericReward(10);
-		fourReward.setIncomeComponent(incomeComponent8);
+		fourReward.setIncomeComponent(five);
 		fourReward.setCoupleNumber(2);
 		rewardService.create(fourReward);
 
 		//create level of network
 		NetworkLevel level1 = new NetworkLevel(1, "Level 1", "", incomeComponent1);
 		NetworkLevel level2 = new NetworkLevel(2, "Level 2", "", incomeComponent2);
+		NetworkLevel level3 = new NetworkLevel(3, "Level 3", "", incomeComponent3);
+		NetworkLevel level4 = new NetworkLevel(4, "Level 4", "", incomeComponent4);
+		NetworkLevel level5 = new NetworkLevel(5, "Level 5", "", incomeComponent5);
+		NetworkLevel level6 = new NetworkLevel(6, "Level 6", "", incomeComponent6);
+		NetworkLevel level7 = new NetworkLevel(7, "Level 7", "", incomeComponent7);
 
 		level1 = networkLevelService.create(level1);
 		LOGGER.info("Created network level: {}", level1);
 
 		level2 = networkLevelService.create(level2);
 		LOGGER.info("Created network level: {}", level2);
+
+		level3 = networkLevelService.create(level3);
+		LOGGER.info("Created network level: {}", level3);
+
+		level4 = networkLevelService.create(level4);
+		LOGGER.info("Created network level: {}", level4);
+
+		level5 = networkLevelService.create(level5);
+		LOGGER.info("Created network level: {}", level5);
+
+		level6 = networkLevelService.create(level6);
+		LOGGER.info("Created network level: {}", level6);
+
+		level7 = networkLevelService.create(level7);
+		LOGGER.info("Created network level: {}", level7);
 
 	}
 
@@ -573,6 +590,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		packageService.create(investmentPackage6);
 		packageService.create(investmentPackage7);
 		packageService.create(investmentPackage8);
+	}
+
+	public void createCash() {
+		Cash cash1 = new Cash(CashEnum.CASH);
+		Cash cash2 = new Cash(CashEnum.INVESTMENT);
+		Cash cash3 = new Cash(CashEnum.TRADING);
+
+		cashService.creates(Arrays.asList(cash1, cash2, cash3));
 	}
 
 }

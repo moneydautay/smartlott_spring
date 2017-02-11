@@ -122,9 +122,9 @@ public class User implements Serializable, UserDetails{
     @Column(name = "introduced_key", updatable = false)
     private String introducedKey;
 
-    @JoinColumn(updatable = false)
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<UserCash> userCashes;
+    @JoinColumn(updatable = false, name = "user_id", referencedColumnName = "id")
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<UserCash> userCashes = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -318,11 +318,11 @@ public class User implements Serializable, UserDetails{
         this.introducedKey = introducedKey;
     }
 
-    public List<UserCash> getUserCashes() {
+    public Set<UserCash> getUserCashes() {
         return userCashes;
     }
 
-    public void setUserCashes(List<UserCash> userCashes) {
+    public void setUserCashes(Set<UserCash> userCashes) {
         this.userCashes = userCashes;
     }
 

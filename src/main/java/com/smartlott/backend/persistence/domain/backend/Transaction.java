@@ -22,7 +22,6 @@ public class Transaction implements Serializable{
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -68,6 +67,9 @@ public class Transaction implements Serializable{
 
     @Transient
     private String securityToken;
+
+    @Transient
+    private long userCashId;
 
     public Transaction() {
     }
@@ -161,19 +163,26 @@ public class Transaction implements Serializable{
         this.investmentPackages = investmentPackages;
     }
 
+    public long getUserCashId() {
+        return userCashId;
+    }
+
+    public void setUserCashId(long userCashId) {
+        this.userCashId = userCashId;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
                 ", createdDate=" + createdDate +
                 ", amount=" + amount +
-                ", ofUser=" + ofUser.getId() +
-                ", handleBy=" + handleBy.getId() +
+                ", ofUser=" + ofUser.getEmail() +
+                ", handleBy=" + ((handleBy != null)? handleBy.getEmail() : null) +
                 ", handleDate=" + handleDate +
-                ", transactionType=" + transactionType +
+                ", transactionType=" + transactionType.getName() +
                 ", lotteryDetails=" + lotteryDetails +
-                ", transactionStatus=" + transactionStatus +
-                ", securityToken='" + securityToken + '\'' +
+                ", transactionStatus=" + transactionStatus.getName() +
                 '}';
     }
 
