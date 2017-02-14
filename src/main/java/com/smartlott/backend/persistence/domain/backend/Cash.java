@@ -87,6 +87,14 @@ public class Cash implements Serializable{
         this.received = received;
     }
 
+    public boolean isWithdraw() {
+        return withdraw;
+    }
+
+    public boolean isTransfer() {
+        return transfer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,6 +118,8 @@ public class Cash implements Serializable{
                 + ", description='" + description + '\''
                 + ", enabled=" + enabled
                 + ", received=" + received
+                + ", withdraw=" + withdraw
+                + ", transfer=" + transfer
                 + '}';
     }
 }

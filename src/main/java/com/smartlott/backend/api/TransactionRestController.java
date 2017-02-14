@@ -3,6 +3,8 @@ package com.smartlott.backend.api;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
+import com.smartlott.enums.TransactionStatusEnum;
+import com.smartlott.utils.FormatNumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class TransactionRestController {
     @Autowired
     private NumberAccountService accountService;
 
+    @Autowired
+    private UserCashService userCashService;
+
     @RequestMapping(value = "/withdraw/{numberAccountId}", method = RequestMethod.POST)
     public ResponseEntity<Object> createWithDraw(@PathVariable long numberAccountId,
                                                  @RequestBody Transaction transaction, Locale locale){
@@ -74,6 +79,7 @@ public class TransactionRestController {
 
         Long userId = transaction.getOfUser().getId();
         User localUser = userService.findOne(transaction.getOfUser().getId());
+
         if(localUser == null){
             LOGGER.error("User id {} not found", userId);
             String message = i18NService.getMessage("Id.user.not.found", String.valueOf(userId) , locale);
@@ -85,21 +91,34 @@ public class TransactionRestController {
         NumberAccount numberAccount = accountService.getAccount(numberAccountId);
 
         //Checking valid amount withdraw and current amount
-        DecimalFormat df = new DecimalFormat("0.0000");
-        double fees = Double.valueOf(df.format(
-                (transaction.getAmount()*numberAccount.getNumberAccountType().getFeesWithdraw())/100));
+        double fees = FormatNumberUtils.formatNumber(
+                (transaction.getAmount()*numberAccount.getNumberAccountType().getFeesWithdraw())/100);
 
-        if(transaction.getAmount() > localUser.getCash()){
+        //get userCash detail
+        UserCash userCash = userCashService.getUserCashByUserCashId(transaction.getUserCashId());
+
+        if(transaction.getAmount() > userCash.getValue()){
             LOGGER.error("Amount withdraw {} of user {} is greater than current cash",
-                    transaction.getAmount() ,localUser, localUser.getCash());
+                    transaction.getAmount() ,localUser, userCash.getValue());
 
             String message = i18NService.getMessage("mycash.amount.withdraw.greater.than.current.cast",
                     String.valueOf(transaction.getAmount()) , locale);
             messageDTOS.add(new MessageDTO(MessageType.ERROR,message));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
+
+        //minus cash of user
+        double cash = userCash.getValue();
+        cash -= (transaction.getAmount() + fees);
+        userCash.setValue(FormatNumberUtils.formatNumber(cash));
+        //update cash of user
+        userCashService.update(userCash);
+
         //add create data to transaction
         transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        //set Status for transaction
+        transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.PENDING));
 
         //save transaction
         transaction = transactionService.createNew(transaction);
@@ -109,6 +128,7 @@ public class TransactionRestController {
         //add withdraw detail
         WithdrawDetail withdrawDetail = new WithdrawDetail(transaction, numberAccount, fees);
         withdrawDetailService.createNew(withdrawDetail);
+
         LOGGER.info("Created withdraw detail {}", withdrawDetail);
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
