@@ -3,7 +3,6 @@ package com.smartlott.intergation;
 import com.smartlott.SmartlottApplication;
 import com.smartlott.backend.persistence.domain.backend.Bonus;
 import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.repositories.BonusRepository;
 import com.smartlott.backend.service.BonusService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public class BonousTest extends AbstractIntegrationTest{
         System.out.println("Before upate cash: "+admin.getCash());
         User user1 = userRepository.findOne(Long.valueOf(2));
         Assert.assertNotNull(user1);
-        bonusService.saveBonousOfUser(user1, 1);
+        bonusService.saveBonusOfUser(user1, 1);
 
         List<Bonus> bonouss = bonusService.getAllByUserId(Long.valueOf(1));
 
@@ -54,4 +51,5 @@ public class BonousTest extends AbstractIntegrationTest{
         Assert.assertEquals("List Bonus mus be equal 1", 1, bonouss.size());
 
     }
+
 }

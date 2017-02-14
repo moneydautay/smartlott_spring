@@ -2,7 +2,6 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
-import com.smartlott.enums.CashEnum;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.TransactionStatusEnum;
 import org.slf4j.Logger;
@@ -117,7 +116,7 @@ public class CheckoutRestController {
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),localTransaction.getAmount());
 
         //save bonus for ancestor of user
-        double bonusValue = bonusService.saveBonousOfUser(localTransaction.getOfUser(), localTransaction.getAmount());
+        double bonusValue = bonusService.saveBonusOfUser(localTransaction.getOfUser(), localTransaction.getAmount());
 
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }

@@ -14,4 +14,5 @@ public interface NetworkLevelRepository extends CrudRepository<NetworkLevel, Int
 
     List<NetworkLevel> findAll();
 
+    List<NetworkLevel> findByEnabled(boolean b);
 }

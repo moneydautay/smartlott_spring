@@ -1,6 +1,7 @@
 package com.smartlott.backend.persistence.repositories;
 
 import com.smartlott.backend.persistence.domain.backend.Network;
+import com.smartlott.backend.persistence.domain.backend.NetworkLevel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -49,4 +50,5 @@ public interface NetworkRepository extends PagingAndSortingRepository<Network, L
      */
     public Page<Network> findByAncestorId(Long ancestorId, Pageable pageable);
 
+    Network findByOfUserIdAndNetworkLevelId(long id, int networkLevelId);
 }
