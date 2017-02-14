@@ -16,9 +16,11 @@ public class NetworkLevel implements Serializable{
     @Id
     private int id;
 
-    private String name;
+    private int level;
 
     private String description;
+
+    private boolean enabled = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private IncomeComponent incomeComponent;
@@ -30,9 +32,9 @@ public class NetworkLevel implements Serializable{
         this.id = id;
     }
 
-    public NetworkLevel(int id, String name, String description, IncomeComponent incomeComponent) {
+    public NetworkLevel(int id, int level, String description, IncomeComponent incomeComponent) {
         this.id = id;
-        this.name = name;
+        this.level = level;
         this.description = description;
         this.incomeComponent = incomeComponent;
     }
@@ -45,12 +47,12 @@ public class NetworkLevel implements Serializable{
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public int getLevel() {
+        return level;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getDescription() {
@@ -69,14 +71,23 @@ public class NetworkLevel implements Serializable{
         this.incomeComponent = incomeComponent;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
-        return "NetworkLevel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", incomeComponent=" + incomeComponent +
-                '}';
+        return "NetworkLevel{"
+                + "id=" + id
+                + ", level=" + level
+                + ", description='" + description + '\''
+                + ", enabled=" + enabled
+                + ", incomeComponent=" + incomeComponent
+                + '}';
     }
 
     @Override

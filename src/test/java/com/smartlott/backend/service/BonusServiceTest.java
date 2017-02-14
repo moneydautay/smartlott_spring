@@ -10,11 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.swing.*;
-
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Mrs Hoang on 11/02/2017.
@@ -39,18 +35,9 @@ public class BonusServiceTest {
 
     @Test
     public void testCalculateNetworkBonus() throws Exception{
-        User user = userService.findOne(8);
+        User user = userService.findOne(9);
 
-        bonusService.saveBonousOfUser(user, 1);
-
-        user = userService.findOne(1);
-        bonusService.saveBonousOfUser(user, 1);
-
-        user = userService.findOne(2);
-        bonusService.saveBonousOfUser(user, 1);
-
-        user = userService.findOne(5);
-        bonusService.saveBonousOfUser(user, 1);
+        bonusService.saveBonusOfUser(user, 1);
 
         List<UserCash> userCashes = userCashService.getAll();
         for (UserCash uc: userCashes) {

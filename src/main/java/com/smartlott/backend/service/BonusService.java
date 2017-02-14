@@ -1,24 +1,22 @@
 package com.smartlott.backend.service;
 
-import com.smartlott.backend.persistence.domain.backend.Bonus;
-import com.smartlott.backend.persistence.domain.backend.Network;
-import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.domain.backend.UserCash;
-import com.smartlott.backend.persistence.repositories.BonusRepository;
-import com.smartlott.backend.persistence.repositories.NetworkRepository;
-import com.smartlott.backend.persistence.repositories.UserCashRepository;
-import com.smartlott.backend.persistence.repositories.UserRepository;
+import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.repositories.*;
+import com.smartlott.utils.FormatNumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by greenlucky on 1/2/17.
@@ -41,6 +39,12 @@ public class BonusService {
 
     @Autowired
     private UserCashRepository userCashRepository;
+
+    @Autowired
+    private NetworkLevelRepository levelRepository;
+
+    @Value("${default.user.id.get.cash}")
+    private long defaultUserIdGetCash=0;
 
     /**
      * Create new bonus
@@ -70,29 +74,47 @@ public class BonusService {
     }
 
     @Transactional
-    public double saveBonousOfUser(User user, double amount){
+    public double saveBonusOfUser(User user, double amount){
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         double valueBonus  = 0;
-        //get List ancestor of user
-        List<Network> networks = networkRepository.findByOfUserId(user.getId());
-        for (Network network : networks){
-            valueBonus = (amount*network.getNetworkLevel().getIncomeComponent().getValue())/100;
-            User ancestor = network.getAncestor();
-            Bonus bonus = new Bonus(valueBonus, ancestor , user, now ,network.getNetworkLevel().getId());
+
+        //get all network level is enabled
+        List<NetworkLevel> networkLevels = levelRepository.findByEnabled(true);
+
+
+        for (NetworkLevel networkLevel : networkLevels) {
+
+            //get List ancestor of user
+            Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), networkLevel.getId());
+
+            valueBonus = (amount*networkLevel.getIncomeComponent().getValue())/100;
+
+            User ancestor = null;
+            UserCash userCash = null;
+            if(network != null
+                    && network.getAncestor().getUserInvestment().getInvestmentPackage().getLevelNetwork()
+                    >= network.getNetworkLevel().getLevel()) {
+
+                ancestor = network.getAncestor();
+                userCash = userCashRepository.findByUserIdAndCash_Received(ancestor.getId(), true);
+            }else {
+                userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
+                ancestor = userCash.getUser();
+            }
+
+            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, network.getNetworkLevel().getId());
             bonus = createNew(bonus);
 
-            UserCash userCash = userCashRepository.findByUserIdAndCash_Received(ancestor.getId(), true);
+            LOGGER.info("Created bonus {}", bonus);
 
             //update cash or ancestor
             double cash = userCash.getValue();
-            cash += valueBonus;
-            userCash.setValue(cash);
-            LOGGER.info("Updating cash of user {}", ancestor);
+            cash = cash + valueBonus;
+            userCash.setValue(FormatNumberUtils.formatNumber(cash));
+            LOGGER.info("Updating User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
             userCash = userCashRepository.save(userCash);
-            LOGGER.info("User cash {}", userCash);
-            LOGGER.info("Updated cash of user {}", ancestor);
+            LOGGER.info("Updated User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
 
-            LOGGER.info("Created bonus {}", bonus);
 
         }
         return valueBonus;

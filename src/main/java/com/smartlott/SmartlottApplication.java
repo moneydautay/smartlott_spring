@@ -523,13 +523,13 @@ public class SmartlottApplication implements CommandLineRunner{
 		rewardService.create(fourReward);
 
 		//create level of network
-		NetworkLevel level1 = new NetworkLevel(1, "Level 1", "", incomeComponent1);
-		NetworkLevel level2 = new NetworkLevel(2, "Level 2", "", incomeComponent2);
-		NetworkLevel level3 = new NetworkLevel(3, "Level 3", "", incomeComponent3);
-		NetworkLevel level4 = new NetworkLevel(4, "Level 4", "", incomeComponent4);
-		NetworkLevel level5 = new NetworkLevel(5, "Level 5", "", incomeComponent5);
-		NetworkLevel level6 = new NetworkLevel(6, "Level 6", "", incomeComponent6);
-		NetworkLevel level7 = new NetworkLevel(7, "Level 7", "", incomeComponent7);
+		NetworkLevel level1 = new NetworkLevel(1, 1, "", incomeComponent1);
+		NetworkLevel level2 = new NetworkLevel(2, 2, "", incomeComponent2);
+		NetworkLevel level3 = new NetworkLevel(3, 3, "", incomeComponent3);
+		NetworkLevel level4 = new NetworkLevel(4, 4, "", incomeComponent4);
+		NetworkLevel level5 = new NetworkLevel(5, 5, "", incomeComponent5);
+		NetworkLevel level6 = new NetworkLevel(6, 6, "", incomeComponent6);
+		NetworkLevel level7 = new NetworkLevel(7, 7, "", incomeComponent7);
 
 		level1 = networkLevelService.create(level1);
 		LOGGER.info("Created network level: {}", level1);

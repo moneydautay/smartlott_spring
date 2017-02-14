@@ -134,7 +134,7 @@ public class CheckoutController {
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),transaction.getAmount());
 
         //save bonus for ancestor of user
-        bonusService.saveBonousOfUser(transaction.getOfUser(), transaction.getAmount());
+        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount());
 
         //insert batch of perfect money to database
         NumberAccountType numberAccountType = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
