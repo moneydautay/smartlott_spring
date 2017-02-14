@@ -27,6 +27,10 @@ public class Cash implements Serializable{
 
     private boolean received = false;
 
+    private boolean withdraw = false;
+
+    private boolean transfer = true;
+
     public Cash() {
     }
 
@@ -34,6 +38,8 @@ public class Cash implements Serializable{
         this.id = cashEnum.getId();
         this.name = cashEnum.getName();
         this.received = cashEnum.isReceived();
+        this.withdraw = cashEnum.isWithdraw();
+        this.transfer = cashEnum.isTransfer();
     }
 
     public Cash(String name, String description) {
