@@ -1,6 +1,7 @@
 package com.smartlott.config;
 
 import com.smartlott.backend.service.UserSecurityService;
+import com.smartlott.web.controllers.InvestmentPackageController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/console/**",
             "/error/**",
             "/api/**",
+            InvestmentPackageController.PACKAGE_INVESTMENT_URL
     };
 
     @Override

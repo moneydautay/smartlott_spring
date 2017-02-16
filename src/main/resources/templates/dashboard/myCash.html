@@ -35,7 +35,8 @@
                 <div class="content">
                     <h3 th:text="#{mycash.title.text}">My Cash</h3>
 
-                    <h4><span th:text="#{mycash.current.amount.text}">WithDraw</span></h4>
+                    <h4><span th:text="#{mycash.current.amount.text}"></span>:</h4>
+                    <div class="boxCash"></div>
                     <hr/>
                     <form  method="post" id="frmWithDraw">
                         <div class="row">
@@ -314,8 +315,9 @@
      * @param data
      */
     function showCash(data) {
-        console.log(data);
+
         var myCashSelect = $('#userCash');
+        var boxCash = $('.boxCash');
         myCashSelect.html('');
         $.each(data, function (index, myCash) {
             if(myCash.cash.withdraw){
@@ -328,6 +330,11 @@
 
                 myCashSelect.append(strMyCash);
             }
+
+            var strCash = '';
+            strCash += '<h6>+ '+ myCash.cash.name+': ' + myCash.value + '</h6>';
+
+            boxCash.append(strCash);
         });
 
         currentAmount = $('option:selected','#userCash').attr('attrValue');

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu"/>
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header"/>
+    <div class="container">
+        <div class=" category">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+                <li class="breadcrumb-item active" th:text="#{breadcrumb.product.investment.pakage.text}">Mua vé số</li>
+            </ol>
+
+            <div class="content">
+                <div class="row" id="messageArea">
+                </div>
+                <div id="contentArea" class="blog-post">
+                    <h1 class="blog-post-title">Sample blog post</h1>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img alt="100%x200" data-src="holder.js/100%x200" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTU4ZDg3ODFlYzEgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNThkODc4MWVjMSI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44NTkzNzUiIHk9IjEwNS40Ij4yNDJ4MjAwPC90ZXh0PjwvZz48L2c+PC9zdmc+" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;" />
+                        </div>
+                        <div class="col-md-3">
+                            <p><span>Price:</span> <span>$<span class="price">1.200</span></span></p>
+                            <p><span>Level network:</span> <span class="levelNetwork">7</span></p>
+                            <p><span>Duration:</span> <span class="duration">7</span></p>
+                            <p><span>Cash Investment:</span> <span class="cashInvestment"></span></p>
+                            <p><span>Cast Trading:</span><span class="castTrading"></span></p>
+                            <a href="' + urlPackageCheckout + '" class="form-control btn-primary text-center">Mua ngay</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="descriptionPackage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news"/>
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment"/>
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer"/>
+</div> <!-- end main container-->
+
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function(){
+        var urlGetPackage = /*[[@{/api/investment-package/{investmentPackageId}(investmentPackageId=${investmentPackageId})}]]*/;
+        getData(urlGetPackage, showPackageDetail, showMessages);
+    });
+    
+    function showPackageDetail(data) {
+        $('.blog-post-title').html(data.name);
+        $('.price').html(data.price);
+        $('.levelNetwork').html(data.levelNetwork);
+        $('.duration').html(data.durationTime);
+        $('.descriptionPackage').html(data.description);
+    }
+
+</script>
+</body>
+</html>

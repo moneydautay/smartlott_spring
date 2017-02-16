@@ -12,7 +12,7 @@ public enum InvestmentPackageEnum {
     SLIVERINVEST(5,"SLIVER INVEST","",4,true,30,600),
     GOLDINVEST(6,"GOLD INVEST","",5,true,30,800),
     PLATIUMINVEST(7,"PRO INVEST","",6,true,30,1000),
-    DIAMONDINVEST(8,"DIAMOND INVEST","",7,true,30,1000);
+    DIAMONDINVEST(8,"DIAMOND INVEST","",7,true,30,1200);
 
     private int id;
     private String name;
