@@ -1,10 +1,13 @@
 package com.smartlott.backend.api;
 
-import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
-import com.smartlott.backend.persistence.domain.backend.MessageDTO;
+import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.I18NService;
 import com.smartlott.backend.service.InvestmentPackageService;
+import com.smartlott.backend.service.TransactionService;
+import com.smartlott.backend.service.UserService;
 import com.smartlott.enums.MessageType;
+import com.smartlott.enums.TransactionStatusEnum;
+import com.smartlott.enums.TransactionTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +17,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +44,12 @@ public class InvestmentPackageRestController {
 
     @Autowired
     private InvestmentPackageService packageService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @Autowired
     private I18NService i18NService;
@@ -73,7 +86,33 @@ public class InvestmentPackageRestController {
         }
 
         return new ResponseEntity<Object>(investmentPackage, HttpStatus.OK);
+    }
 
+    @RequestMapping(value = "/buy/{investmentPackageId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> buyingInvestmentPackage(@PathVariable int investmentPackageId , Locale locale){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+
+        InvestmentPackage investmentPackage = packageService.getOne(investmentPackageId);
+
+        if(investmentPackage == null){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("investment.package.id.error.not.found.text",
+                            String.valueOf(investmentPackageId), locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
+        }
+
+        Transaction transaction = new Transaction();
+        transaction.setOfUser(user);
+        transaction.setAmount(investmentPackage.getPrice());
+        transaction.setTransactionType(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage));
+        transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.PENDING));
+        transaction.setInvestmentPackages(Arrays.asList(investmentPackage));
+
+        transaction = transactionService.createNew(transaction);
+
+        return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
 
 }

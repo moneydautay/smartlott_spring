@@ -156,8 +156,7 @@ public class TransactionRestController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
         LocalDateTime from = LocalDateTime.parse(fromDate, formatter);
         LocalDateTime to = LocalDateTime.parse(toDate, formatter);
-        System.out.println(from);
-        System.out.println(to);
+
         PageRequest request = new PageRequest(pageable.getPageNumber(),
                 pageable.getPageSize(), new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
         Page<Transaction> transactions
@@ -185,11 +184,11 @@ public class TransactionRestController {
             LOGGER.error("Transaction ID {} was handle {}", transactionId,transaction.getTransactionStatus());
             if(transaction.getTransactionStatus().getId()==2)
                 messageDTOS.add(new MessageDTO(
-                        MessageType.SUCCESS,i18NService.getMessage("order.lottery.success",
+                        MessageType.SUCCESS,i18NService.getMessage("order.success",
                         String.valueOf(transactionId),locale)));
             if(transaction.getTransactionStatus().getId()==3)
                 messageDTOS.add(new MessageDTO(
-                        MessageType.WARNING,i18NService.getMessage("order.lottery.cancel",
+                        MessageType.WARNING,i18NService.getMessage("order.cancel",
                         String.valueOf(transactionId),locale)));
         }
 
@@ -200,11 +199,9 @@ public class TransactionRestController {
         return new ResponseEntity<Object>(data, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/handle/{transactionId}",method = RequestMethod.PUT)
     public ResponseEntity<Object> handle(@PathVariable long transactionId,
                                          @RequestBody Transaction transaction, Locale locale){
-
         messageDTOS = new ArrayList<>();
         Transaction localTrans = transactionService.getOne(transactionId);
 
@@ -227,6 +224,7 @@ public class TransactionRestController {
                     MessageType.SUCCESS,i18NService.getMessage("order.lottery.success",
                     String.valueOf(transactionId),locale)));
         }
+
         if(localTrans.getTransactionStatus().getId() == 3){
             messageDTOS.add(new MessageDTO(
                     MessageType.SUCCESS,i18NService.getMessage("order.lottery.cancel",
@@ -235,6 +233,7 @@ public class TransactionRestController {
 
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }
+
 
 
 }

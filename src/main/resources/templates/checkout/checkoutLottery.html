@@ -134,10 +134,7 @@
             var msgConfirm = /*[[#{order.checkout.confirm.text}]]*/;
             if(confirm(msgConfirm)){
                 switch ($('#accountType').val()){
-                    case 1:
-                        url = /*[[@{/checkout/bitcoin/{checkoutId}(checkoutId=${checkoutId})}]]*/;
-                        break;
-                    case 2:
+                    case "1":
                         $('#frmCheckoutByPerfectMoney').submit();
                         break;
                     default:

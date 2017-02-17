@@ -50,16 +50,45 @@
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function(){
         var urlGetPackages = /*[[@{/api/investment-package/all}]]*/;
+        var urlBuyPackage = /*[[@{/api/investment-package/buy}]]*/;
+
+        var confirmBuyingPackage = /*[[#{investment.package.buying.confirm.text}]]*/;
+
         getData(urlGetPackages, showPackages, showMessages);
+
+        //buying the investment package
+        $(document).on('click','.buyInvestmentPackage', function () {
+          var authorized = /*[[${#authorization.expression('isAuthenticated()')}]]*/;
+
+          if(!authorized){
+              var urlLogin = /*[[@{/login}]]*/;
+              window.location.href = urlLogin;
+              return;
+          }
+            var packageId = $(this).attr('id');
+            urlBuyPackage += '/' + packageId;
+
+            if(confirm(confirmBuyingPackage)){
+
+                getData(urlBuyPackage, redirectToCheckout, showMessages);
+            }
+        })
+
     });
-    
+
+    function redirectToCheckout(data) {
+        var urlCheckout = /*[[@{/checkout}]]*/;
+        urlCheckout += '/' + data.id;
+        window.location.href= urlCheckout;
+    }
+
     function showPackages(data) {
         var productContent = $('#contentArea .product');
         productContent.html('');
 
         $.each(data.content, function (index, package) {
             productContent.append(showPackageDetail(package));
-        })
+        });
     }
     
     function showPackageDetail(packageDetail) {
@@ -79,7 +108,7 @@
         strPackageDetail += '<p><span>Cash Investment:</span> 90%</p>';
         strPackageDetail += '<p><span>Cast Trading:</span> 10%</p>';
         strPackageDetail += '</div>';
-        strPackageDetail += '<a href="' + urlPackageCheckout + '" class="form-control btn-primary text-center">Mua ngay</a>';
+        strPackageDetail += '<button id="' + packageDetail.id + '" class="form-control btn-primary text-center buyInvestmentPackage">Mua ngay</button>';
         strPackageDetail += '</div>';
         strPackageDetail += '</div>';
 

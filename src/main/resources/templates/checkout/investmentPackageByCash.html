@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header :: common-head">
+
+</head>
+
+<body>
+<!-- main container-->
+<div class="container">
+
+    <!-- include fragment top-menu-->
+    <div th:replace="common/header :: common-top-menu"/>
+
+    <!-- INCLUDE FRAGMENT HEADER -->
+    <div th:replace="common/header :: common-header"/>
+    <div class="container">
+        <div class=" category">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/login}" th:text="#{breadcrumb.home.text}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/checkout/{checkoutId}(checkoutId=${checkoutId})}" th:text="#{breadcrumb.lottery.checkout.text}">Checkout</a></li>
+                <li class="breadcrumb-item active" th:text="#{breadcrumb.product.investment.pakage.text}">Perfect Money</li>
+            </ol>
+            <div class="content">
+                <div class="row" id="messageArea">
+
+                </div>
+                <div class="row col-md-6" id="checkoutDetail">
+                    <h2><span th:text="#{order.buy.investment.package.title.text}"></span> #<span id="orderNumber"></span></h2>
+                    <hr/>
+                    <p th:text="#{order.detail.title.text}"></p>
+                    <div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <td th:text="#{order.detail.order.text}"></td>
+                                <td th:text="#{order.detail.name.text}">Name</td>
+                                <td th:text="#{order.detail.duration.text}">Duration</td>
+                                <td th:text="#{order.detail.price.text}">Price</td>
+                            </tr>
+                            </thead>
+                            <tbody id="orderDetail">
+
+                            </tbody>
+                        </table>
+                        <p><span th:text="#{order.buy.date.text}">Date</span>: <span id="buydate"></span></p>
+                        <p><span th:text="#{order.discount.text}">Discount</span>: - $<span id="discount"></span></p>
+                        <p><span th:text="#{order.fees.other.text}">Fees other</span>: + $<span id="feesOther"></span></p>
+                        <p><span th:text="#{order.status.text}">Status</span>: <span id="statusOrder"></span></p>
+                        <hr/>
+                        <p class="totalOrder"><b><span th:text="#{order.total.text}">Total</span>:</b> $<span id="totalOrder"></span></p>
+                        <form id="frmCheckoutCash" method="post" th:action="@{/api/checkout/cash}">
+                            <div class="form-group col-md-6">
+                                <label th:text="#{order.transaction.select.cash.text}"></label>
+                                <select id="userCash" class="form-control" name="userCash"></select>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-6">
+                                <label th:text="#{order.transaction.code.text}"></label>
+                                <input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" th:text="#{order.confirm.button.text}"></button>
+                                <button type="button" id="resentSecurityCode" class="btn btn-warning" th:text="#{order.resend.security.token.text}">Resend</button>
+                            </div>
+                            <input type="hidden" id="amount" value=""/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--FEATURED NEWS-->
+    <div th:replace="common/include :: common-featured-news"/>
+
+    <!-- ACCEPTED PAYMENT -->
+    <div th:replace="common/include :: common-accepted-payment"/>
+
+
+    <!-- FOOTER -->
+    <div th:replace="common/footer :: common-footer"/>
+</div> <!-- end main container-->
+<!-- Boostrap core Javascript -->
+<div th:replace="common/header :: common-before-scripts"/>
+<script th:src="@{/js/moment.min.js}"></script>
+<script th:src="@{/sources/moment-timezone.js}"></script>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:src="@{/js/checkout.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function ($) {
+
+        var urlNumberAccountType = /*[[@{/api/number-account-type}]]*/;
+        var urlGetTransaction = /*[[@{/api/transaction/{transactionId}(transactionId=${checkoutId})}]]*/;
+        var urlUserCash = /*[[@{/api/user-cash/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+        var urlSecurityToken= /*[[@{/api/security-token/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+        //get message
+        var messages = /*[[${messages}]]*/;
+        var msgTransactionCode = /*[[#{order.transaction.code.text}]]*/;
+        var msgUserCashInvalid = /*[[#{order.transaction.user.cash.not.enough.text}]]*/;
+        var msgConfirmResendSecurityToken= /*[[#{order.transaction.resend.security.token.text}]]*/;
+        var msgInfoResendSecurityTokenSuccess= /*[[#{order.transaction.resend.security.token.success.text}]]*/;
+
+        getData(urlGetTransaction, showTransactionInfo, showMessages);
+
+        //get cash account of member
+        getData(urlUserCash, showUserCash,showErrors);
+
+        /* Signup form validation */
+        $('#frmCheckoutCash').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                userCash: {
+                    validators: {
+                        notEmpty: {
+                            message: msgUserCashInvalid
+                        }
+                    }
+                },
+                securityToken: {
+                    validators: {
+                        notEmpty: {
+                            message: msgTransactionCode
+                        }
+                    }
+                },
+            }
+        }).on('success.form.fv',function (e) {
+
+            e.preventDefault();
+
+            var urlCheckoutCash = $(this).attr('action');
+            var transactionId = /*[[${checkoutId}]]*/;
+            var availableCash = $('option:selected','#userCash').attr('attrValue');
+            var totalAmount = $('#amount').val();
+
+            if(totalAmount > availableCash) {
+                $('#frmCheckoutCash')
+                    .data('formValidation')
+                    .updateStatus('userCash','INVALID');
+                $('#frmCheckoutCash')
+                    .formValidation('updateMessage', 'userCash', 'notEmpty', msgUserCashInvalid);
+                return;
+            }
+
+            var data = {};
+            data['id'] = transactionId;
+            data['userCashId'] = $('#userCash').val();
+            data['securityToken'] = $('#securityToken').val();
+
+            saveOrupdateData(urlCheckoutCash, 'POST', data , showCheckoutCashSuccess);
+
+        });
+
+        $('#resentSecurityCode').click(function () {
+            if(confirm(msgConfirmResendSecurityToken))
+            //get cash account of member
+                getData(urlSecurityToken, showMessages,showErrors);
+        })
+
+    });
+
+    function showTransactionInfo(data) {
+        var messages = data.messages;
+        console.log(messages);
+        if(messages.length > 0){
+            showMessages(messages);
+            $('#frmCheckoutOrder').html('');
+        }
+
+        data = data.content;
+
+        console.log(data);
+
+        $('#orderNumber').html(data.id);
+
+        var investmentPackages = data.investmentPackages;
+
+        var orderDetail = $('#orderDetail');
+
+        $.each(investmentPackages, function (index, package) {
+
+            strRow = '<tr>';
+            strRow+='<td>'+(index+1)+'</td>';
+            strRow+='<td>'+ package.name +'</td>';
+            strRow+='<td>'+ package.durationTime +'</td>';
+            strRow+='<td class="text-right">$'+ package.price +'</td>';
+            strRow+='</tr>';
+            orderDetail.append(strRow);
+        });
+
+        //total
+        strTotal = '<tr>';
+        strTotal += '<td colspan="3" class="text-center" th:text="#{order.provisional.price.text}">Provisional price</td>';
+        strTotal += '<td class="text-right">';
+        strTotal += '$'+data.amount;
+        strTotal += '</td>';
+        strTotal += '</tr>';
+        orderDetail.append(strTotal);
+        $('#buydate').html(data.createdDate);
+        $('#discount').html(0);
+        $('#feesOther').html(0);
+        $('#totalOrder').html(data.amount);
+        $('#statusOrder').html(data.transactionStatus.name);
+
+        //set data for perfect money form
+        $('#paymentAmount').val(data.amount);
+        $('#orderNum').val(data.id);
+        $('#custNum').val(data.ofUser.id);
+    }
+    
+    function showUserCash(data) {
+
+        var userCash = $('#userCash');
+        userCash.html('');
+        $.each(data, function(index, usc) {
+
+            var optStr = '';
+            optStr += '<option value="'+ usc.id +'" attrValue="' + usc.value + '">';
+            optStr += usc.cash.name + ': ' + usc.value + '';
+            optStr += '</option>';
+
+            userCash.append(optStr);
+        })
+    }
+
+    function showCheckoutCashSuccess(data) {
+        var urlCheckoutResult = /*[[@{/checkout/result}]]*/;
+        urlCheckoutResult += '/'+ data.id;
+        setTimeout(function () {
+            window.location.href = urlCheckoutResult;
+        },500)
+    }
+
+
+</script>
+</body>
+</html>

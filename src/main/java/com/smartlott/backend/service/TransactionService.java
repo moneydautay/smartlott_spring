@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 /**
@@ -29,6 +30,7 @@ public class TransactionService {
      */
     @Transactional
     public Transaction createNew(Transaction transaction){
+        transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
         return transactionRepository.save(transaction);
     }
 

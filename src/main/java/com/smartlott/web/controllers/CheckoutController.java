@@ -6,10 +6,13 @@ import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.NumberAccountTypeEnum;
 import com.smartlott.enums.TransactionStatusEnum;
+import com.smartlott.enums.TransactionTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,11 +37,22 @@ public class CheckoutController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckoutController.class);
 
     public static final String CHECKOUT_URL = "/checkout";
-    public static final String CHECKOUT_VIEW_NAME = "/checkout/checkoutLottery";
+    public static final String CHECKOUT_RESULT_URL = "/checkout/result";
+
+    public static final String CHECKOUT_INVESTMENT_PACKAGE_URL = CHECKOUT_URL + "/investment-package";
+    public static final String CHECKOUT_LOTTERY_VIEW_NAME = "/checkout/checkoutLottery";
+
     public static final String CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME = "/checkout/checkoutByPerfectMoney";
+
     public static final String CHECKOUT_BY_PERFECT_MONEY_ERROR_VIEW_NAME = "/checkout/checkoutByPerfectMoneyError";
+    public static final String CHECKOUT_BY_INVESTMENT_PACKAGE_ERROR_VIEW_NAME = "/checkout/checkoutByInvestmentPackageError";
+
     public static final String FORM_TEST_PERFECT_MONEY_VIEW_NAME = "/checkout/formTestPerfectMoney";
-    public static final String CHECKOUT_BY_CASH_VIEW_NAME = "/checkout/checkoutByCash";
+    public static final String CHECKOUT_LOTTERY_BY_CASH_VIEW_NAME = "/checkout/lotteryByCash";
+    public static final String CHECKOUT_INVESTMENT_PACKAGE_BY_CASH_VIEW_NAME = "/checkout/investmentPackageByCash";
+
+    public static final String CHECKOUT_INVESTMENT_PACKAGE_VIEW_NAME = "/checkout/investmentPackage";
+    public static final String CHECKOUT_INVESTMENT_PACKAGE_RESULT_VIEW_NAME = "/checkout/investmentPackageResult";
 
     @Autowired
     private TransactionService transactionService;
@@ -67,12 +82,25 @@ public class CheckoutController {
     @Autowired
     private SecurityTokenSevice securityTokenSevice;
 
+    @Autowired
+    private UserInvestmentService investmentService;
+
     private List<MessageDTO> messageDTOS;
 
     @RequestMapping(CHECKOUT_URL+"/{checkoutId}")
     public String checkout(@PathVariable long checkoutId, Model model){
+
         model.addAttribute("checkoutId", checkoutId);
-        return CHECKOUT_VIEW_NAME;
+
+        Transaction transaction = transactionService.getOne(checkoutId);
+        TransactionType type = null;
+        if(transaction != null)
+            type = transaction.getTransactionType();
+
+        if(type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage)))
+            return CHECKOUT_INVESTMENT_PACKAGE_VIEW_NAME;
+
+        return CHECKOUT_LOTTERY_VIEW_NAME;
     }
 
     @RequestMapping(value = CHECKOUT_URL+"/perfectmoney/{checkoutId}", method = RequestMethod.POST)
@@ -104,11 +132,11 @@ public class CheckoutController {
         System.out.println("Updating transaction");
 
         LOGGER.info("Updating transaction {} ", transaction);
-        //status susscess
+        //status success
         TransactionStatus status = new TransactionStatus(TransactionStatusEnum.SUCCESS);
         transaction.setTransactionStatus(status);
 
-        //update transaction tion
+        //update transaction
         transaction = transactionService.update(transaction);
 
         LOGGER.info("Updated transaction {} ", transaction);
@@ -172,17 +200,25 @@ public class CheckoutController {
         return false;
     }
 
-    @RequestMapping(value = CHECKOUT_URL+"/perfectmoney/error/{checkoutId}")
+    @RequestMapping(value = CHECKOUT_URL+"/error/{checkoutId}")
     public String checkoutPerfectMoneyError(@PathVariable long checkoutId, Model model, Locale locale){
         messageDTOS = new ArrayList<>();
         model.addAttribute("checkoutId", checkoutId);
         Transaction transaction = transactionService.getOne(checkoutId);
-        if(invalidTransaction(checkoutId, transaction, model, locale))
-            return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
 
-        messageDTOS.add(new MessageDTO(MessageType.WARNING,i18NService.getMessage("order.lottery.error.checkout", String.valueOf(checkoutId),locale)));
+        TransactionType type = null;
+        if(transaction != null)
+            type = transaction.getTransactionType();
+
+        if(!invalidTransaction(checkoutId, transaction, model, locale))
+            messageDTOS.add(new MessageDTO(MessageType.WARNING,i18NService.getMessage("order.lottery.error.checkout", String.valueOf(checkoutId),locale)));
+
         model.addAttribute("messages",messageDTOS);
-        return CHECKOUT_BY_PERFECT_MONEY_VIEW_NAME;
+
+        if(type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage)))
+            return CHECKOUT_BY_INVESTMENT_PACKAGE_ERROR_VIEW_NAME;
+
+        return CHECKOUT_BY_PERFECT_MONEY_ERROR_VIEW_NAME;
     }
 
     @RequestMapping(value = CHECKOUT_URL+"/perfectmoney/frmtest")
@@ -194,6 +230,105 @@ public class CheckoutController {
     public String checkoutByCash(@PathVariable long checkoutId, Model model){
         model.addAttribute("checkoutId", checkoutId);
         model.addAttribute("checkoutType", "cash");
-        return CHECKOUT_BY_CASH_VIEW_NAME;
+
+        Transaction transaction = transactionService.getOne(checkoutId);
+
+        TransactionType type = null;
+        if(transaction != null)
+            type = transaction.getTransactionType();
+
+        if(type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage)))
+            return CHECKOUT_INVESTMENT_PACKAGE_BY_CASH_VIEW_NAME;
+
+        return CHECKOUT_LOTTERY_BY_CASH_VIEW_NAME;
+    }
+
+    @Transactional
+    @RequestMapping(value = CHECKOUT_INVESTMENT_PACKAGE_URL + "/pm/{checkoutId}", method = RequestMethod.POST)
+    public String checkoutInvestmentPackage(@PathVariable long checkoutId, PerfectMoney perfectMoney, Model model, Locale locale, ServletRequest request){
+
+        messageDTOS = new ArrayList<>();
+
+        Transaction transaction = transactionService.getOne(checkoutId);
+        if(invalidTransaction(checkoutId, transaction, model, locale))
+            return CHECKOUT_BY_INVESTMENT_PACKAGE_ERROR_VIEW_NAME;
+
+        //checks exist batch in perfect money
+        LocalDateTime createDateTrans = transaction.getCreatedDate();
+        LocalDate starDate = LocalDate.of(createDateTrans.getYear(), createDateTrans.getMonthValue(), createDateTrans.getDayOfMonth());
+        boolean validBatch = perfectMoneyService.checkExistBatch(starDate, perfectMoney.getPAYMENT_BATCH_NUM());
+
+        //checking batch even exist in history
+        boolean existedBatch = historyAccountService.existed(perfectMoney.getPAYMENT_BATCH_NUM());
+
+        //checking valid info: transaction id (order id), customer id
+        if(transaction.getId() != perfectMoney.getORDER_NUM()
+                || transaction.getOfUser().getId() != perfectMoney.getCUST_NUM()
+                || transaction.getAmount() != perfectMoney.getPAYMENT_AMOUNT()
+                || existedBatch || !validBatch){
+            LOGGER.error("Transaction {} is not valid with return data from perfect money {}  ", transaction, perfectMoney);
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,i18NService.getMessage("transaction.error.id.not.valid", String.valueOf(checkoutId),locale)));
+            model.addAttribute("messages",messageDTOS);
+            return CHECKOUT_BY_INVESTMENT_PACKAGE_ERROR_VIEW_NAME;
+        }
+
+        System.out.println("Updating transaction");
+
+        LOGGER.info("Updating transaction {} ", transaction);
+        //status success
+        TransactionStatus status = new TransactionStatus(TransactionStatusEnum.SUCCESS);
+        transaction.setTransactionStatus(status);
+
+        //update transaction
+        transaction = transactionService.update(transaction);
+
+        LOGGER.info("Updated transaction {} ", transaction);
+
+        messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.lottery.success", String.valueOf(checkoutId),locale)));
+        model.addAttribute("messages",messageDTOS);
+        model.addAttribute("transaction",transaction);
+        model.addAttribute("checkoutId", checkoutId);
+
+        //insert batch of perfect money to database
+        NumberAccountType numberAccountType = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
+        ExternalHistoryAccount historyAccount = new ExternalHistoryAccount();
+        historyAccount.setCreateDate(LocalDateTime.now(Clock.systemDefaultZone()));
+        historyAccount.setNumberAccountType(numberAccountType);
+        historyAccount.setTransaction(transaction);
+        historyAccount.setExternalTransId(perfectMoney.getPAYMENT_BATCH_NUM());
+
+        historyAccount = historyAccountService.create(historyAccount);
+
+        LOGGER.info("Created External history account: "+ historyAccount);
+
+        //get current lottery dialing
+        LotteryDialing currentLottDialing = dialingService.getOpenedLotteryDialing(true);
+
+        InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
+
+        LocalDateTime from = currentLottDialing.getToDate();
+        LocalDateTime to = from.plusDays(investmentPackage.getDurationTime());
+
+        //add investment package to user
+        UserInvestment userInvestment = new UserInvestment();
+        userInvestment.setInvestmentPackage(investmentPackage);
+        userInvestment.setUser(transaction.getOfUser());
+        userInvestment.setFromDate(from);
+        userInvestment.setToDate(to);
+
+        userInvestment = investmentService.create(userInvestment);
+
+        model.addAttribute("userInvestment", userInvestment);
+
+        return "redirect:" + CHECKOUT_RESULT_URL + "/" + transaction.getId();
+    }
+
+    @Transactional
+    @RequestMapping(value = CHECKOUT_RESULT_URL + "/{checkoutId}", method = RequestMethod.GET)
+    public String checkoutResult(@PathVariable long checkoutId, Model model, Locale locale){
+
+        model.addAttribute("checkoutId", checkoutId);
+
+        return CHECKOUT_INVESTMENT_PACKAGE_RESULT_VIEW_NAME;
     }
 }

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "external_history_account")
 public class ExternalHistoryAccount {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
