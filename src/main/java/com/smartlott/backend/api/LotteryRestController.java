@@ -59,6 +59,15 @@ public class LotteryRestController {
     @Autowired
     private I18NService i18NService;
 
+    /**
+     * Adds lotteries given by lotteries..
+     *
+     * @param lotteries
+     * @param request
+     * @param locale
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="", method =  RequestMethod.POST)
     public ResponseEntity<Object> addLotteries(@RequestBody Lotteries lotteries, ServletRequest request , Locale locale) throws Exception{
         messageDTOS = new ArrayList<>();
@@ -112,6 +121,7 @@ public class LotteryRestController {
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
+
 
     @RequestMapping(value = "/ofuser/{userId}", method = RequestMethod.GET)
     public ResponseEntity<Object> getLotteriesByUser(@PathVariable("userId") long userId, Pageable pageable, Locale locale){

@@ -3,12 +3,23 @@ package com.smartlott.backend.service;
 import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
 import com.smartlott.backend.persistence.repositories.InvestmentPackageRepository;
 import com.smartlott.enums.InvestmentPackageEnum;
+import com.smartlott.utils.PageRequestUtils;
 import org.junit.Before;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
+
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -18,40 +29,24 @@ import static org.mockito.Mockito.doAnswer;
 /**
  * Created by Mrs Hoang on 10/02/2017.
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class InvestmentPackageServiceTest {
 
+    @Autowired
     private InvestmentPackageService packageService;
-    private InvestmentPackageRepository investmentPackageRepository;
 
     @Before
     public void setupMock() throws Exception{
-        investmentPackageRepository = Mockito.mock(InvestmentPackageRepository.class);
-        packageService = new InvestmentPackageService(investmentPackageRepository);
-
-
-
+        Assert.notNull(packageService);
     }
 
     @Test
-    public void createInvestmentPackage() throws  Exception{
+    public void getAllPackages() throws Exception{
+        PageRequest pageRequest = new PageRequest(0, 10, new Sort(Sort.Direction.DESC, "price"));
 
-        InvestmentPackage investmentPackage = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
-
-        when(investmentPackageRepository.findOne(investmentPackage.getId())).thenReturn(null);
-
-        doAnswer(returnsFirstArg()).when(investmentPackageRepository).save(any(InvestmentPackage.class));
-
-
-        InvestmentPackage aspect = packageService.create(investmentPackage);
-        assertEquals(aspect, investmentPackage);
-        assertNotNull(aspect);
-    }
-
-    @Test
-    public void createInvestmentWithEmptyName() throws Exception{
-        InvestmentPackage investmentPackage = new InvestmentPackage();
-
-        investmentPackageRepository.save(investmentPackage);
+        Page<InvestmentPackage> investmentPackages = packageService.getAll(true, pageRequest);
+        System.out.println(investmentPackages.getContent());
     }
 
 }

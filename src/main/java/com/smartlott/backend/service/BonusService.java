@@ -81,7 +81,6 @@ public class BonusService {
         //get all network level is enabled
         List<NetworkLevel> networkLevels = levelRepository.findByEnabled(true);
 
-
         for (NetworkLevel networkLevel : networkLevels) {
 
             //get List ancestor of user
@@ -101,8 +100,11 @@ public class BonusService {
                 userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
                 ancestor = userCash.getUser();
             }
+            System.out.println(ancestor);
+            System.out.println(network);
+            System.out.println(user);
+            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, networkLevel.getLevel());
 
-            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, network.getNetworkLevel().getId());
             bonus = createNew(bonus);
 
             LOGGER.info("Created bonus {}", bonus);

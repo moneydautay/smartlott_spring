@@ -3,12 +3,11 @@
  */
 
 function showCheckoutCashSuccess(data) {
-    showSuccess(data);
-    //clear content form cash checkout
-    $('#frmCheckoutCash').html('');
+    var urlCheckoutResult = '/checkout/result';
+    urlCheckoutResult += '/'+ data.id;
     setTimeout(function () {
-        window.location.reload();
-    },1000)
+        window.location.href = urlCheckoutResult;
+    },500)
 }
 
 function showTransactionInfo(data, msg = null) {

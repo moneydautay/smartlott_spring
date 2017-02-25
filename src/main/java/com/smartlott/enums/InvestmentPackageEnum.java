@@ -6,13 +6,13 @@ package com.smartlott.enums;
 public enum InvestmentPackageEnum {
 
     CUSTOMER(1,"CUSTOMER","",0,false,0,0),
-    AGENT(2,"AGENT","",1,false,0,10),
-    INVEST(3,"INVEST","",2,true,30,200),
-    PROINVEST(4,"PRO INVEST","",3,true,30,400),
-    SLIVERINVEST(5,"SLIVER INVEST","",4,true,30,600),
-    GOLDINVEST(6,"GOLD INVEST","",5,true,30,800),
-    PLATIUMINVEST(7,"PRO INVEST","",6,true,30,1000),
-    DIAMONDINVEST(8,"DIAMOND INVEST","",7,true,30,1000);
+    AGENT(2,"AGENT","",1,false,0,0.01),
+    INVEST(3,"INVEST","",2,true,30, 0.01),
+    PROINVEST(4,"PRO INVEST","",3,true,30, 0.01),
+    SLIVERINVEST(5,"SLIVER INVEST","",4,true,30, 0.01),
+    GOLDINVEST(6,"GOLD INVEST","",5,true,30, 0.01),
+    PLATIUMINVEST(7,"PRO INVEST","",6,true,30, 0.01),
+    DIAMONDINVEST(8,"DIAMOND INVEST","",7,true,30, 0.01);
 
     private int id;
     private String name;

@@ -4,9 +4,8 @@ package com.smartlott.enums;
  * Created by greenlucky on 1/1/17.
  */
 public enum NumberAccountTypeEnum {
-    BitCoin(1,"BitCoin","This is BitCoin number account",0.1,true,""),
-    PerfectMoney(2,"Perfect Money","This is Perfect Money number account",0.2,true,"U9498703"),
-    Cash(3,"Cash","This is Cash number account",0.0,true,"");
+    PerfectMoney(1,"Perfect Money","This is Perfect Money number account",0.2,true,"U9498703"),
+    Cash(2,"Cash","This is Cash number account",0.0,true,"");
 
     private int id;
     private String name;

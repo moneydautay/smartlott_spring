@@ -60,8 +60,8 @@ public class NumberAccountTest extends AbstractIntegrationTest{
         Assert.assertNotNull(user);
 
         //add account type
-        NumberAccountType numberAccountType1 = new NumberAccountType(NumberAccountTypeEnum.BitCoin);
-        NumberAccountType numberAccountType2 = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
+        NumberAccountType numberAccountType1 = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
+        NumberAccountType numberAccountType2 = new NumberAccountType(NumberAccountTypeEnum.Cash);
 
         numberAccountType.save(numberAccountType1);
         numberAccountType.save(numberAccountType2);

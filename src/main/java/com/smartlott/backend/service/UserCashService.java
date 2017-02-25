@@ -57,6 +57,12 @@ public class UserCashService {
         return userCashRepository.save(userCashes);
     }
 
+    @Transactional
+    public UserCash update(UserCash userCash){
+        return  userCashRepository.save(userCash);
+    }
+
+
     /**
      * Updates cash of user given by user id, cash id and value
      * @param userId
