@@ -101,11 +101,15 @@
         /*<![CDATA[*/
         var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
 
-        var url = [[@{/api/lottery/ofuser/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        var url = [[@{
+            /api/
+            lottery / ofuser / {userId}(userId =${#authorization.getAuthentication().getPrincipal().id}, size = 10, page =);
+        }
+        ]]
         /*]]>*/
         pagination(url, showLottery);
 
-    });
+    });;
 
     function showLottery(data) {
         var contentTable = $('#contentTable');

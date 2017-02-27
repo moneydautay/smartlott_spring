@@ -17,5 +17,5 @@ public interface CountryRepository extends CrudRepository<Country, Integer>{
      * Retrieve all country in database
      * @return
      */
-    public List<Country> findAll();
+    List<Country> findAll();
 }

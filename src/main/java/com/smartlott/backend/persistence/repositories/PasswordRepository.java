@@ -24,7 +24,7 @@ public interface PasswordRepository extends CrudRepository<Password, Long>{
      * @param user a given by user
      * @return A passowrd a given by username or null if not found
      */
-    public List<Password> findByUserAndEnabled(User user, Boolean enabled);
+    List<Password> findByUserAndEnabled(User user, Boolean enabled);
 
 
     /**
@@ -35,13 +35,13 @@ public interface PasswordRepository extends CrudRepository<Password, Long>{
     @Transactional
     @Modifying
     @Query("update Password p set p.enabled = :enabled where p.user.id= :userId")
-    public void changePasswordByUserIdAndEnabled(@Param("userId") long userId, @Param("enabled") boolean enabled);
+    void changePasswordByUserIdAndEnabled(@Param("userId") long userId, @Param("enabled") boolean enabled);
 
     /**
      * Find list password by user
      * @param user
      * @return A list password or null if not exist
      */
-    public List<Password> findByUser(User user);
+    List<Password> findByUser(User user);
 
 }

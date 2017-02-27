@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-;
-
 /**
  * Created by Mrs Hoang on 12/15/2016.
  */

@@ -90,6 +90,6 @@ public class Category implements Serializable{
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return id ^ (id >>> 32);
     }
 }

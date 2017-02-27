@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface LotteryRepository extends CrudRepository<Lottery, Long>{
 
-    public List<Lottery> findAll();
+    List<Lottery> findAll();
 }

@@ -12,6 +12,6 @@ import java.util.Set;
 @Repository
 public interface FeaturedSliderRepository extends CrudRepository<FeaturedSlider, Integer>{
 
-    public Set<FeaturedSlider> findAll();
+    Set<FeaturedSlider> findAll();
 
 }

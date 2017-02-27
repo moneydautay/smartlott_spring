@@ -112,16 +112,24 @@
     jQuery(document).ready(function ($) {
         /*<![CDATA[*/
         var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
-        var urlGetIUserInfo = [[@{/api/user/{username}(username=${#authorization.getAuthentication().getPrincipal().username})}]];
+        var urlGetIUserInfo = [[@{
+            /api/us
+            er / {username}(username =${#authorization.getAuthentication().getPrincipal().username});
+        }
+        ]]
 
         //get user data
         getData(urlGetIUserInfo, showIntroducedLink);
 
-        var url = [[@{/api/network/ofancestor/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        var url = [[@{
+            /api/
+            network / ofancestor / {userId}(userId =${#authorization.getAuthentication().getPrincipal().id}, size = 10, page =);
+        }
+        ]]
         /*]]>*/
         pagination(url, showNetwork);
 
-    });
+    });;;
 
     function showNetwork(data) {
         var contentTable = $('#contentTable');

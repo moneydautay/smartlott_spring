@@ -17,20 +17,20 @@ import java.util.List;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
-    public List<Post> findAll();
+    List<Post> findAll();
 
-    public Page<Post> findAll(Pageable pageable);
+    Page<Post> findAll(Pageable pageable);
 
-    public Page<Post> findByCategories_Id(int categoryId, Pageable pageable);
+    Page<Post> findByCategories_Id(int categoryId, Pageable pageable);
 
     Post findBySlug(String slug);
 
     @Modifying
     @Query("delete from Post as p where p.id in (:postIds)")
-    public int delete(@Param("postIds") List<Long> postIds);
+    int delete(@Param("postIds") List<Long> postIds);
 
     @Modifying
     @Query("update Post as p set status = :status where p.id in (:postIds)")
-    public int changeStatus(@Param("postIds") List<Long> postIds, @Param("status") boolean status);
+    int changeStatus(@Param("postIds") List<Long> postIds, @Param("status") boolean status);
 
 }

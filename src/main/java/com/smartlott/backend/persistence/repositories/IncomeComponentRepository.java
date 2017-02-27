@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface IncomeComponentRepository extends CrudRepository<IncomeComponent, Long>{
 
-    public List<IncomeComponent> findAll();
+    List<IncomeComponent> findAll();
 
-    public Page<IncomeComponent> findAll(Pageable pageable);
+    Page<IncomeComponent> findAll(Pageable pageable);
 
     List<IncomeComponent> findByEnabled(boolean b);
 

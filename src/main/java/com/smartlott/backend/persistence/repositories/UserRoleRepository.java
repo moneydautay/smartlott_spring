@@ -18,19 +18,19 @@ public interface UserRoleRepository extends CrudRepository<UserRole, Long>{
      * Deletes role by User if exist or nothing if not not
      * @param user
      */
-    public void deleteByUser(User user);
+    void deleteByUser(User user);
 
 
     /**
      * Find all user role
      * @return
      */
-    public List<UserRole> findAll();
+    List<UserRole> findAll();
 
     /**
      * Finy User Role by role
      * @param role given by user
      * @return A List of UserRole
      */
-    public List<UserRole> findByRole(Role role);
+    List<UserRole> findByRole(Role role);
 }

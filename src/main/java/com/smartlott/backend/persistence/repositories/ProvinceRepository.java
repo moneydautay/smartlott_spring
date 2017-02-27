@@ -18,5 +18,5 @@ public interface ProvinceRepository extends CrudRepository<Province, Integer>{
      * @param country
      * @return Returns a list of provice of country or null if not found
      */
-    public List<Province> findByCountry(Country country);
+    List<Province> findByCountry(Country country);
 }

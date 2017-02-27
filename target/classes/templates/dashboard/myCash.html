@@ -190,8 +190,8 @@
                     url += "/" + numberAccountId;
                     var data = {};
                     data['amount'] = amount;
-                    data['transactionType'] = {'id': 1}
-                    data['ofUser'] = {'id': userId}
+                    data['transactionType'] = {'id': 1};
+                    data['ofUser'] = {'id': userId};
                     data['userCashId'] = userCashId;
 
                     data['securityToken'] = securityToken;
@@ -262,7 +262,7 @@
         strSTA = '<div class="row">';
         strSTA += '<label for="securityToken" th:text="#{security.token.text}"></label>';
         strSTA += '</div>';
-        strSTA += '<div class="col-md-4">'
+        strSTA += '<div class="col-md-4">';
         strSTA += '<input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>';
         strSTA += '</div><div class="clearfix"></div>';
         securityTokenArea.html(strSTA);

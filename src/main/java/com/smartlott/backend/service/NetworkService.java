@@ -41,7 +41,7 @@ public class NetworkService {
 
     @Transactional
     public List<Network> createNetworks(List<Network> networks){
-        Iterable<Network> datas = (Iterable<Network>) networks;
+        Iterable<Network> datas = networks;
         return ( List<Network>) networkRepository.save(datas);
     }
 

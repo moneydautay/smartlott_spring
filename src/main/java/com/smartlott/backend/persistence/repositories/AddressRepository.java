@@ -20,7 +20,7 @@ public interface AddressRepository extends CrudRepository<Address, Long>{
      * @param user
      * @return A list address given by User or null if not found
      */
-    public List<Address> findByUser(User user);
+    List<Address> findByUser(User user);
 
 
     /**
@@ -28,7 +28,7 @@ public interface AddressRepository extends CrudRepository<Address, Long>{
      * @param province
      * @return Reuturns a list address or null if not found
      */
-    public List<Address> findByProvince(Province province);
+    List<Address> findByProvince(Province province);
 
 
     /**
@@ -36,5 +36,5 @@ public interface AddressRepository extends CrudRepository<Address, Long>{
      * @param userId
      * @return A list addresses or null if not found
      */
-    public List<Address> findByUserId(long userId);
+    List<Address> findByUserId(long userId);
 }

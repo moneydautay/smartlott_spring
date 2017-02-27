@@ -116,9 +116,9 @@ function showNotifications(id, msgs, type) {
 }
 
 function getCurrentDate(seperate='-') {
-    var currentDate = new Date()
-    var day = currentDate.getDate()
-    var month = currentDate.getMonth() + 1
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    var month = currentDate.getMonth() + 1;
     var year = currentDate.getFullYear();
     return day +seperate+ month + seperate +year;
 }
@@ -162,4 +162,4 @@ $('#selectAll').change(function () {
     if($(this).is(':checked'))
         checked = true;
     $('input[name="_id"]').prop('checked',checked);
-})
+});

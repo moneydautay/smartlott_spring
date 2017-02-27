@@ -17,7 +17,7 @@ function selectPageNumber(url, callBack) {
             currentPage = $(this).attr('page');
             setActivePagiItem(url, callBack);
         }
-    })
+    });
 
 
     $('body').on('click','.pagination .previous' ,function () {

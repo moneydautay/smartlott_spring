@@ -26,7 +26,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @param username
      * @return A User given a username and null if not found
      */
-    public User findByUsername(String username);
+    User findByUsername(String username);
 
 
     /**
@@ -34,7 +34,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @param email
      * @return A user given by a email and null if not found
      */
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
     /**
      * Find user by username and password
@@ -42,7 +42,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @param password
      * @return A user or null if not exist
      */
-    public User findByUsernameAndPassword(String username, String password);
+    User findByUsernameAndPassword(String username, String password);
 
     @Modifying
     @Transactional
@@ -54,15 +54,15 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * @param introducedKey
      * @return A user or null if not found
      */
-    public User findByIntroducedKey(String introducedKey);
+    User findByIntroducedKey(String introducedKey);
 
     @Transactional
-    public User save(User user);
+    User save(User user);
 
     @Transactional
     @Modifying
     @Query("update User u set u.cash = :cash where u.id = :userId")
-    public void updateCash(@Param("userId") long userId, @Param("cash") double cash);
+    void updateCash(@Param("userId") long userId, @Param("cash") double cash);
 
     List<User> findAll();
 

@@ -19,7 +19,7 @@ public interface LotteryDialingRepository extends CrudRepository<LotteryDialing,
      *  @param pageable
      * @return A list of lottery dialing or null if not eixst
      */
-    public Page<LotteryDialing> findAll(Pageable pageable);
+    Page<LotteryDialing> findAll(Pageable pageable);
 
     /**
      * Find lottery dialing is opening

@@ -199,7 +199,7 @@ aciPluginClass.plugins.aciTree_dom = {
                             if (match !== null) {
                                 break;
                             } else {
-                                continue;
+
                             }
                         }
                     } else {

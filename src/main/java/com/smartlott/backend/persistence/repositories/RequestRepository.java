@@ -19,18 +19,18 @@ public interface RequestRepository extends CrudRepository<Request, Long>{
      * Find all request
      * @return List of Request
      */
-    public List<Request> findAll();
+    List<Request> findAll();
 
     /**
      * Find all request given by user
      * @param requestOfUser
      * @return A list of request of user
      */
-    public List<Request> findByRequestOfUser(User requestOfUser);
+    List<Request> findByRequestOfUser(User requestOfUser);
 
-    public List<Request> findByHandleByUser(User handleByUser);
+    List<Request> findByHandleByUser(User handleByUser);
 
-    public List<Request> findByRequestDate(LocalDateTime requestDate);
+    List<Request> findByRequestDate(LocalDateTime requestDate);
 
-    public List<Request> findByRequestType(RequestType requestType);
+    List<Request> findByRequestType(RequestType requestType);
 }
