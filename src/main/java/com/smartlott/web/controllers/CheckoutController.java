@@ -10,7 +10,6 @@ import com.smartlott.enums.TransactionTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -154,7 +152,6 @@ public class CheckoutController {
         model.addAttribute("messages",messageDTOS);
         model.addAttribute("transaction",transaction);
         model.addAttribute("checkoutId", checkoutId);
-
 
         //Get current opened lottery dialing
         LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
