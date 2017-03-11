@@ -76,7 +76,7 @@
         var urlGetTransaction = /*[[@{/api/transaction/{transactionId}(transactionId=${checkoutId})}]]*/;
 
         getData(urlGetTransaction, showTransactionInfo, showCheckoutErrors);
-    })
+    });
 
     function showTransactionInfo(data) {
         var messages = data.messages;

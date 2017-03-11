@@ -184,7 +184,7 @@
                 categories[i] = {"id":sel.value,"title":sel.text}
             });
             data['categories'] = categories;
-            data['user'] = {'id':userId}
+            data['user'] = {'id':userId};
             //save or update
             saveOrupdateData(urlAddPost, type, data, showSuccessPost);
         });

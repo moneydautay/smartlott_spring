@@ -22,7 +22,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
      *
      * @return A list of notification or null if not exist
      */
-    public List<Notification> findAll();
+    List<Notification> findAll();
 
     /**
      * Find notifications by user
@@ -30,7 +30,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
      * @param user
      * @return A list of notification or null if not exist
      */
-    public List<Notification> findByUser(User user);
+    List<Notification> findByUser(User user);
 
 
     /**
@@ -40,7 +40,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
      * @param processed
      * @return A Notification or null if not found
      */
-    public Notification findByUserIdAndNotificationTypeUrlAndProcessed(Long userId,String notificationTypeUrl, boolean processed);
+    Notification findByUserIdAndNotificationTypeUrlAndProcessed(Long userId, String notificationTypeUrl, boolean processed);
 
     /**
      * Find notification by userId, user api url and processed
@@ -49,14 +49,14 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
      * @param processed
      * @return A notification or null if not found
      */
-    public Notification findByUserIdAndNotificationTypeApiUrlAndProcessed(long userId, String notificationTypeApiUrl, boolean processed);
+    Notification findByUserIdAndNotificationTypeApiUrlAndProcessed(long userId, String notificationTypeApiUrl, boolean processed);
 
     /**
      * Find notifications by user id
      * @param userId
      * @return A list of notification or null if not exist
      */
-    public List<Notification> findByUserId(long userId);
+    List<Notification> findByUserId(long userId);
 
     List<Notification> findByUserIdAndProcessed(long userId, boolean processed);
 

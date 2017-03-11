@@ -19,12 +19,12 @@ public interface UserLogsRepository extends CrudRepository<UserLogs, Long>{
      * @param user
      * @return A list UserLogs
      */
-    public List<UserLogs> findByUser(User user);
+    List<UserLogs> findByUser(User user);
 
     /**
      * Find a list UserLogs by createdDate given by user
      * @param createdDate
      * @return A list UserLogs
      */
-    public List<UserLogs> findByCreatedDate(LocalDateTime createdDate);
+    List<UserLogs> findByCreatedDate(LocalDateTime createdDate);
 }

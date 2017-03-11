@@ -15,19 +15,19 @@ import java.util.Map;
 @Repository
 public interface PerfectMoneyRepository {
 
-    public String transferMoney(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
+    String transferMoney(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
 
-    public String transferMoneyWithVerification(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
+    String transferMoneyWithVerification(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
 
-    public String transferMoneyWithProtectionCode(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
+    String transferMoneyWithProtectionCode(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
 
-    public String verifyAccount(String accountId, String password, String account) throws PerfectMoneyException;
+    String verifyAccount(String accountId, String password, String account) throws PerfectMoneyException;
 
-    public String getTransferHistory(PerfectMoneyHistoryFilter perfectMoneyHistoryFilter) throws PerfectMoneyException;
+    String getTransferHistory(PerfectMoneyHistoryFilter perfectMoneyHistoryFilter) throws PerfectMoneyException;
 
-    public String getAccountBalance(String accountId, String password) throws PerfectMoneyException;
+    String getAccountBalance(String accountId, String password) throws PerfectMoneyException;
 
-    public String getExchangeRates(String currency) throws PerfectMoneyException;
+    String getExchangeRates(String currency) throws PerfectMoneyException;
 
 	Map<String, String> transferMoneyToMap(PerfectMoneyDetails perfectMoneyDetails) throws PerfectMoneyException;
 }

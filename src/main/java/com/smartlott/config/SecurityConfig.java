@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .and()
                 .rememberMe()
                 .rememberMeCookieName("REMEMBER_ME_SMARTLOTT")
-                .tokenValiditySeconds(31536000);;
+                .tokenValiditySeconds(31536000);
     }
 
     @Autowired

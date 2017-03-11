@@ -17,7 +17,7 @@ public interface SecurityTokenRepository extends CrudRepository<SecurityToken, L
      * @param token
      * @return A security token or null if not founds
      */
-    public SecurityToken findByToken(String token);
+    SecurityToken findByToken(String token);
 
     /**
      * Find security token by user id

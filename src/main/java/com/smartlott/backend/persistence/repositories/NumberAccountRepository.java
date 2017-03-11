@@ -22,7 +22,7 @@ public interface NumberAccountRepository extends CrudRepository<NumberAccount, L
      * @param user
      * @return Returns A list of number account of User or null if not found
      */
-    public List<NumberAccount> findByUser(User user);
+    List<NumberAccount> findByUser(User user);
 
 
     /**
@@ -31,7 +31,7 @@ public interface NumberAccountRepository extends CrudRepository<NumberAccount, L
      * @param numberAccountType
      * @return Returns a number account of user or null if not found
      */
-    public NumberAccount findByUserAndNumberAccountType(User user, NumberAccountType numberAccountType);
+    NumberAccount findByUserAndNumberAccountType(User user, NumberAccountType numberAccountType);
 
     /**
      * Find all number account by username

@@ -10,14 +10,14 @@ jQuery(document).ready(function ($) {
         $('.box-choosing-number').show();
         pos = $(this).position();
         $('.box-choosing-number').css('top',pos.top + 50);
-    })
+    });
 
     $('.box-choosing-number li').click(function () {
         var chooseing_number = $(this).html();
         $('#'+current_lot_id).val(chooseing_number);
         $('.box-choosing-number').hide();
         $('#'+current_lot_id).removeClass('invalid-input-lot');
-    })
+    });
 
     $('.numeric-buying-lottery').change(function () {
         $('#numeric-needed-lottery').hide();
@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
             i++;
         }
         $('.box-btn-control-buying-lot').show();
-    })
+    });
 
     
     $('#btn-cancel').click(function () {
@@ -55,7 +55,7 @@ jQuery(document).ready(function ($) {
             $('.box-btn-control-buying-lot').hide();
         }
 
-    })
+    });
 
     
     $('#btn-buying-lottery').click(function () {
@@ -114,7 +114,7 @@ jQuery(document).ready(function ($) {
             }
     })
 
-})
+});
 
 function concatLottery(orderNumber) {
     var boxNumericLottery = $('.box-numeric-lottery');
@@ -129,7 +129,7 @@ function concatLottery(orderNumber) {
 
 function createArrLottery(orderNumber, lotteryTypeId=1){
     var boxNumericLottery = $('.box-numeric-lottery');
-    var lottery= {}
+    var lottery= {};
     lottery['coupleOne'] = $(".box-numeric-lottery #lot-"+orderNumber+"-0").val();
     lottery['coupleTwo'] = $(".box-numeric-lottery #lot-"+orderNumber+"-1").val();
     lottery['coupleThree'] = $(".box-numeric-lottery #lot-"+orderNumber+"-2").val();

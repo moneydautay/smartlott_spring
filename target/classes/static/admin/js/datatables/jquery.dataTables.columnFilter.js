@@ -30,8 +30,8 @@
         //var sTableId = "table";
         var sRangeFormat = "From {from} to {to}";
         //Array of the functions that will override sSearch_ parameters
-        var afnSearch_ = new Array();
-        var aiCustomSearch_Indexes = new Array();
+        var afnSearch_ = [];
+        var aiCustomSearch_Indexes = [];
 
         var oFunctionTimeout = null;
 
@@ -48,7 +48,7 @@
             ///<param name="bIgnoreEmpty" type="bool">Ignore empty cells</param>
 
             // check that we have a column id
-            if (typeof iColumn == "undefined") return new Array();
+            if (typeof iColumn == "undefined") return [];
 
             // by default we only wany unique data
             if (typeof bUnique == "undefined") bUnique = true;
@@ -68,7 +68,7 @@
             else aiRows = oSettings.aiDisplayMaster; // all row numbers
 
             // set up data array    
-            var asResultData = new Array();
+            var asResultData = [];
 
             for (var i = 0, c = aiRows.length; i < c; i++) {
                 var iRow = aiRows[i];
@@ -76,10 +76,10 @@
                 var sValue = aData[iColumn];
 
                 // ignore empty values?
-                if (bIgnoreEmpty == true && sValue.length == 0) continue;
+                if (bIgnoreEmpty == true && sValue.length == 0)
 
                 // ignore unique values?
-                else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
+                else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1)
 
                 // else push the value onto the result data array
                 else asResultData.push(sValue);
@@ -350,7 +350,7 @@
                     if (escape(aData[j]) == currentFilter
                         || escape(aData[j]) == escape(currentFilter)
                         )
-                        selected = 'selected '
+                        selected = 'selected ';
                     r += '<option ' + selected + ' value="' + escape(aData[j]) + '">' + aData[j] + '</option>';
                 }
                 else {
@@ -434,8 +434,7 @@
             var numCol = Math.floor(iLen / numRow);
             if (iLen % numRow > 0) {
                 numCol = numCol + 1;
-            };
-
+            }
             //count how many column should be generated and split the div size
             var divWidth = 100 / numCol - 2;
 
@@ -607,7 +606,7 @@
 
             if (!oTable.fnSettings().oFeatures.bFilter)
                 return;
-            asInitVals = new Array();
+            asInitVals = [];
 
             var aoFilterCells = oTable.fnSettings().aoFooter[0];
 
@@ -719,7 +718,7 @@
                 var fnSearch_ = function () {
                     var id = oTable.attr("id");
                     return $("#" + id + "_range_from_" + aiCustomSearch_Indexes[j]).val() + properties.sRangeSeparator + $("#" + id + "_range_to_" + aiCustomSearch_Indexes[j]).val()
-                }
+                };
                 afnSearch_.push(fnSearch_);
             }
 

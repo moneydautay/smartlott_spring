@@ -108,10 +108,14 @@
     jQuery(document).ready(function ($) {
         /*<![CDATA[*/
         var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
-        var url = [[@{/api/bonus/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        var url = [[@{
+            /api/
+            bonus / {userId}(userId =${#authorization.getAuthentication().getPrincipal().id}, size = 10, page =);
+        }
+        ]]
         /*]]>*/
         pagination(url,showBonus);
-    });
+    });;
     function showBonus(data) {
         var contentTable = $('#contentTable');
         contentTable.html('');

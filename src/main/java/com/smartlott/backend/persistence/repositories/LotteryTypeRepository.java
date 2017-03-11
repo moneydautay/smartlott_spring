@@ -17,5 +17,5 @@ public interface LotteryTypeRepository extends CrudRepository<LotteryType, Integ
      * @return A list of lottery type or null if not eixst
      * @see LotteryType
      */
-    public List<LotteryType> findAll();
+    List<LotteryType> findAll();
 }

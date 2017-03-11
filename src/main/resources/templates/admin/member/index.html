@@ -110,7 +110,7 @@
         $('#filterPost').submit(function (e) {
             e.preventDefault();
             doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
-        })
+        });
 
         //do action
         doActionPost();
@@ -199,7 +199,7 @@
             _str+='</td>';
 
             _str+='<td>';
-            _str+= item.cash
+            _str+= item.cash;
             _str+='</td>';
 
             _str+='<td>';

@@ -107,9 +107,7 @@ public class PostService {
     public boolean existSlug(String slug) {
         Post post = postRepository.findBySlug(slug);
         System.out.println(post);
-        if(post != null)
-            return true;
-        return false;
+        return post != null;
     }
 
     @Transactional

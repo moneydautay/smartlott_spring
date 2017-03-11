@@ -13,7 +13,7 @@ function showProvinceToSelect(data, selectId) {
 
     var select = $('#'+selectId);
     select.html('');
-    select.append('<option value="-1">Chọn tỉnh/thành phố</option>')
+    select.append('<option value="-1">Chọn tỉnh/thành phố</option>');
     $.each(data, function (index, country) {
         var strOp = '';
         strOp += '<option value="'+country.id+'">';

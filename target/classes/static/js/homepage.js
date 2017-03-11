@@ -24,7 +24,7 @@ function showSliderImage(data){
         strHtml += '</p>';
 
         strHtml += '<p>';
-        strHtml += '<a class="btn btn-lg btn-primary" href="'+item.url+'" role="button">Learn more</a>'
+        strHtml += '<a class="btn btn-lg btn-primary" href="'+item.url+'" role="button">Learn more</a>';
         strHtml += '</p>';
 
         strHtml += '</div>';

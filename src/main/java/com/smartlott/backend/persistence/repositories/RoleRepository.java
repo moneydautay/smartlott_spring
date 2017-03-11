@@ -16,6 +16,6 @@ public interface RoleRepository extends CrudRepository<Role, Integer>{
      *
      * @return
      */
-    public List<Role> findAll();
+    List<Role> findAll();
 
 }

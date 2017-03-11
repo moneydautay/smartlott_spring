@@ -2437,7 +2437,7 @@
               if (wordStart == cur.ch && lineNum == cur.line &&
                   wordEnd == wordStart + dir) {
                 // We started at the end of a word. Find the next one.
-                continue;
+
               } else {
                 return {
                   from: Math.min(wordStart, wordEnd + 1),
@@ -3630,8 +3630,8 @@
       macroModeState.isMacroPlaying = true;
       for (var i = 0, len = keyBuffer.length; i < len; i++) {
         CodeMirror.Vim.handleKey(cm, keyBuffer[i]);
-      };
-      macroModeState.isMacroPlaying = false;
+      }
+        macroModeState.isMacroPlaying = false;
     }
 
     function logKey(macroModeState, key) {
@@ -3751,9 +3751,8 @@
         exitInsertMode(cm);
       }
       macroModeState.inReplay = false;
-    };
-
-    function repeatLastInsertModeChanges(cm, repeat, macroModeState) {
+    }
+      function repeatLastInsertModeChanges(cm, repeat, macroModeState) {
       var lastChange = macroModeState.lastInsertModeChanges;
       function keyHandler(binding) {
         if (typeof binding == 'string') {

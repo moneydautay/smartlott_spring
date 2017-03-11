@@ -20,7 +20,7 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
      * @param pageable
      * @return Page of transaction or null if not existed
      */
-    public Page<Transaction> findByOfUserId(long ofUserId, Pageable pageable);
+    Page<Transaction> findByOfUserId(long ofUserId, Pageable pageable);
 
     /**
      * Find transactions of user given by

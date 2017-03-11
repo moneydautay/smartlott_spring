@@ -26,8 +26,6 @@ public class ExternalHistoryAccountService {
      */
     public boolean existed(String externalTransId){
         ExternalHistoryAccount historyAccount = historyAccountRepository.findByExternalTransId(externalTransId);
-        if(historyAccount != null)
-            return true;
-        return false;
+        return historyAccount != null;
     }
 }

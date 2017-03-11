@@ -69,10 +69,14 @@
     jQuery(document).ready(function ($) {
 
         /*<![CDATA[*/
-            var url = [[@{/api/lottery-dialing(size=10,page=)}]];
-            pagination(url, showLotteryDialing);
+        var url = [[@{
+            /api/
+            lottery - dialing(size = 10, page =);
+        }
+        ]]
+        pagination(url, showLotteryDialing);
         /*]]>*/
-    });
+    });;
 
     function showLotteryDialing(data) {
         var closedUrl = /*[[@{/stl-admin/lottery/lottery-dialing/close}]]*/;

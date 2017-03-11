@@ -19,8 +19,8 @@ public interface FeaturedSliderImageRepository extends CrudRepository<FeaturedSl
      * @param featuredSlider
      * @return A list of featured slider images
      */
-    public List<FeaturedSliderImage> findByFeaturedSlider(FeaturedSlider featuredSlider);
+    List<FeaturedSliderImage> findByFeaturedSlider(FeaturedSlider featuredSlider);
 
-    public Set<FeaturedSliderImage> findAll();
+    Set<FeaturedSliderImage> findAll();
 
 }

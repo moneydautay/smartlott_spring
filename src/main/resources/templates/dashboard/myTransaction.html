@@ -145,7 +145,11 @@
     jQuery(document).ready(function ($) {
         /*<![CDATA[*/
         var userId = [[${#authorization.getAuthentication().getPrincipal().id}]];
-        var url = [[@{/api/transaction/ofuser/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id},size=10,page=)}]];
+        var url = [[@{
+            /api/
+            transaction / ofuser / {userId}(userId =${#authorization.getAuthentication().getPrincipal().id}, size = 10, page =);
+        }
+        ]]
         /*]]>*/
         pagination(url, showTransaction);
 
@@ -179,7 +183,7 @@
 
             pagination(url, showTransaction);
         });
-    });
+    });;
 
     function showTransaction(data) {
         var contentTable = $('#contentTable');
