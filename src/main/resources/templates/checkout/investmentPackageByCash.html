@@ -55,10 +55,10 @@
                                 <select id="userCash" class="form-control" name="userCash"></select>
                             </div>
                             <div class="clearfix"></div>
-                            <div class="form-group col-md-6">
+                          <!--  <div class="form-group col-md-6">
                                 <label th:text="#{order.transaction.code.text}"></label>
                                 <input type="text" id="securityToken" name="securityToken" class="form-control" data-fv-field="securityToken"/>
-                            </div>
+                            </div>-->
                             <div class="clearfix"></div>
                             <div class="form-group">
                                 <button class="btn btn-primary" th:text="#{order.confirm.button.text}"></button>
@@ -104,6 +104,7 @@
         var msgUserCashInvalid = /*[[#{order.transaction.user.cash.not.enough.text}]]*/;
         var msgConfirmResendSecurityToken= /*[[#{order.transaction.resend.security.token.text}]]*/;
         var msgInfoResendSecurityTokenSuccess= /*[[#{order.transaction.resend.security.token.success.text}]]*/;
+        var cashConFirm = /*[[#{order.transaction.confirm.cash.text}]]*/;
 
         getData(urlGetTransaction, showTransactionInfo, showMessages);
 
@@ -141,6 +142,7 @@
             var urlCheckoutCash = $(this).attr('action');
             var transactionId = /*[[${checkoutId}]]*/;
             var availableCash = $('option:selected','#userCash').attr('attrValue');
+            cashConFirm += ' ' + $('option:selected','#userCash').attr('name');
             var totalAmount = $('#amount').val();
 
             if(totalAmount > availableCash) {
@@ -157,7 +159,9 @@
             data['userCashId'] = $('#userCash').val();
             data['securityToken'] = $('#securityToken').val();
 
-            saveOrupdateData(urlCheckoutCash, 'POST', data , showCheckoutCashSuccess);
+            //confirm checkout cash
+            if(confirm(cashConFirm))
+                saveOrupdateData(urlCheckoutCash, 'POST', data , showCheckoutCashSuccess);
 
         });
 
@@ -223,13 +227,15 @@
         var userCash = $('#userCash');
         userCash.html('');
         $.each(data, function(index, usc) {
+            if(usc.cash.withdraw){
+                var optStr = '';
+                optStr += '<option value="'+ usc.id +'" attrValue="' + usc.value + '" name="' + usc.cash.name + '">';
+                optStr += usc.cash.name + ': ' + usc.value + '';
+                optStr += '</option>';
 
-            var optStr = '';
-            optStr += '<option value="'+ usc.id +'" attrValue="' + usc.value + '">';
-            optStr += usc.cash.name + ': ' + usc.value + '';
-            optStr += '</option>';
+                userCash.append(optStr);
+            }
 
-            userCash.append(optStr);
         })
     }
 

@@ -13,4 +13,9 @@ import java.util.List;
 public interface LotteryRepository extends CrudRepository<Lottery, Long>{
 
     public List<Lottery> findAll();
+
+    List<Lottery> findByLotteryDetailLotteryDialing_Id(long id);
+
+    List<Lottery> findByLotteryDetailLotteryDialing_IdAndEnabled(long id, boolean b);
+
 }

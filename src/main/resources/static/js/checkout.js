@@ -18,17 +18,18 @@ function showTransactionInfo(data, msg = null) {
     var lotteryDetails = data.lotteryDetails;
     var orderDetail = $('#orderDetail');
 
-    $.each(lotteryDetails, function (index, lottery) {
-        var strNumberLottery = lottery.lottery.coupleOne + '-' + lottery.lottery.coupleTwo
-            + '-' + lottery.lottery.coupleThree + '-' + lottery.lottery.coupleFour
-            + '-' + lottery.lottery.coupleFive + '-' + lottery.lottery.coupleSix;
-        var price = lottery.lottery.lotteryType.price;
+    $.each(lotteryDetails[0]['lotteries'], function (index, lottery) {
+        console.log(lottery);
+        var strNumberLottery = lottery.coupleOne + '-' + lottery.coupleTwo
+            +'-'+lottery.coupleThree+'-'+lottery.coupleFour
+            +'-'+lottery.coupleFive+'-'+lottery.coupleSix;
+        var price = lottery.lotteryType.price;
         strRow = '<tr>';
-        strRow += '<td>' + (index + 1) + '</td>';
-        strRow += '<td>#' + (lottery.id) + '</td>';
-        strRow += '<td>' + strNumberLottery + '</td>';
-        strRow += '<td class="text-right">$' + price + '</td>';
-        strRow += '</tr>';
+        strRow+='<td>'+(index+1)+'</td>';
+        strRow+='<td>#'+(lottery.id)+'</td>';
+        strRow+='<td>'+strNumberLottery+'</td>';
+        strRow+='<td class="text-right">$'+price+'</td>';
+        strRow+='</tr>';
         orderDetail.append(strRow);
     });
 

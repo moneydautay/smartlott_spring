@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -40,6 +41,10 @@ public class Lottery implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_type_id")
     private LotteryType lotteryType;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    private LotteryDetail lotteryDetail;
 
     private boolean enabled = false;
 
@@ -129,6 +134,14 @@ public class Lottery implements Serializable{
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public LotteryDetail getLotteryDetail() {
+        return lotteryDetail;
+    }
+
+    public void setLotteryDetail(LotteryDetail lotteryDetail) {
+        this.lotteryDetail = lotteryDetail;
     }
 
     @Override

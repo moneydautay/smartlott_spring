@@ -3,6 +3,7 @@ package com.smartlott.backend.persistence.domain.backend;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by greenlucky on 1/8/17.
@@ -15,9 +16,8 @@ public class LotteryDetail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "lottery_id")
-    private Lottery lottery;
+    @OneToMany(mappedBy = "lotteryDetail")
+    private List<Lottery> lotteries;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -27,13 +27,10 @@ public class LotteryDetail {
     @Column(name = "ip_address")
     private String ipAddress;
 
-    public LotteryDetail() {
-    }
+    @ManyToOne
+    private LotteryDialing lotteryDialing;
 
-    public LotteryDetail(Lottery lottery, Transaction transaction, String ipAddress) {
-        this.lottery = lottery;
-        this.transaction = transaction;
-        this.ipAddress = ipAddress;
+    public LotteryDetail() {
     }
 
     public long getId() {
@@ -44,12 +41,12 @@ public class LotteryDetail {
         this.id = id;
     }
 
-    public Lottery getLottery() {
-        return lottery;
+    public List<Lottery> getLotteries() {
+        return lotteries;
     }
 
-    public void setLottery(Lottery lottery) {
-        this.lottery = lottery;
+    public void setLotteries(List<Lottery> lotteries) {
+        this.lotteries = lotteries;
     }
 
     public Transaction getTransaction() {
@@ -68,11 +65,19 @@ public class LotteryDetail {
         this.ipAddress = ipAddress;
     }
 
+    public LotteryDialing getLotteryDialing() {
+        return lotteryDialing;
+    }
+
+    public void setLotteryDialing(LotteryDialing lotteryDialing) {
+        this.lotteryDialing = lotteryDialing;
+    }
+
     @Override
     public String toString() {
         return "LotteryDetail{" +
                 "id=" + id +
-                ", lottery=" + lottery +
+                ", lotteries=" + lotteries +
                 ", ipAddress='" + ipAddress + '\'' +
                 '}';
     }

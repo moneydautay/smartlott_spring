@@ -2,7 +2,6 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,12 +21,6 @@ public class LotteryDialingResult implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Length(min = 2, max = 2)
-    private String coupleNumber;
-
-    @Length(max = 1, min = 1)
-    private int position;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_dialing")
     private LotteryDialing lotteryDialing;
@@ -43,6 +36,8 @@ public class LotteryDialingResult implements Serializable{
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createDate;
 
+    private Lottery lottery;
+
     public LotteryDialingResult() {
     }
 
@@ -52,22 +47,6 @@ public class LotteryDialingResult implements Serializable{
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getCoupleNumber() {
-        return coupleNumber;
-    }
-
-    public void setCoupleNumber(String coupleNumber) {
-        this.coupleNumber = coupleNumber;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     public LotteryDialing getLotteryDialing() {
@@ -102,12 +81,18 @@ public class LotteryDialingResult implements Serializable{
         this.createDate = createDate;
     }
 
+    public Lottery getLottery() {
+        return lottery;
+    }
+
+    public void setLottery(Lottery lottery) {
+        this.lottery = lottery;
+    }
+
     @Override
     public String toString() {
         return "LotteryDialingResult{" +
                 "id=" + id +
-                ", coupleNumber='" + coupleNumber + '\'' +
-                ", position=" + position +
                 ", lotteryDialing=" + lotteryDialing +
                 ", ofUser=" + ofUser +
                 ", reward=" + reward +

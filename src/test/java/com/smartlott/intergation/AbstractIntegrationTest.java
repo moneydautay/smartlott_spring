@@ -125,12 +125,11 @@ public abstract class AbstractIntegrationTest {
         return createAddress(testName.getMethodName(), testName.getMethodName(), testName.getMethodName());
     }
 
-    public IncomeComponent createIncomeComponent(User user, String name, String description, double value ,boolean jeckpots){
+    public IncomeComponent createIncomeComponent(User user, String name, String description, double value){
         IncomeComponent incomeComponent = new IncomeComponent();
         incomeComponent.setCreateBy(user);
         incomeComponent.setName(name);
         incomeComponent.setDescription(description);
-        incomeComponent.setJackpots(jeckpots);
         incomeComponent.setValue(value);
         return incomeComponentRepository.save(incomeComponent);
     }

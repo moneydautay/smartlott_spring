@@ -76,9 +76,9 @@ public class CheckoutRestController {
         //initial messageDTOS array
         messageDTOS = new ArrayList<>();
 
-        SecurityToken securityToken = securityTokenSevice.checkValidToken(transaction.getSecurityToken(), messageDTOS, locale);
+       /* SecurityToken securityToken = securityTokenSevice.checkValidToken(transaction.getSecurityToken(), messageDTOS, locale);
         if(securityToken==null)
-            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);*/
 
         Transaction localTransaction = transactionService.getOne(transaction.getId());
         if(invalidTransaction(transaction.getId(), localTransaction, messageDTOS ,locale)){
@@ -106,8 +106,8 @@ public class CheckoutRestController {
         LOGGER.info("Updated transaction {} ", localTransaction);
 
         //delete security token
-        securityTokenSevice.remove(securityToken.getId());
-        LOGGER.debug("Removed security token {} ",localTransaction.getSecurityToken());
+       /* securityTokenSevice.remove(securityToken.getId());
+        LOGGER.debug("Removed security token {} ",localTransaction.getSecurityToken());*/
 
 
         TransactionType type = null;
@@ -180,11 +180,11 @@ public class CheckoutRestController {
     private void activeLotteries(Set<LotteryDetail> lotteryDetails) {
         //update lottery
         for (LotteryDetail lotteryDetail: lotteryDetails) {
-            Lottery lottery = lotteryDetail.getLottery();
-            LOGGER.info("Updating lottery {} ", lottery);
-            lottery.setEnabled(true);
-            lottery = lotterySerivce.update(lottery);
-            LOGGER.info("Updated lottery {} ", lottery);
+            List<Lottery> lotteries = lotteryDetail.getLotteries();
+            LOGGER.info("Updating lottery {} ", lotteries);
+            lotteries.forEach(lottery -> lottery.setEnabled(true));
+            lotterySerivce.update(lotteries);
+            LOGGER.info("Updated lottery {} ", lotteries);
         }
     }
 

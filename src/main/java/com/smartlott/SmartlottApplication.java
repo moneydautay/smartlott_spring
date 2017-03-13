@@ -368,6 +368,54 @@ public class SmartlottApplication implements CommandLineRunner{
 	}
 
 	public void createIncomeComponentAndRewardUtils(User user){
+
+		//create reward
+		Reward jackpots = new Reward();
+		jackpots.setName("Jeckpots");
+		jackpots.setAccumulation(true);
+		jackpots.setValue(1000000);
+		jackpots.setDefaultNumericReward(0);
+		jackpots.setCoupleNumber(6);
+		jackpots = rewardService.create(jackpots);
+		LOGGER.info("Create reward {}", jackpots);
+
+		Reward firstReward = new Reward();
+		firstReward.setName("firstReward");
+		firstReward.setValue(20000);
+		firstReward.setDefaultNumericReward(0);
+		firstReward.setCoupleNumber(5);
+		rewardService.create(firstReward);
+
+		Reward secondReward = new Reward();
+		secondReward.setName("secondReward");
+		secondReward.setValue(1000);
+		secondReward.setDefaultNumericReward(0);
+		secondReward.setCoupleNumber(4);
+		rewardService.create(secondReward);
+
+		Reward thirdReward = new Reward();
+		thirdReward.setName("thirdReward");
+		thirdReward.setValue(100);
+		thirdReward.setDefaultNumericReward(0);
+		thirdReward.setCoupleNumber(3);
+		rewardService.create(thirdReward);
+
+		Reward fourReward = new Reward();
+		fourReward.setName("fourReward");
+		fourReward.setValue(20);
+		fourReward.setDefaultNumericReward(0);
+		fourReward.setCoupleNumber(2);
+		rewardService.create(fourReward);
+
+		Reward fiveReward = new Reward();
+		fiveReward.setName("fourReward");
+		fiveReward.setValue(5);
+		fiveReward.setDefaultNumericReward(0);
+		fiveReward.setCoupleNumber(1);
+		rewardService.create(fiveReward);
+
+
+
 		IncomeComponent incomeComponent1 = new IncomeComponent();
 		incomeComponent1.setName("Hoa hồng bán hàng F1");
 		incomeComponent1.setValue(20);
@@ -385,7 +433,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent2 = componentService.create(incomeComponent2);
 
 		IncomeComponent incomeComponent3 = new IncomeComponent();
-		incomeComponent3.setJackpots(true);
 		incomeComponent3.setName("Hoa hồng bán hàng F3");
 		incomeComponent3.setValue(2);
 		incomeComponent3.setCreateBy(user);
@@ -394,7 +441,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent3 = componentService.create(incomeComponent3);
 
 		IncomeComponent incomeComponent4 = new IncomeComponent();
-		incomeComponent4.setJackpots(true);
 		incomeComponent4.setName("Hoa hồng bán hàng F4");
 		incomeComponent4.setValue(2);
 		incomeComponent4.setCreateBy(user);
@@ -403,7 +449,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent4 = componentService.create(incomeComponent4);
 
 		IncomeComponent incomeComponent5 = new IncomeComponent();
-		incomeComponent5.setJackpots(true);
 		incomeComponent5.setName("Hoa hồng bán hàng F5");
 		incomeComponent5.setValue(2);
 		incomeComponent5.setCreateBy(user);
@@ -412,7 +457,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent5 = componentService.create(incomeComponent5);
 
 		IncomeComponent incomeComponent6 = new IncomeComponent();
-		incomeComponent6.setJackpots(true);
 		incomeComponent6.setName("Hoa hồng bán hàng F6");
 		incomeComponent6.setValue(2);
 		incomeComponent6.setCreateBy(user);
@@ -421,7 +465,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent6 = componentService.create(incomeComponent6);
 
 		IncomeComponent incomeComponent7 = new IncomeComponent();
-		incomeComponent7.setJackpots(true);
 		incomeComponent7.setName("Hoa hồng bán hàng F7");
 		incomeComponent7.setValue(2);
 		incomeComponent7.setCreateBy(user);
@@ -431,17 +474,18 @@ public class SmartlottApplication implements CommandLineRunner{
 
 
 		IncomeComponent ja = new IncomeComponent();
-		ja.setJackpots(true);
 		ja.setName("Giải đặc biệt");
-		ja.setValue(46);
+		ja.setReward(jackpots);
+		ja.setValue(40);
 		ja.setCreateBy(user);
 		ja.setEnabled(true);
-		ja.setDescription("D");
+		ja.setDescription("Giải đặc biệt");
 		ja = componentService.create(ja);
 
 		IncomeComponent oneth = new IncomeComponent();
 		oneth.setName("Giải nhất");
-		oneth.setValue(3);
+		oneth.setReward(firstReward);
+		oneth.setValue(6);
 		oneth.setCreateBy(user);
 		oneth.setEnabled(true);
 		oneth.setDescription("Giải nhất");
@@ -449,7 +493,8 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		IncomeComponent second = new IncomeComponent();
 		second.setName("Giải nhì");
-		second.setValue(3);
+		second.setReward(secondReward);
+		second.setValue(4);
 		second.setCreateBy(user);
 		second.setEnabled(true);
 		second.setDescription("Giải nhì");
@@ -457,6 +502,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		IncomeComponent third = new IncomeComponent();
 		third.setName("Giải ba");
+		third.setReward(thirdReward);
 		third.setValue(4);
 		third.setCreateBy(user);
 		third.setEnabled(true);
@@ -465,60 +511,77 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		IncomeComponent four = new IncomeComponent();
 		four.setName("Giải tư");
-		four.setValue(4);
+		four.setReward(fourReward);
+		four.setValue(3);
 		four.setCreateBy(user);
 		four.setEnabled(true);
 		four.setDescription("Giải tư");
 		four = componentService.create(four);
 
 		IncomeComponent five = new IncomeComponent();
-		five.setName("Quản lý web, server");
-		five.setValue(5);
+		five.setName("Giải năm");
+		five.setReward(fiveReward);
+		five.setValue(3);
 		five.setCreateBy(user);
 		five.setEnabled(true);
-		five.setDescription("Quản lý web, server");
+		five.setDescription("Giải năm");
 		five = componentService.create(five);
 
+		IncomeComponent management = new IncomeComponent();
+		management.setName("Quản lý web, server");
+		management.setValue(5);
+		management.setCreateBy(user);
+		management.setEnabled(true);
+		management.setDescription("Quản lý web, server");
+		management = componentService.create(management);
 
-		//create reward
-		Reward jeckpots = new Reward();
-		jeckpots.setName("Jeckpots");
-		jeckpots.setValue(1000000);
-		jeckpots.setIncomeComponent(ja);
-		jeckpots.setDefaultNumericReward(0);
-		jeckpots.setCoupleNumber(6);
-		rewardService.create(jeckpots);
+		//Bonus investment
+		IncomeComponent agent = new IncomeComponent();
+		agent.setName("Agent");
+		agent.setValue(0);
+		agent.setCreateBy(user);
+		agent.setEnabled(true);
+		agent.setDescription("The bonus agent investment package");
+		agent = componentService.create(agent);
 
-		Reward firstReward = new Reward();
-		firstReward.setName("firstReward");
-		firstReward.setValue(1500);
-		firstReward.setIncomeComponent(oneth);
-		firstReward.setDefaultNumericReward(0);
-		firstReward.setCoupleNumber(5);
-		rewardService.create(firstReward);
+		//Bonus investment
+		IncomeComponent invest = new IncomeComponent();
+		invest.setName("Invest");
+		invest.setValue(0.01);
+		invest.setCreateBy(user);
+		invest.setEnabled(true);
+		invest.setDescription("The bonus invest investment package");
+		componentService.create(invest);
 
-		Reward secondReward = new Reward();
-		secondReward.setName("secondReward");
-		secondReward.setValue(120);
-		secondReward.setIncomeComponent(second);
-		secondReward.setDefaultNumericReward(0);
-		secondReward.setCoupleNumber(4);
-		rewardService.create(secondReward);
+		//Bonus investment
+		invest.setId(0);
+		invest.setName("Pro Invest");
+		invest.setValue(0.1);
+		componentService.create(invest);
 
-		Reward thirdReward = new Reward();
-		thirdReward.setName("thirdReward");
-		thirdReward.setValue(20);
-		thirdReward.setIncomeComponent(third);
-		thirdReward.setDefaultNumericReward(10);
-		thirdReward.setCoupleNumber(3);
-		rewardService.create(thirdReward);
-		Reward fourReward = new Reward();
-		fourReward.setName("fourReward");
-		fourReward.setValue(5);
-		firstReward.setDefaultNumericReward(10);
-		fourReward.setIncomeComponent(five);
-		fourReward.setCoupleNumber(2);
-		rewardService.create(fourReward);
+		//Bonus investment
+		invest.setId(0);
+		invest.setName("Sliver Invest");
+		invest.setValue(0.24);
+		componentService.create(invest);
+
+		//Bonus investment
+		invest.setId(0);
+		invest.setName("Gold Invest");
+		invest.setValue(0.50);
+		componentService.create(invest);
+
+		//Bonus investment
+		invest.setId(0);
+		invest.setName("Platinum Invest");
+		invest.setValue(0.75);
+		componentService.create(invest);
+
+		//Bonus investment
+		invest.setId(0);
+		invest.setName("Diamond Invest");
+		invest.setValue(1.4);
+		componentService.create(invest);
 
 		//create level of network
 		NetworkLevel level1 = new NetworkLevel(1, 1, "", incomeComponent1);

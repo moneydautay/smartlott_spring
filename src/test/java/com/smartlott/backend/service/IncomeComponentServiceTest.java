@@ -30,8 +30,6 @@ public class IncomeComponentServiceTest extends AbstractIntegrationTest{
     @Rule
     public TestName testName = new TestName();
 
-
-
     @Before
     public void before() throws Exception{
         Assert.assertNotNull(incomeComponentService);
@@ -45,7 +43,6 @@ public class IncomeComponentServiceTest extends AbstractIntegrationTest{
         IncomeComponent incomeComponent = new IncomeComponent();
         incomeComponent.setName(testName.getMethodName());
         incomeComponent.setDescription("This is test create a income component");
-        incomeComponent.setJackpots(true);
         incomeComponent.setCreateBy(user);
 
         incomeComponent = incomeComponentService.create(incomeComponent);
@@ -62,7 +59,6 @@ public class IncomeComponentServiceTest extends AbstractIntegrationTest{
         IncomeComponent incomeComponent = new IncomeComponent();
         incomeComponent.setName(testName.getMethodName());
         incomeComponent.setDescription("This is test create a income component");
-        incomeComponent.setJackpots(true);
         incomeComponent.setCreateBy(user);
 
         incomeComponent = incomeComponentService.create(incomeComponent);
@@ -85,7 +81,6 @@ public class IncomeComponentServiceTest extends AbstractIntegrationTest{
         IncomeComponent incomeComponent = new IncomeComponent();
         incomeComponent.setName(testName.getMethodName());
         incomeComponent.setDescription("This is test create a income component");
-        incomeComponent.setJackpots(true);
         incomeComponent.setCreateBy(user);
 
         incomeComponent = incomeComponentService.create(incomeComponent);

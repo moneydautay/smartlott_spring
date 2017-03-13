@@ -1,7 +1,10 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.SmartlottApplication;
-import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.domain.backend.IncomeComponent;
+import com.smartlott.backend.persistence.domain.backend.LotteryDialing;
+import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComponent;
+import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.intergation.AbstractIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,8 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -61,11 +62,11 @@ public class LotteryDialingHasIncomeComponentServiceTest extends AbstractIntegra
 
         Assert.assertNotNull(lotteryDialing);
 
-        incomeComponent1 = createIncomeComponent(user, testName.getMethodName()+"A", testName.getMethodName(), 47.7 ,true);
-        incomeComponent2 = createIncomeComponent(user, testName.getMethodName()+"B", testName.getMethodName(), 20 ,true);
-        incomeComponent3 = createIncomeComponent(user, testName.getMethodName()+"C", testName.getMethodName(), 10 ,true);
-        incomeComponent4 = createIncomeComponent(user, testName.getMethodName()+"D", testName.getMethodName(), 10 ,true);
-        incomeComponent5 = createIncomeComponent(user, testName.getMethodName()+"E", testName.getMethodName(), 12.3 ,true);
+        incomeComponent1 = createIncomeComponent(user, testName.getMethodName()+"A", testName.getMethodName(), 47.7 );
+        incomeComponent2 = createIncomeComponent(user, testName.getMethodName()+"B", testName.getMethodName(), 20 );
+        incomeComponent3 = createIncomeComponent(user, testName.getMethodName()+"C", testName.getMethodName(), 10 );
+        incomeComponent4 = createIncomeComponent(user, testName.getMethodName()+"D", testName.getMethodName(), 10 );
+        incomeComponent5 = createIncomeComponent(user, testName.getMethodName()+"E", testName.getMethodName(), 12.3);
 
 
         //insert new dialing
@@ -184,5 +185,15 @@ public class LotteryDialingHasIncomeComponentServiceTest extends AbstractIntegra
         LotteryDialingHasIncomeComponent item4 = dialingInCompService.getOne(4);
         aspectValue = price*incomeComponent4.getValue()/100;
         Assert.assertEquals(aspectValue, item4.getValue(),1);
+    }
+
+    @Test
+    public void getByIncomeComponentId() throws Exception {
+        List<LotteryDialingHasIncomeComponent> components = dialingInCompService.getByLotteryDialingId(1);
+
+        for (LotteryDialingHasIncomeComponent item : components) {
+            System.out.println(item);
+        }
+
     }
 }

@@ -27,11 +27,13 @@ public class IncomeComponent implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     private User modifyBy;
 
-    private boolean jackpots = false;
-
     private double value = 0.0;
 
     private boolean enabled = true;
+
+    @OneToOne
+    @JoinColumn(name = "reward_id")
+    private Reward reward;
 
     public IncomeComponent() {
     }
@@ -76,15 +78,6 @@ public class IncomeComponent implements Serializable{
         this.modifyBy = modifyBy;
     }
 
-    public boolean isJackpots() {
-        return jackpots;
-    }
-
-    public void setJackpots(boolean jeckpots) {
-        this.jackpots = jeckpots;
-    }
-
-
     public double getValue() {
         return value;
     }
@@ -101,6 +94,14 @@ public class IncomeComponent implements Serializable{
         this.enabled = enabled;
     }
 
+    public Reward getReward() {
+        return reward;
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
+    }
+
     @Override
     public String toString() {
         return "IncomeComponent{" +
@@ -109,9 +110,9 @@ public class IncomeComponent implements Serializable{
                 ", description='" + description + '\'' +
                 ", createBy=" + createBy +
                 ", modifyBy=" + modifyBy +
-                ", jeckpots=" + jackpots +
                 ", value=" + value +
-                ", enabled =" + enabled +
+                ", enabled=" + enabled +
+                ", reward=" + reward +
                 '}';
     }
 

@@ -38,7 +38,26 @@ public class LotterySerivce {
         return lotteryRepository.save(lottery);
     }
 
+    /**
+     * Updates lottery
+     * @param lotteries
+     * @return A lottery after update or null if occurs errors
+     */
+    @Transactional
+    public Iterable<Lottery> update(List<Lottery> lotteries) {
+        return lotteryRepository.save(lotteries);
+    }
+
     public List<Lottery> getAll() {
         return lotteryRepository.findAll();
+    }
+
+    public List<Lottery> getByLotteryDialingId(long id) {
+        return lotteryRepository.findByLotteryDetailLotteryDialing_IdAndEnabled(id, true);
+    }
+
+    @Transactional
+    public Iterable<Lottery> createNewLotteries(List<Lottery> lotteries) {
+        return lotteryRepository.save(lotteries);
     }
 }

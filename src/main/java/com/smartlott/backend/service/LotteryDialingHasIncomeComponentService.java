@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -57,8 +56,16 @@ public class LotteryDialingHasIncomeComponentService {
         return dialingIncomCompRepository.findByLotteryDialingId(lotteryDialingId, pageRequest(pageable));
     }
 
+    public List<LotteryDialingHasIncomeComponent> getByLotteryDialingId(long lotteryDialingId){
+        return dialingIncomCompRepository.findByLotteryDialingId(lotteryDialingId);
+    }
+
     public Page<LotteryDialingHasIncomeComponent> getByIncomeComponentId(long incomeComponentId, Pageable pageable){
         return dialingIncomCompRepository.findByIncomeComponentId(incomeComponentId, pageable);
+    }
+
+    public List<LotteryDialingHasIncomeComponent> getByIncomeComponentId(long incomeComponentId){
+        return dialingIncomCompRepository.findByIncomeComponentId(incomeComponentId);
     }
 
     private PageRequest pageRequest(Pageable pageable){

@@ -31,10 +31,12 @@ public class Reward implements Serializable{
 
     private int defaultNumericReward = 0;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private IncomeComponent incomeComponent;
-
     private int coupleNumber = 2;
+
+    private boolean accumulation = false;
+
+    @OneToOne(mappedBy = "reward")
+    private IncomeComponent incomeComponent;
 
     public Reward() {
     }
@@ -84,6 +86,14 @@ public class Reward implements Serializable{
     }
 
 
+    public int getCoupleNumber() {
+        return coupleNumber;
+    }
+
+    public void setCoupleNumber(int coupleNumber) {
+        this.coupleNumber = coupleNumber;
+    }
+
     public IncomeComponent getIncomeComponent() {
         return incomeComponent;
     }
@@ -92,12 +102,12 @@ public class Reward implements Serializable{
         this.incomeComponent = incomeComponent;
     }
 
-    public int getCoupleNumber() {
-        return coupleNumber;
+    public boolean isAccumulation() {
+        return accumulation;
     }
 
-    public void setCoupleNumber(int coupleNumber) {
-        this.coupleNumber = coupleNumber;
+    public void setAccumulation(boolean accumulation) {
+        this.accumulation = accumulation;
     }
 
     @Override
@@ -108,7 +118,9 @@ public class Reward implements Serializable{
                 ", value=" + value +
                 ", jeckpots=" + jeckpots +
                 ", defaultNumericReward=" + defaultNumericReward +
-                ", incomeComponent=" + incomeComponent +
+                ", coupleNumber=" + coupleNumber +
+                ", accumulation=" + accumulation +
+                ", incomeComponent=" + ((incomeComponent != null ) ? incomeComponent.getName() : null) +
                 '}';
     }
 

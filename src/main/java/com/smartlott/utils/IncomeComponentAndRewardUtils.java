@@ -76,25 +76,21 @@ public class IncomeComponentAndRewardUtils {
         Reward jeckpots = new Reward();
         jeckpots.setName("Jeckpots");
         jeckpots.setValue(10000000);
-        jeckpots.setIncomeComponent(incomeComponent1);
         rewardService.create(jeckpots);
 
         Reward firstReward = new Reward();
         firstReward.setName("Jeckpots");
         firstReward.setValue(15000);
-        firstReward.setIncomeComponent(incomeComponent2);
         rewardService.create(firstReward);
 
         Reward secondReward = new Reward();
         secondReward.setName("Jeckpots");
         secondReward.setValue(5000);
-        secondReward.setIncomeComponent(incomeComponent3);
         rewardService.create(secondReward);
 
         Reward thirdReward = new Reward();
         thirdReward.setName("Jeckpots");
         thirdReward.setValue(2000);
-        thirdReward.setIncomeComponent(incomeComponent4);
         rewardService.create(thirdReward);
     }
 

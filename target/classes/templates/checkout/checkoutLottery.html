@@ -73,7 +73,7 @@
                             <input type="hidden" name="PAYMENT_URL"
                                    th:value="@{http://localhost:8080/checkout/perfectmoney/{checkoutId}(checkoutId=${checkoutId})}"/>
                             <input type="hidden" name="NOPAYMENT_URL"
-                                   th:value="@{http://localhost:8080/checkout/perfectmoney/error/{checkoutId}(checkoutId=${checkoutId})}"/>
+                                   th:value="@{http://localhost:8080/checkout/error/{checkoutId}(checkoutId=${checkoutId}, action=cancel)}"/>
                             <input type="hidden" name="BAGGAGE_FIELDS"
                                    value="ORDER_NUM CUST_NUM"/>
                             <input type="hidden" id="orderNum" name="ORDER_NUM" value=""/>
@@ -133,17 +133,18 @@
             var url = '';
             var msgConfirm = /*[[#{order.checkout.confirm.text}]]*/;
             if(confirm(msgConfirm)){
+
                 switch ($('#accountType').val()){
                     case "1":
                         $('#frmCheckoutByPerfectMoney').submit();
                         break;
                     default:
-                        var urlSendToken = /*[[@{/api/security-token/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
-                        getData(urlSendToken,submitCashConfirmSecurityCode);
-
+                        var url = /*[[@{/checkout/cash/{checkoutId}(checkoutId=${checkoutId})}]]*/;
+                        window.location.href = url;
+                       /* var urlSendToken = /!*[[@{/api/security-token/{userId}(userId=${#authorization.getAuthentication().getPrincipal().id})}]]*!/;
+                        getData(urlSendToken,submitCashConfirmSecurityCode);*/
                 }
             }
-
         });
 
         function submitCashConfirmSecurityCode(data) {
@@ -187,11 +188,13 @@
         $('#orderNumber').html(data.id);
         var lotteryDetails = data.lotteryDetails;
         var orderDetail = $('#orderDetail');
-        $.each(lotteryDetails, function (index, lottery) {
-            var strNumberLottery = lottery.lottery.coupleOne + '-' + lottery.lottery.coupleTwo
-                                    +'-'+lottery.lottery.coupleThree+'-'+lottery.lottery.coupleFour
-                                    +'-'+lottery.lottery.coupleFive+'-'+lottery.lottery.coupleSix;
-            var price = lottery.lottery.lotteryType.price;
+        console.log(lotteryDetails[0]['lotteries']);
+        $.each(lotteryDetails[0]['lotteries'], function (index, lottery) {
+            console.log(lottery);
+            var strNumberLottery = lottery.coupleOne + '-' + lottery.coupleTwo
+                                    +'-'+lottery.coupleThree+'-'+lottery.coupleFour
+                                    +'-'+lottery.coupleFive+'-'+lottery.coupleSix;
+            var price = lottery.lotteryType.price;
             strRow = '<tr>';
             strRow+='<td>'+(index+1)+'</td>';
             strRow+='<td>#'+(lottery.id)+'</td>';

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletRequest;
 import java.time.Clock;
@@ -141,11 +142,14 @@ public class CheckoutController {
 
         //update lottery
         for (LotteryDetail lotteryDetail: transaction.getLotteryDetails()) {
-            Lottery lottery = lotteryDetail.getLottery();
-            LOGGER.info("Updating lottery {} ", lottery);
-            lottery.setEnabled(true);
-            lottery = lotterySerivce.update(lottery);
-            LOGGER.info("Updated lottery {} ", lottery);
+            List<Lottery> lotteries = lotteryDetail.getLotteries();
+            LOGGER.info("Updating lottery {} ", lotteries);
+
+            //enable all lottery
+            lotteries.forEach(lottery -> lottery.setEnabled(true));
+
+            lotterySerivce.update(lotteries);
+            LOGGER.info("Updated lottery {} ", lotteries);
         }
 
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.lottery.success", String.valueOf(checkoutId),locale)));
@@ -198,7 +202,7 @@ public class CheckoutController {
     }
 
     @RequestMapping(value = CHECKOUT_URL+"/error/{checkoutId}")
-    public String checkoutPerfectMoneyError(@PathVariable long checkoutId, Model model, Locale locale){
+    public String checkoutPerfectMoneyError(@PathVariable long checkoutId, @RequestParam("action") String action, Model model, Locale locale){
         messageDTOS = new ArrayList<>();
         model.addAttribute("checkoutId", checkoutId);
         Transaction transaction = transactionService.getOne(checkoutId);

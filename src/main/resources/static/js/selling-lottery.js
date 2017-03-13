@@ -4,12 +4,15 @@
 jQuery(document).ready(function ($) {
     var current_lot_id = '';
     var pos = '';
+
+    $('.textClose').click(function () {
+        $('.box-choosing-number').hide();
+    })
     
     $(document).on('click','.box-numeric-lottery li input', function () {
         current_lot_id = $(this).attr('id');
-        $('.box-choosing-number').show();
-        pos = $(this).position();
-        $('.box-choosing-number').css('top',pos.top + 50);
+        console.log($(this).offset());
+        showNumericBox(current_lot_id);
     })
 
     $('.box-choosing-number li').click(function () {
@@ -17,6 +20,16 @@ jQuery(document).ready(function ($) {
         $('#'+current_lot_id).val(chooseing_number);
         $('.box-choosing-number').hide();
         $('#'+current_lot_id).removeClass('invalid-input-lot');
+        var lastNextId = current_lot_id.substr(current_lot_id.length-1,1);
+        while (lastNextId < 6) {
+            var nextId = current_lot_id.substr(0, current_lot_id.length - 1) + (parseInt(lastNextId) + 1);
+            if ($('#' + nextId).val() == ''){
+                current_lot_id = nextId;
+                showNumericBox(current_lot_id);
+                break;
+            }
+            lastNextId ++;
+        }
     })
 
     $('.numeric-buying-lottery').change(function () {
@@ -54,7 +67,6 @@ jQuery(document).ready(function ($) {
             $('#numeric-needed-lottery').show();
             $('.box-btn-control-buying-lot').hide();
         }
-
     })
 
     
@@ -138,6 +150,16 @@ function createArrLottery(orderNumber, lotteryTypeId=1){
     lottery['coupleSix'] = $(".box-numeric-lottery #lot-"+orderNumber+"-5").val();
     lottery['lotteryType'] = {'id': lotteryTypeId};
     return lottery;
+}
+
+function showNumericBox(id) {
+    $('#'+id).focus();
+    $('.box-choosing-number').show();
+    pos = $('#'+id).offset();
+    var formGroupOffset = $('.selling-lottery .form-group').offset();
+    console.log(formGroupOffset);
+    var top = pos.top - formGroupOffset.top;
+    $('.box-choosing-number').css('top',top + 50);
 }
 
 /**

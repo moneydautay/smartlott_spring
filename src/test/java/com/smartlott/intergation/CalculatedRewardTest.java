@@ -49,7 +49,7 @@ public class CalculatedRewardTest {
     @Test
     public void test40Lottery() throws Exception{
 
-        CreateTest(40,100);
+        CreateTest(40,20);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CalculatedRewardTest {
 
             System.out.println("Dialing com: "+ component.getIncomeComponent().getName() + ": val "+ component.getValue());
             totalValue += component.getValue();
-            double expectValue = price*component.getIncomeComponent().getValue()*numberLottery/100;
+            double expectValue = price * component.getIncomeComponent().getValue()*numberLottery/100;
             expectValue = MathUtils.round(expectValue,4);
             Assert.assertEquals(expectValue,component.getValue(),numberLottery);
 
@@ -123,7 +123,7 @@ public class CalculatedRewardTest {
                 System.out.println("[Value of jackpot]: "+component.getValue());
                 System.out.println("[Defalut value of jackpot]: "+ reward.getValue());
                 int numberReward = (int) (component.getValue() / reward.getValue());
-                if(component.getIncomeComponent().isJackpots())
+                if(component.getIncomeComponent().getReward().isJeckpots())
                     if (numberReward > 0)
                         numberReward = 1;
 
@@ -135,10 +135,11 @@ public class CalculatedRewardTest {
                 }
                 else
                     System.out.println("Reward name: " + reward.getName() + ": " + reward.getDefaultNumericReward());
+
                 System.out.println("[========================================================]");
                 System.out.println("[========================================================]");
                 List<Lottery> listResult = new ArrayList<>();
-                if(component.getIncomeComponent().isJackpots()) {
+                if(component.getIncomeComponent().getReward().isJeckpots()) {
                     listResult = findJackpots(lotteries, numberReward);
                     lotteries.removeAll(listResult);
                 }
@@ -203,5 +204,31 @@ public class CalculatedRewardTest {
             lstResults.addAll(findLotteryAwards(lotteries, numberComparedCouple, numberReward));
         }
         return lstResults;
+    }
+
+    @Test
+    public void testForeach() throws Exception{
+        LotteryType lotteryType = new LotteryType(LotteryTypeEnum.TYPE1);
+        List<Lottery> lotteries = new ArrayList<>();
+        for (int i = 0; i < 10; i++){
+
+            Lottery lottery = new Lottery();
+            lottery.setCoupleOne(getRandom());
+            lottery.setCoupleTwo(getRandom());
+            lottery.setCoupleThree(getRandom());
+            lottery.setCoupleFour(getRandom());
+            lottery.setCoupleFive(getRandom());
+            lottery.setCoupleSix(getRandom());
+            lottery.setLotteryType(lotteryType);
+
+            lottery = lotterySerivce.createNewLottery(lottery);
+            lotteries.add(lottery);
+        }
+
+        System.out.println(lotteries);
+
+        System.out.println("All lottery after enabled");
+        lotteries.forEach(lottery -> lottery.setEnabled(true));
+        System.out.println(lotteries);
     }
 }

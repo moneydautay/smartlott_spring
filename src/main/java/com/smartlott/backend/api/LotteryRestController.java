@@ -81,7 +81,7 @@ public class LotteryRestController {
         }
 
         long userId = lotteries.getUserId();
-        List<Lottery> localLottery= new ArrayList<>();
+        List<Lottery> localLottery = new ArrayList<>();
         Transaction transaction = null;
         if(userId != 0){
             double totalPrice = 0;
@@ -89,9 +89,7 @@ public class LotteryRestController {
                 LotteryType lotteryType = lotteryTypeService.getOne(lottery.getLotteryType().getId());
                 totalPrice += lotteryType.getPrice();
                 lottery.setLotteryType(lotteryType);
-                localLottery.add(lotterySerivce.createNewLottery(lottery));
-
-                LOGGER.info("Created new lottery {}", lottery);
+                localLottery.add(lottery);
             }
 
             System.out.println(localLottery);
@@ -111,12 +109,21 @@ public class LotteryRestController {
             transaction.setTransactionStatus(status);
 
             transactionService.createNew(transaction);
-            LOGGER.info("Created new transaction {} for user {}",transaction, user);
+            LOGGER.info("Created new transaction {} for user {}", transaction, user);
 
             String ipAddress = request.getRemoteAddr();
 
             //creates Lottery Details
-            lotteryDetailService.createNewLotterDetails(localLottery, transaction, ipAddress);
+            LotteryDetail lotteryDetail = lotteryDetailService.createNewLotteryDetails(transaction, ipAddress, lotteryDialing);
+            LOGGER.info("Created Lottery detail {}", lotteryDetail);
+
+
+
+            for (Lottery lottery: localLottery) {
+                lottery.setLotteryDetail(lotteryDetail);
+                lottery = lotterySerivce.createNewLottery(lottery);
+                LOGGER.info("Created new lotteries {}", lottery);
+            }
         }
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
@@ -134,7 +141,7 @@ public class LotteryRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
-        Page<LotteryDetail> lotteryDetails = lotteryDetailService.getLotteryDetialByUserId(userId, PageRequestUtils.createPageRequest(pageable));
+        Page<LotteryDetail> lotteryDetails = lotteryDetailService.getLotteryDetailByUserId(userId, PageRequestUtils.createPageRequest(pageable));
 
         return new ResponseEntity<Object>(lotteryDetails, HttpStatus.OK);
     }
