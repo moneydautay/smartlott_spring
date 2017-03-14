@@ -408,7 +408,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		rewardService.create(fourReward);
 
 		Reward fiveReward = new Reward();
-		fiveReward.setName("fourReward");
+		fiveReward.setName("fiveReward");
 		fiveReward.setValue(5);
 		fiveReward.setDefaultNumericReward(0);
 		fiveReward.setCoupleNumber(1);

@@ -31,7 +31,7 @@ public class Reward implements Serializable{
 
     private int defaultNumericReward = 0;
 
-    private int coupleNumber = 2;
+    private int coupleNumber = 1;
 
     private boolean accumulation = false;
 

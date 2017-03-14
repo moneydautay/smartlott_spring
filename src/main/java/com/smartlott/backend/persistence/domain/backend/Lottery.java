@@ -169,7 +169,8 @@ public class Lottery implements Serializable{
             strCouple+=coupleThree + "-";
         if(numberComparedCouple >=3)
             strCouple+=coupleFour + "-";
-        strCouple+=coupleFive + "-";
+        if(numberComparedCouple >=2)
+            strCouple+=coupleFive + "-";
         strCouple+=coupleSix;
                         strCouple+="]";
         return strCouple;

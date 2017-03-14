@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by greenlucky on 1/26/17.
@@ -134,26 +134,34 @@ public class CheckoutRestController {
      * @param locale
      */
     private void investmentPackageHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale){
-        //get current lottery dialing
-        LotteryDialing currentLottDialing = dialingService.getOpenedLotteryDialing(true);
 
         InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
 
-        LocalDateTime from = currentLottDialing.getToDate();
+        LocalDateTime from = LocalDateTime.now(Clock.systemDefaultZone());
         LocalDateTime to = from.plusDays(investmentPackage.getDurationTime());
-
+        User ofUser = transaction.getOfUser();
         //add investment package to user
         UserInvestment userInvestment = new UserInvestment();
         userInvestment.setInvestmentPackage(investmentPackage);
-        userInvestment.setUser(transaction.getOfUser());
+        userInvestment.setUser(ofUser);
         userInvestment.setFromDate(from);
         userInvestment.setToDate(to);
 
         userInvestment = investmentService.create(userInvestment);
 
+        LOGGER.info("Added investment package {}", userInvestment);
         //add message success
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("order.investment.package.success", String.valueOf(transaction.getId()),locale)));
+
+        Set<UserInvestment> userInvestments = ofUser.getUserInvestments();
+        userInvestments.add(userInvestment);
+
+        //relogin user to see investment package just bought
+        Authentication auth = new UsernamePasswordAuthenticationToken(ofUser, null, ofUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        LOGGER.info("Re login {} to load new investment package", ofUser);
     }
 
     private void lotteryHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale){
