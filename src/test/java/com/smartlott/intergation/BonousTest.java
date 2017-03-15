@@ -1,6 +1,5 @@
 package com.smartlott.intergation;
 
-import com.smartlott.SmartlottApplication;
 import com.smartlott.backend.persistence.domain.backend.Bonus;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.service.BonusService;
@@ -11,7 +10,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SmartlottApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BonousTest extends AbstractIntegrationTest{
 
     @Autowired

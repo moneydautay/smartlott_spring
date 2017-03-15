@@ -1,17 +1,14 @@
 package com.smartlott.intergation;
 
-import com.smartlott.SmartlottApplication;
 import com.smartlott.backend.persistence.domain.backend.Network;
-import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.repositories.UserRepository;
 import com.smartlott.backend.service.NetworkService;
-import com.smartlott.backend.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
@@ -20,7 +17,7 @@ import java.util.List;
  * Created by Mrs Hoang on 04/01/2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SmartlottApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NetworkTest {
 
     @Autowired

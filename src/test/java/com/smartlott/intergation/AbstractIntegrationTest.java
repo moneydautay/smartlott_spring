@@ -1,6 +1,5 @@
 package com.smartlott.intergation;
 
-import com.smartlott.SmartlottApplication;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.repositories.*;
 import com.smartlott.enums.RolesEnum;
@@ -8,7 +7,7 @@ import com.smartlott.utils.UserUtils;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,7 +22,7 @@ import java.util.Set;
  * Created by Mrs Hoang on 12/15/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SmartlottApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractIntegrationTest {
 
     @Autowired

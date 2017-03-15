@@ -5,7 +5,6 @@ import com.smartlott.backend.persistence.domain.backend.User;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by Mrs Hoang on 12/15/2016.
@@ -27,6 +26,7 @@ public class UserUtils {
         user.setLastName("Last Name");
         user.setBirthday(LocalDate.of(1986,05,20));
         user.setPhoneNumber("0000000000000");
+        user.setPassword("123456");
         user.setEnabled(true);
         user.setStatus(1);
 

@@ -110,16 +110,16 @@
     function showLottery(data) {
         var contentTable = $('#contentTable');
         contentTable.html('');
-        $.each(data.content, function (index, lot) {
+
+        $.each(data.content[0]['lotteries'], function (index, lottery) {
+            var strNumber = lottery.coupleOne + "-" + lottery.coupleTwo + "-" + lottery.coupleThree + "-" + lottery.coupleFour + "-" + lottery.coupleFive + "-" + lottery.coupleSix;
             var strRow = '';
-            var lottery = lot.lottery;
-            var strNumber = lottery.coupleOne+"-"+lottery.coupleTwo+"-"+lottery.coupleThree+"-"+lottery.coupleFour+"-"+lottery.coupleFive+"-"+lottery.coupleSix;
             strRow += '<tr>';
-            strRow += '<td>'+ (index+1) +'</td>';
-            strRow += '<td>'+ (lottery.id) +'</td>';
-            strRow += '<td>'+ strNumber +'</td>';
-            strRow += '<td>'+ lottery.enabled +'</td>';
-            strRow += '<td></td>';
+            strRow += '<td>' + (index + 1) + '</td>';
+            strRow += '<td>' + (lottery.id) + '</td>';
+            strRow += '<td>' + strNumber + '</td>';
+            strRow += '<td>' + lottery.enabled + '</td>';
+            strRow += '<td>' + +'</td>';
             strRow += '</tr>';
             contentTable.append(strRow);
         });

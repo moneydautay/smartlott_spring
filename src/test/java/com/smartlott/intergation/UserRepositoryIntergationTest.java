@@ -1,10 +1,11 @@
 package com.smartlott.intergation;
 
-import com.smartlott.SmartlottApplication;
-import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.domain.backend.Address;
+import com.smartlott.backend.persistence.domain.backend.Password;
+import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.domain.backend.UserRole;
 import com.smartlott.backend.persistence.repositories.*;
 import com.smartlott.backend.service.UserService;
-import com.smartlott.enums.InvestmentPackageEnum;
 import com.smartlott.utils.UserUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,16 +14,12 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
