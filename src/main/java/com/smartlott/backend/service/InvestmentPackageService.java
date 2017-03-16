@@ -1,6 +1,5 @@
 package com.smartlott.backend.service;
 
-import com.smartlott.backend.persistence.domain.backend.Cash;
 import com.smartlott.backend.persistence.domain.backend.InvestmentPackage;
 import com.smartlott.backend.persistence.domain.backend.InvestmentPackageCash;
 import com.smartlott.backend.persistence.repositories.InvestmentPackageRepository;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +34,11 @@ public class InvestmentPackageService {
     @Transactional
     public InvestmentPackage create(InvestmentPackage investmentPackage) {
         return packageRepository.save(investmentPackage);
+    }
+
+    @Transactional
+    public Iterable<InvestmentPackage> creates(List<InvestmentPackage> investmentPackages){
+        return packageRepository.save(investmentPackages);
     }
 
     /**

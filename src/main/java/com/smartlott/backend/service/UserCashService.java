@@ -24,6 +24,7 @@ public class UserCashService {
     /** The application logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCashService.class);
 
+
     @Autowired
     private UserCashRepository userCashRepository;
 
@@ -74,9 +75,15 @@ public class UserCashService {
     public UserCash update(long userId, int cashId, double value){
         UserCash userCash = userCashRepository.findByUserIdAndCashIdAndEnabled(userId, cashId,true);
         double currentCash = userCash.getValue();
+
+        LOGGER.info("User {} cash {} before update cash: {} ",userCash.getUser().getId(), userCash.getCash().getName(), userCash.getValue());
+
         currentCash += value;
         userCash.setValue(currentCash);
-        return userCashRepository.save(userCash);
+        userCash = userCashRepository.save(userCash);
+
+        LOGGER.info("User {} cash {} after update cash: {} ",userCash.getUser().getId(), userCash.getCash().getName(), userCash.getValue());
+        return userCash;
     }
 
 
@@ -107,6 +114,7 @@ public class UserCashService {
         return userCashRepository.findOne(userCashId);
     }
 
+    @Transactional
     public UserCash update(long userCashId, double v) {
 
         UserCash userCash = userCashRepository.findOne(userCashId);

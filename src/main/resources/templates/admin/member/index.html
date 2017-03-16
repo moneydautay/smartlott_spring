@@ -182,8 +182,8 @@
         area.html('');
         $.each(data.content, function (i, item) {
             var _str = '<tr id="row_'+item.id+'">';
-            var urlEdit = /*[[@{/stl-admin/post/edit/}]]*/;
-            var urlDel = /*[[@{/stl-admin/post/delete/}]]*/;
+            var urlEdit = /*[[@{/stl-admin/member/edit/}]]*/;
+            var urlDel = /*[[@{/stl-admin/member/delete/}]]*/;
             urlEdit+=item.id;
             urlDel+=item.id;
             _str+='<td>';

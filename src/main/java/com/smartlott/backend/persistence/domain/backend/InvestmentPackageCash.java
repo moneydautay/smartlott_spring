@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -17,6 +19,7 @@ public class InvestmentPackageCash implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private InvestmentPackage investmentPackage;
 
@@ -29,6 +32,12 @@ public class InvestmentPackageCash implements Serializable{
     private int ratevalue = 0;
 
     public InvestmentPackageCash() {
+    }
+
+    public InvestmentPackageCash(InvestmentPackage investmentPackage, Cash cash, int ratevalue) {
+        this.investmentPackage = investmentPackage;
+        this.cash = cash;
+        this.ratevalue = ratevalue;
     }
 
     public InvestmentPackage getInvestmentPackage() {

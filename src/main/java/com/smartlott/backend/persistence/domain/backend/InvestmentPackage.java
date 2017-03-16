@@ -1,13 +1,10 @@
 package com.smartlott.backend.persistence.domain.backend;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.enums.InvestmentPackageEnum;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +36,8 @@ public class InvestmentPackage implements Serializable {
 
     int durationTime = 0;
 
+    private int parent = 0;
+
     @OneToMany(mappedBy = "investmentPackage", fetch = FetchType.EAGER)
     private List<InvestmentPackageCash> investmentPackageCashes;
 
@@ -54,6 +53,7 @@ public class InvestmentPackage implements Serializable {
         this.levelNetwork = packageEnum.getLevelNetwork();
         this.limitTime = packageEnum.isLimit();
         this.durationTime = packageEnum.getDurationTime();
+        this.parent = packageEnum.getParent();
     }
 
     public int getId() {
@@ -126,6 +126,14 @@ public class InvestmentPackage implements Serializable {
 
     public void setInvestmentPackageCashes(List<InvestmentPackageCash> investmentPackageCashes) {
         this.investmentPackageCashes = investmentPackageCashes;
+    }
+
+    public int getParent() {
+        return parent;
+    }
+
+    public void setParent(int parent) {
+        this.parent = parent;
     }
 
     @Override

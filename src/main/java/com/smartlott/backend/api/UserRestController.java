@@ -160,6 +160,7 @@ public class UserRestController {
      */
     @RequestMapping(value = API_USER_REST_URL+"/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user, Locale locale){
+
         if(userService.findOne(user.getId()) == null){
             LOGGER.error("User {} not found", user);
             return new ResponseEntity<Object>(i18NService.getMessage("Id.user.not.found", String.valueOf(user.getId()),locale), HttpStatus.BAD_REQUEST);
@@ -190,6 +191,26 @@ public class UserRestController {
         if(user == null){
             LOGGER.error("Username {} was not found",username);
             return new ResponseEntity<Object>(new Object[]{i18NService.getMessage("Username.not.found", username, locale)}, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        return new ResponseEntity<Object>(user, HttpStatus.OK);
+    }
+
+    /**
+     * Get user by username.
+     *
+     * @param userId given by user
+     * @param locale current locale given by browser
+     * @return A user
+     */
+    @RequestMapping(value = API_USER_REST_URL+"/id/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getUser(@PathVariable long userId, Locale locale){
+
+        User user = userService.findOne(userId);
+
+        if(user == null){
+            LOGGER.error("UserId {} was not found", userId);
+            return new ResponseEntity<Object>(new Object[]{i18NService.getMessage("Username.not.found", String.valueOf(userId), locale)}, HttpStatus.EXPECTATION_FAILED);
         }
 
         return new ResponseEntity<Object>(user, HttpStatus.OK);

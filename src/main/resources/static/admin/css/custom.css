@@ -4,8 +4,9 @@
  *
 */
 
-body {
-	
+*, html, body {
+    margin: 0;
+    padding: 0;
 }
 .navigaion {
     text-align: center;

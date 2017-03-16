@@ -1,9 +1,7 @@
 package com.smartlott.backend.service;
 
-import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.repositories.*;
-import com.smartlott.enums.InvestmentPackageEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -27,6 +28,9 @@ public class UserService {
 
     /** The application logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
+    @Value("${default.user.cash}")
+    private double defaultUserCash;
 
     @Autowired
     private UserRepository userRepository;
@@ -196,7 +200,7 @@ public class UserService {
     private void addCashToUser(User user) {
         //get all cash
         List<Cash> cashes = cashRepository.findByEnabled(true);
-        cashes.forEach(ru->userCashRepository.save(new UserCash(user, ru, 10)));
+        cashes.forEach(ru->userCashRepository.save(new UserCash(user, ru, defaultUserCash)));
 
     }
 }

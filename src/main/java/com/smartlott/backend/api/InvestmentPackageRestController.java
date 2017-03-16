@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,6 +75,7 @@ public class InvestmentPackageRestController {
 
     @RequestMapping(value = "/{investmentPackageId}", method = RequestMethod.GET)
     public ResponseEntity<Object> getInvestmentPackage(@PathVariable int investmentPackageId, Locale locale){
+        messageDTOS = new ArrayList<>();
         InvestmentPackage investmentPackage = packageService.getOne(investmentPackageId);
 
         if (packageService == null){
@@ -103,6 +103,26 @@ public class InvestmentPackageRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
         }
 
+        InvestmentPackage requiredPackage = user.getRequriedInvestmentPackage(investmentPackage.getParent());
+
+        //checking user existed required package
+        if (investmentPackage.getParent() != 0 && requiredPackage == null){
+            requiredPackage = packageService.getOne(investmentPackage.getParent());
+
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("investment.package.error.required.package",
+                            requiredPackage.getName(), locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.BAD_REQUEST);
+        }
+
+        //If current package has network level greater than package level buying
+        if (user.getUserInvestment().getInvestmentPackage().getId() >= investmentPackage.getId()){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("investment.package.error.current.package.is.greater",
+                            String.valueOf(user.getUserInvestment().getInvestmentPackage().getLevelNetwork()), locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.BAD_REQUEST);
+        }
+        
         Transaction transaction = new Transaction();
         transaction.setOfUser(user);
         transaction.setAmount(investmentPackage.getPrice());

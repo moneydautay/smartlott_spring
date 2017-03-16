@@ -88,7 +88,16 @@ public class CheckoutRestController {
         //Minus cash of user
         User user = localTransaction.getOfUser();
 
-        UserCash userCash = userCashService.update(transaction.getUserCashId(), -localTransaction.getAmount());
+        UserCash userCash = userCashService.getUserCashByUserCashId(transaction.getUserCashId());
+
+        //checking current user cash enough to pay for transaction
+        if(userCash.getValue() < localTransaction.getAmount()){
+            messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("order.error.cash.enough", locale)));
+            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+        }
+
+
+        userCash = userCashService.update(transaction.getUserCashId(), -localTransaction.getAmount());
 
         System.out.println("Updating transaction");
 
@@ -138,7 +147,7 @@ public class CheckoutRestController {
         InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
 
         LocalDateTime from = LocalDateTime.now(Clock.systemDefaultZone());
-        LocalDateTime to = from.plusDays(investmentPackage.getDurationTime());
+        LocalDateTime to = (investmentPackage.getDurationTime() != 0) ? from.plusDays(investmentPackage.getDurationTime()): null;
         User ofUser = transaction.getOfUser();
         //add investment package to user
         UserInvestment userInvestment = new UserInvestment();
@@ -156,6 +165,11 @@ public class CheckoutRestController {
 
         Set<UserInvestment> userInvestments = ofUser.getUserInvestments();
         userInvestments.add(userInvestment);
+
+        //add cash to respective investment package
+        investmentPackage.getInvestmentPackageCashes().forEach(
+                item -> userCashService.update(item.getCash().getId(),
+                        calculateRate(item.getRatevalue(), item.getInvestmentPackage().getPrice())));
 
         //relogin user to see investment package just bought
         Authentication auth = new UsernamePasswordAuthenticationToken(ofUser, null, ofUser.getAuthorities());
@@ -230,5 +244,8 @@ public class CheckoutRestController {
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
 
+    private double calculateRate(double rate, double amount){
+        return (rate * amount)/100;
+    }
 
 }

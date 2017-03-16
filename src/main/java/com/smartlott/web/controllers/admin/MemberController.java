@@ -19,28 +19,28 @@ public class MemberController {
 
     @RequestMapping("/all")
     public String showAllMember(@RequestParam(value = "status", required = false) boolean status,
-                                  @RequestParam(value = "query", required = false) String query,
-                                  Model model){
-        model.addAttribute("status",status);
-        model.addAttribute("query",query);
+                                @RequestParam(value = "query", required = false) String query,
+                                Model model) {
+        model.addAttribute("status", status);
+        model.addAttribute("query", query);
 
-        return MEMBER_VIEW_NAME+"/index";
+        return MEMBER_VIEW_NAME + "/index";
     }
 
     @RequestMapping("/view/{memberId}")
-    public String viewMember(@PathVariable long memberId, Model model){
-        model.addAttribute("memberId",memberId);
-        return MEMBER_VIEW_NAME+"/addMember";
+    public String viewMember(@PathVariable long memberId, Model model) {
+        model.addAttribute("memberId", memberId);
+        return MEMBER_VIEW_NAME + "/addMember";
     }
 
     @RequestMapping("/edit/{memberId}")
-    public String editMember(@PathVariable long memberId, Model model){
-        model.addAttribute("memberId",memberId);
-        return MEMBER_VIEW_NAME+"/addMember";
+    public String editMember(@PathVariable long memberId, Model model) {
+        model.addAttribute("memberId", memberId);
+        return MEMBER_VIEW_NAME + "/addMember";
     }
 
     @RequestMapping("/add")
-    public String addMember(){
-        return MEMBER_VIEW_NAME+"/addMember";
+    public String addMember() {
+        return MEMBER_VIEW_NAME + "/addMember";
     }
 }

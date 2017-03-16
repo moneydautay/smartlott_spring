@@ -351,6 +351,18 @@ public class User implements Serializable, UserDetails{
         return investmentPackage;
     }
 
+    public InvestmentPackage getRequriedInvestmentPackage(int packageId){
+        Iterator<UserInvestment> userInvestmentIterator = userInvestments.iterator();
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
+        while (userInvestmentIterator.hasNext()) {
+            UserInvestment next = userInvestmentIterator.next();
+            if((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
+                    && next.isEnabled() && next.getInvestmentPackage().getId() == packageId)
+                return next.getInvestmentPackage();
+        }
+        return null;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

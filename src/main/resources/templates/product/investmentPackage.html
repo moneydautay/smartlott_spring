@@ -48,27 +48,26 @@
 <script th:src="@{/js/gluck-functions.js}"></script>
 <script th:src="@{/js/gluck.js}"></script>
 <script th:inline="javascript" type="application/javascript">
-    jQuery(document).ready(function(){
+    jQuery(document).ready(function () {
         var urlGetPackages = /*[[@{/api/investment-package/all}]]*/;
-        var urlBuyPackage = /*[[@{/api/investment-package/buy}]]*/;
-
         var confirmBuyingPackage = /*[[#{investment.package.buying.confirm.text}]]*/;
 
         getData(urlGetPackages, showPackages, showMessages);
 
         //buying the investment package
-        $(document).on('click','.buyInvestmentPackage', function () {
-          var authorized = /*[[${#authorization.expression('isAuthenticated()')}]]*/;
+        $(document).on('click', '.buyInvestmentPackage', function () {
+            var urlBuyPackage = /*[[@{/api/investment-package/buy}]]*/;
+            var authorized = /*[[${#authorization.expression('isAuthenticated()')}]]*/;
 
-          if(!authorized){
-              var urlLogin = /*[[@{/login}]]*/;
-              window.location.href = urlLogin;
-              return;
-          }
+            if (!authorized) {
+                var urlLogin = /*[[@{/login}]]*/;
+                window.location.href = urlLogin;
+                return;
+            }
             var packageId = $(this).attr('id');
             urlBuyPackage += '/' + packageId;
 
-            if(confirm(confirmBuyingPackage)){
+            if (confirm(confirmBuyingPackage)) {
 
                 getData(urlBuyPackage, redirectToCheckout, showMessages);
             }
@@ -79,7 +78,7 @@
     function redirectToCheckout(data) {
         var urlCheckout = /*[[@{/checkout}]]*/;
         urlCheckout += '/' + data.id;
-        window.location.href= urlCheckout;
+        window.location.href = urlCheckout;
     }
 
     function showPackages(data) {
@@ -90,7 +89,7 @@
             productContent.append(showPackageDetail(package));
         });
     }
-    
+
     function showPackageDetail(packageDetail) {
 
         var urlPackageDetail = '/investment-package/' + packageDetail.id;
@@ -99,12 +98,12 @@
         var strPackageDetail = '<div class="col-md-3">';
         strPackageDetail += '<div class="thumbnail">';
         strPackageDetail += '<img alt="100%x200" data-src="holder.js/100%x200" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTU4ZDg3ODFlYzEgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNThkODc4MWVjMSI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44NTkzNzUiIHk9IjEwNS40Ij4yNDJ4MjAwPC90ZXh0PjwvZz48L2c+PC9zdmc+" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;" />';
-        strPackageDetail +=  '<div clas="caption">';
+        strPackageDetail += '<div clas="caption">';
         strPackageDetail += '<h4><a href="' + urlPackageDetail + '">' + packageDetail.name + '</a></h4>';
         strPackageDetail += '</div>';
         strPackageDetail += '<div class="detail">';
-        strPackageDetail += '<p><span>Price:</span> <span class="price">$' +  packageDetail.price + '</span></p>';
-        strPackageDetail += '<p><span>Level network:</span> ' +  packageDetail.levelNetwork + '</p>';
+        strPackageDetail += '<p><span>Price:</span> <span class="price">$' + packageDetail.price + '</span></p>';
+        strPackageDetail += '<p><span>Level network:</span> ' + packageDetail.levelNetwork + '</p>';
         strPackageDetail += '<p><span>Cash Investment:</span> 90%</p>';
         strPackageDetail += '<p><span>Cast Trading:</span> 10%</p>';
         strPackageDetail += '</div>';

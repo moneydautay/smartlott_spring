@@ -88,6 +88,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private CashService cashService;
 
+	@Autowired
+	private InvestmentPackageCashService investmentPackageCashService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -102,9 +105,6 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//add default package
 		addInvestmentPackage();
-
-		//add cash
-		createCash();
 
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
 		NumberAccountType pm = numberAccountTypeService.getOne(2);
@@ -136,7 +136,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		user.setUserRoles(userRoles);
 		user.setActived(true);
-		user.setCash(1200);
+		user.setCash(12000);
 
 		LOGGER.debug("Creating user with username {} and email {}", user.getUsername(), user.getEmail());
 		user = userService.createUser(user);
@@ -316,7 +316,7 @@ public class SmartlottApplication implements CommandLineRunner{
 			userRoles.add(new UserRole(custRole, localUser));
 			localUser.setUserRoles(userRoles);
 			localUser.setActived(true);
-			localUser.setCash(100);
+			localUser.setCash(10000);
 
 			if(i == 1) {
 				accestor = user;
@@ -634,6 +634,16 @@ public class SmartlottApplication implements CommandLineRunner{
 
 	public void addInvestmentPackage() {
 
+		Cash cash1 = new Cash(CashEnum.CASH);
+		Cash cash2 = new Cash(CashEnum.INVESTMENT);
+		Cash cash3 = new Cash(CashEnum.TRADING);
+
+		cash1 = cashService.create(cash1);
+		cash2 = cashService.create(cash2);
+		cash3 = cashService.create(cash3);
+
+		List<InvestmentPackage> investmentPackages = new ArrayList<>();
+
 		InvestmentPackage investmentPackage1 = new InvestmentPackage(InvestmentPackageEnum.CUSTOMER);
 		InvestmentPackage investmentPackage2 = new InvestmentPackage(InvestmentPackageEnum.AGENT);
 		InvestmentPackage investmentPackage3 = new InvestmentPackage(InvestmentPackageEnum.INVEST);
@@ -645,20 +655,17 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		packageService.create(investmentPackage1);
 		packageService.create(investmentPackage2);
-		packageService.create(investmentPackage3);
-		packageService.create(investmentPackage4);
-		packageService.create(investmentPackage5);
-		packageService.create(investmentPackage6);
-		packageService.create(investmentPackage7);
-		packageService.create(investmentPackage8);
-	}
+		investmentPackages.add(packageService.create(investmentPackage3));
+		investmentPackages.add(packageService.create(investmentPackage4));
+		investmentPackages.add(packageService.create(investmentPackage5));
+		investmentPackages.add(packageService.create(investmentPackage6));
+		investmentPackages.add(packageService.create(investmentPackage7));
+		investmentPackages.add(packageService.create(investmentPackage8));
 
-	public void createCash() {
-		Cash cash1 = new Cash(CashEnum.CASH);
-		Cash cash2 = new Cash(CashEnum.INVESTMENT);
-		Cash cash3 = new Cash(CashEnum.TRADING);
-
-		cashService.creates(Arrays.asList(cash1, cash2, cash3));
+		for (InvestmentPackage item : investmentPackages) {
+			investmentPackageCashService.create(new InvestmentPackageCash(item, cash2, 90));
+			investmentPackageCashService.create(new InvestmentPackageCash(item, cash3, 10));
+		}
 	}
 
 }
