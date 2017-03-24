@@ -334,6 +334,10 @@ public class User implements Serializable, UserDetails{
         this.userInvestments = userInvestments;
     }
 
+    public void addUserInvestment(UserInvestment userInvestment){
+        this.userInvestments.add(userInvestment);
+    }
+
     public UserInvestment getUserInvestment() {
         UserInvestment investmentPackage = null;
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());

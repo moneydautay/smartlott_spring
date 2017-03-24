@@ -14,7 +14,7 @@ public class FormatNumberUtils {
 
     public static double formatNumber(double value){
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
-        String s = formatter.format(value);
+        String s = formatter.format(value).replace(",","");
         return Double.parseDouble(s);
     }
 }

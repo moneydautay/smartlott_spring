@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -26,7 +23,9 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class UserService {
 
-    /** The application logger */
+    /**
+     * The application logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Value("${default.user.cash}")
@@ -56,29 +55,32 @@ public class UserService {
 
     /**
      * Findy a user by username
+     *
      * @param username given by user
      * @return A user or not if not found
      */
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     /**
      * Findy a user by email
+     *
      * @param email given by user
      * @return A user or not if not found
      */
-    public User findByEmail(String email){
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
 
     /**
      * Create a user
+     *
      * @param user
      */
     @Transactional
-    public User createUser(User user){
+    public User createUser(User user) {
 
         String encryptPassword = passwordEncoder.encode(user.getPassword());
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
@@ -98,13 +100,16 @@ public class UserService {
         addCashToUser(user);
 
         //add basic user investment package is CUSTOMER
-        addInvestmentPackage(user, defaultInvestmentPackage, now);
+        UserInvestment userInvestment = addInvestmentPackage(user, defaultInvestmentPackage, now);
+
+        user.addUserInvestment(userInvestment);
 
         return user;
     }
 
     /**
      * Find user by id
+     *
      * @param id given by user
      * @return a user if null if not found
      */
@@ -113,7 +118,8 @@ public class UserService {
     }
 
     /**
-     *Update user
+     * Update user
+     *
      * @param user
      * @return user after update
      */
@@ -124,18 +130,19 @@ public class UserService {
 
     public User checkingPassword(String username, String currentPassword) {
         User localUser = userRepository.findByUsername(username);
-        if(passwordEncoder.matches(currentPassword, localUser.getPassword()))
+        if (passwordEncoder.matches(currentPassword, localUser.getPassword()))
             return localUser;
         return null;
     }
 
     @Transactional
-    public void changePassword(String username, String newPassword){
+    public void changePassword(String username, String newPassword) {
         userRepository.changePassword(username, newPassword);
     }
 
     /**
      * Get user by introduced key
+     *
      * @param introducedKey
      * @return A user or null if not found
      */
@@ -167,7 +174,7 @@ public class UserService {
     }
 
     @Transactional
-    public void addInvestmentPackage(User user, int investmentPackageId, LocalDateTime from) {
+    public UserInvestment addInvestmentPackage(User user, int investmentPackageId, LocalDateTime from) {
 
         InvestmentPackage investmentPackage = investmentPackageRepository.findOne(investmentPackageId);
 
@@ -175,32 +182,35 @@ public class UserService {
         userInvestment.setUser(user);
         userInvestment.setInvestmentPackage(investmentPackage);
         userInvestment.setFromDate(from);
-        if(investmentPackage.isLimitTime())
+        if (investmentPackage.isLimitTime())
             userInvestment.setToDate(from.plusDays(investmentPackage.getDurationTime()));
 
-        investmentRepository.save(userInvestment);
+        userInvestment = investmentRepository.save(userInvestment);
 
         //add user introduced key if not exist
-        if(investmentPackage.getLevelNetwork() > 0 && user.getIntroducedKey() == null) {
+        if (investmentPackage.getLevelNetwork() > 0 && user.getIntroducedKey() == null) {
             userRepository.updateIntroducedKey(user.getId(), createIntroducedKey(user.getUsername()));
         }
+
+        return userInvestment;
     }
 
-    public String createIntroducedKey(String username){
+    public String createIntroducedKey(String username) {
         //set introduced key
         byte[] charKey = username.getBytes();
-        String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-","").substring(0,8);
+        String introducedKey = UUID.nameUUIDFromBytes(charKey).toString().replace("-", "").substring(0, 8);
         return introducedKey;
     }
 
     /**
      * Add cash to user
+     *
      * @param user
      */
     private void addCashToUser(User user) {
         //get all cash
         List<Cash> cashes = cashRepository.findByEnabled(true);
-        cashes.forEach(ru->userCashRepository.save(new UserCash(user, ru, defaultUserCash)));
+        cashes.forEach(ru -> userCashRepository.save(new UserCash(user, ru, defaultUserCash)));
 
     }
 }

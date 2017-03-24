@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li>
+                <a th:href="@{/stl-admin/transaction/all}">Transaction</a>
+            </li>
+            <li class="active">
+                <strong th:if="${transactionId == null and typeAction!='delete'}">Add transaction</strong>
+                <strong th:if="${transactionId != null and typeAction!='delete'}">Edit transaction</strong>
+            </li>
+
+        </ol>
+        <h2>
+            <strong th:if="${transactionId == null and typeAction!='delete'}">Add transaction</strong>
+            <strong th:if="${transactionId != null and typeAction!='delete'}">Edit transaction</strong>
+        </h2>
+        <!--Message area-->
+        <div class="row" id="messageArea">
+        </div>
+        <form role="form" id="frmDetailTransaction" method="post" class="form-groups-bordered">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="id">Mã giao dịch</label>
+                            <input type="text" id="id" name="id" class="form-control" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="transactionType">Loại giao dịch</label>
+                            <input type="text" id="transactionType" name="transactionType" class="form-control"
+                                   readonly="readonly"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="amount">Số tiền</label>
+                            <input type="text" id="amount" name="amount" class="form-control"
+                                   readonly="readonly"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="createdDate">Ngày giao dịch</label>
+                            <input type="text" id="createdDate" name="createdDate" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="ofUser">Người giao dịch</label>
+                            <input type="text" id="ofUser" name="ofUser" fields="username" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="transactionStatus">Trạng thái</label>
+                            <input type="text" id="transactionStatus" name="transactionStatus" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="handleDate">Thực hiện ngày</label>
+                            <input type="text" id="handleDate" name="handleDate" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="handleBy">Thực hiện bởi</label>
+                            <input type="text" id="handleBy" name="handleBy" fields="username" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="extraRow">
+                </div>
+
+                <!-- Include field detail handle -->
+                <div th:if="${action == 'handle'}" th:include="admin/transaction/script :: detail-handle"></div>
+
+            </div>
+            <div class="col-md-3">
+                <div class="form-group align-right handleButton">
+
+                </div>
+            </div>
+        </form>
+
+        <!-- Include perfect money handle -->
+        <div th:if="${action == 'handle'}" th:include="admin/transaction/script :: detail-handle-perfect-money"></div>
+
+        <div class="clearfix"></div>
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:src="@{/js/formValidation.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/admin/js/ckeditor/ckeditor.js}"></script>
+<script th:src="@{/admin/js/ckeditor/adapters/jquery.js}"></script>
+<script th:src="@{/admin/js/fileinput.js}"></script>
+<div th:include="admin/transaction/script :: detail-load"></div>
+<div th:if="${action == null}" th:include="admin/transaction/script :: detail-view"></div>
+<div th:if="${action == 'cancel'}" th:include="admin/transaction/script :: detail-cancel"></div>
+<div th:if="${action == 'handle'}" th:include="admin/transaction/script :: detail-handle-script"></div>
+
+</body>
+</html>

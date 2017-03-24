@@ -152,7 +152,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//add number account
 		NumberAccount numberAccount1 = new NumberAccount("greenlucky", user, bigCoin);
-		NumberAccount numberAccount2 = new NumberAccount("U73273487", user, pm);
+		NumberAccount numberAccount2 = new NumberAccount("U9498703", user, pm);
 		numberAccountService.create(numberAccount1);
 		numberAccountService.create(numberAccount2);
 
@@ -175,7 +175,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		//create new Lottery dialing has income component
 		createLotDialHasIncome();
 
-		createCusts(user);
+		//createCusts(user);
 
 	}
 

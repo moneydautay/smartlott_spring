@@ -31,4 +31,8 @@ public class WithdrawDetailService {
     public WithdrawDetail createNew(WithdrawDetail withdrawDetail){
         return detailRepository.save(withdrawDetail);
     }
+
+    public WithdrawDetail getByTransactionId(long transactionId) {
+        return detailRepository.findByTransactionId(transactionId);
+    }
 }

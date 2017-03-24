@@ -12,11 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by greenlucky on 1/2/17.
@@ -100,9 +98,7 @@ public class BonusService {
                 userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
                 ancestor = userCash.getUser();
             }
-            System.out.println(ancestor);
-            System.out.println(network);
-            System.out.println(user);
+
             Bonus bonus = new Bonus(valueBonus, ancestor, user, now, networkLevel.getLevel());
 
             bonus = createNew(bonus);

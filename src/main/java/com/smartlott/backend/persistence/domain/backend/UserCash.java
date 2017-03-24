@@ -80,6 +80,14 @@ public class UserCash {
         this.enabled = enabled;
     }
 
+    public void plusValue(double value) {
+        this.value += value;
+    }
+
+    public void minusValue(double value) {
+        this.value -= value;
+    }
+
     @Override
     public String toString() {
         return "UserCash{"

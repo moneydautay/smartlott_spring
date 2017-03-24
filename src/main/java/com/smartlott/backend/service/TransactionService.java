@@ -1,9 +1,7 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.Transaction;
-import com.smartlott.backend.persistence.domain.backend.TransactionStatus;
 import com.smartlott.backend.persistence.repositories.TransactionRepository;
-import com.smartlott.enums.TransactionStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,5 +66,9 @@ public class TransactionService {
     @Transactional
     public Transaction update(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    public Page<Transaction> getAll(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
     }
 }

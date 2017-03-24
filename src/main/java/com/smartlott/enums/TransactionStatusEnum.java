@@ -8,7 +8,7 @@ package com.smartlott.enums;
  */
 public enum TransactionStatusEnum {
 
-    PENDING(1,"PENDING","The status is waiting deposite or handle by manager"),
+    PENDING(1,"PENDING","The status is waiting deposit or handle by manager"),
     SUCCESS(2,"SUCCESS","The status is success"),
     CANCEL(3,"CANCEL","The status was cancel by customer or manager");
 
