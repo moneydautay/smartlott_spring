@@ -30,4 +30,8 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
      * @return A page of transaction or null if not found
      */
     Page<Transaction> findByOfUserIdAndCreatedDateBetween(long userId, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
+
+    Page<Transaction> findByCreatedDateBetween(LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
+
+    Page<Transaction> findByCreatedDateBetweenAndTransactionStatusId(LocalDateTime fromDate, LocalDateTime toDate, int statusId, Pageable pageable);
 }

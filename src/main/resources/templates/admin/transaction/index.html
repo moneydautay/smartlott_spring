@@ -28,40 +28,48 @@
         <!--Message area-->
         <div class="row" id="messageArea"></div>
         <div class="row">
-            <div class="form-group col-md-4 col-xs-12">
-                <form id="actionPost" method="GET" th:action="@{/api/post/category}">
-                    <div class="col-md-8 col-xs-12">
-                        <select id="action" name="action" class="form-control">
-                            <option value="-1">Action</option>
-                            <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
-                            <option value="2" th:text="#{admin.member.block.text}">Block</option>
+            <div class="form-group col-md-12 col-xs-12">
+                <form id="actionDate" method="GET">
+                    <div class="form-group col-md-2">
+                        <div class="input-group date" data-provide="datepicker" id="filterFromFormat">
+                            <input type="text" id="filterFrom" name="filterFrom" class="form-control"/>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <div class="input-group date" data-provide="datepicker" id="filterToFormat">
+                            <input type="text" id="filterTo" name="filterTo" class="form-control"/>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12">
+                        <select id="status" name="status" class="form-control" th:value="${status}">
+                            <option value="-1">Status</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Success</option>
+                            <option value="3">Cancel</option>
                         </select>
                     </div>
-                    <div class="col-md-4 col-xs-12">
+                    <div class="form-group col-md-1 col-xs-12">
                         <button type="submit" class="form-control btn btn-primary">Do</button>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 navbar-right">
+                        <input type="text" id="query" name="query" class="form-control" placeholder="Search member"
+                               th:value="${query}"/>
                     </div>
                 </form>
             </div>
-            <form id="filterPost" method="GET" th:action="@{/stl-admin/post/all}">
-                <div class="form-group col-md-3 col-xs-12">
-                    <select id="status" name="status" class="form-control" th:value="${status}">
-                        <option value="-1">Status</option>
-                        <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
-                        <option value="2" th:text="#{admin.member.block.text}">Block</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-4 col-xs-12 navbar-right">
-                    <input type="text" id="query" name="query" class="form-control" placeholder="Search member"
-                           th:value="${query}"/>
-                </div>
-            </form>
         </div>
-
         <div class="row">
             <table class="table responsive" id="tableContent">
                 <thead>
                 <tr class="dataFields">
-                    <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/></th>
+                    <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/>
+                    </th>
                     <th th:text="#{admin.transaction.id.text}" fields="id">Id</th>
                     <th th:text="#{admin.transaction.type.text}" fields="transactionType.name">Type</th>
                     <th th:text="#{admin.transaction.amount.text}" fields="amount">Amount</th>
@@ -90,16 +98,18 @@
 
         <!-- Footer -->
         <footer class="main">
-            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co"
+                                                                target="_blank">Laborator</a>
         </footer>
     </div>
 
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
 <script th:inline="javascript" type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function ($) {
-        var urlApiAll = /*[[@{/api/transaction/all}]]*/;
+        var urlApiAll = /*[[@{/api/transaction/all(size=10, page=)}]]*/;
         var urlItem = /*[[@{/stl-admin/transaction/all}]]*/;
         //set value to category selectbox
         var status = /*[[${status}]]*/;
@@ -115,69 +125,47 @@
             doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
         })
 
-        //do action
-        doActionPost();
+        pagination(urlApiAll, appendData);
 
-        var urlMemberSearch = /*[[@{/api/member/search}]]*/;
-        doSearchMember(urlApiAll, urlMemberSearch, status, query, appendData);
-
-    });
-
-    function doActionPost() {
-        $('#actionPost').submit(function (e) {
-            e.preventDefault();
-            var msgConfirmDelete = /*[[#{admin.post.delete.confirm.text}]]*/;
-            var msgConfirmChangeStatus = /*[[#{admin.post.change.status.confirm.text}]]*/;
-            var msgErrorSizeZero = /*[[#{admin.post.action.size.zero.text}]]*/;
-
-            var action = $('#action').val();
-
-            var data = [];
-            //do nothing
-            if (action == -1)
-                return;
-            //gets all checked
-            var sizeData = 0;
-            $('input[name=_id]:checked', '#tableContent').each(function (index, _id) {
-                data[index] = _id.value;
-                sizeData++;
-            });
-
-            //checks data equals zero to return nothing
-            if (0 >= sizeData) {
-                alert(msgErrorSizeZero);
-                return;
-            }
-
-            //action delete
-            if (action == 1) {
-                if (confirm(msgConfirmDelete))
-                    deletePosts(data);
-            } else {
-                //change status of posts
-                if (confirm(msgConfirmChangeStatus)) {
-                    //status publish
-                    var status = true;
-                    //status unpublish
-                    if (action == 3)
-                        status = false;
-                    //do change status
-                    changeStatus(data, status);
-                }
-            }
+        $('#filterFromFormat').datepicker({
+            format: 'dd-mm-yyyy',
+            startDate: '-2y',
+            endDate: '0y',
+            startView: '-0y',
+            autoclose: true,
         });
-    }
+
+        $('#filterToFormat').datepicker({
+            format: 'dd-mm-yyyy',
+            startDate: '-2y',
+            endDate: '0y',
+            startView: '-0y',
+            autoclose: true,
+        });
+
+        $('#actionDate').submit(function (e) {
+            e.preventDefault();
+            var url = /*[[@{/api/transaction/all}]]*/;
+            var from = encodeURI($('#filterFrom').val());
+            var to = encodeURI($('#filterTo').val());
+            var status = $('#status').val();
+            if (from == '')
+                from = '01-01-1970';
+
+            url += '?fromDate=' + from;
+            if (to != '')
+                url += '&toDate=' + to;
 
 
-    /**
-     * Deletes datas
-     * @param data
-     */
-    function changeStatus(data, status=true) {
-        var urlChangeStatusPost = /*[[@{/api/post/change-status/}]]*/;
-        urlChangeStatusPost += status;
-        saveOrupdateData(urlChangeStatusPost, 'PUT', data, showSuccessAction, showErrors);
-    }
+            if (status > -1)
+                url += '&status=' + status;
+
+            url += '&size=10';
+            url += '&page=';
+
+            pagination(url, appendData);
+        });
+    });
 
     function appendData(data) {
         var dataFields = $('#tableContent .dataFields').find('th[fields]');

@@ -71,4 +71,12 @@ public class TransactionService {
     public Page<Transaction> getAll(Pageable pageable) {
         return transactionRepository.findAll(pageable);
     }
+
+    public Page<Transaction> getCreateDateBetween(LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
+        return transactionRepository.findByCreatedDateBetween(fromDate, toDate, pageable);
+    }
+
+    public Page<Transaction> getCreateDateBetweenAndStatus(LocalDateTime fromDate, LocalDateTime toDate, int statusId, Pageable pageable) {
+        return transactionRepository.findByCreatedDateBetweenAndTransactionStatusId(fromDate, toDate, statusId, pageable);
+    }
 }

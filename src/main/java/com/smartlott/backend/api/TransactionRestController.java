@@ -311,9 +311,32 @@ public class TransactionRestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAll(Pageable pageable, Locale locale) {
+    public ResponseEntity<Object> getAll(@RequestParam(name = "fromDate", required = false) String fromDate,
+                                         @RequestParam(name = "toDate", required = false) String toDate,
+                                         @RequestParam(name = "status", required = false, defaultValue = "0") Integer status,
+                                         Pageable pageable, Locale locale) {
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
+                new Sort(Sort.Direction.DESC, "id"));
+        Page<Transaction> transactions = null;
+        if (fromDate != null) {
 
-        Page<Transaction> transactions = transactionService.getAll(pageable);
+            fromDate += " 00:00:00";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
+            LocalDateTime from = LocalDateTime.parse(fromDate, formatter);
+            LocalDateTime to = LocalDateTime.now(Clock.systemDefaultZone());;
+
+            if (toDate != null) {
+                toDate += " 23:59:00";
+                to = LocalDateTime.parse(toDate, formatter);
+            }
+
+            if (status != 0)
+                transactions = transactionService.getCreateDateBetweenAndStatus(from, to, status, pageRequest);
+            else
+                transactions = transactionService.getCreateDateBetween(from, to, pageRequest);
+        } else {
+            transactions = transactionService.getAll(pageRequest);
+        }
 
         return new ResponseEntity<Object>(transactions, HttpStatus.OK);
     }
@@ -325,7 +348,7 @@ public class TransactionRestController {
 
         if (wdd == null) {
             messageDTOS.add(new MessageDTO(MessageType.ERROR,
-                    i18NService.getMessage("transaction.error.withdraw.not.found.text" ,
+                    i18NService.getMessage("transaction.error.withdraw.not.found.text",
                             String.valueOf(transactionId), locale)));
         }
 

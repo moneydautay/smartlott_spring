@@ -8,10 +8,16 @@
             var id = /*[[${transactionId}]]*/;
             var typeAction = /*[[${action}]]*/;
 
+            var messages = /*[[${messages}]]*/;
+
             if (id != null) {
                 var urlGetData = /*[[@{/api/transaction/detail/{id}(id=${transactionId})}]]*/;
                 getData(urlGetData, showDataPost, showErrorPost);
             }
+
+            //show messages
+            if (messages != null)
+                showMessages(messages);
         });
 
         function showErrorPost(data) {
@@ -95,30 +101,31 @@
     </script>
 </div>
 <div th:fragment="detail-handle">
-        <div class="form-group">
-            <label for="accountType" th:text="#{order.gate.checkout.text}"></label>
-            <select id="accountType" name="accountType" class="form-control">
-                <option th:value="-1" th:text="#{transaction.choice.gate.checkout.text}"></option>
-                <option th:value="1">Perfect money</option>
-            </select>
-        </div>
-        <input type="hidden" name="transactionId" th:value="${transactionId}"/>
-        <input type="hidden" name="amount" id="frmAmount" value="0"/>
-        <input type="hidden" name="transactionId" th:value="${transactionId}"/>
+    <div class="form-group">
+        <label for="accountType" th:text="#{order.gate.checkout.text}"></label>
+        <select id="accountType" name="accountType" class="form-control">
+            <option th:value="-1" th:text="#{transaction.choice.gate.checkout.text}"></option>
+            <option th:value="1">Perfect money</option>
+        </select>
+    </div>
+    <input type="hidden" name="transactionId" th:value="${transactionId}"/>
+    <input type="hidden" name="amount" id="frmAmount" value="0"/>
+    <input type="hidden" name="transactionId" th:value="${transactionId}"/>
 </div>
 <div th:fragment="detail-handle-perfect-money">
     <form id="frmCheckoutByPerfectMoney" action="https://perfectmoney.is/api/step1.asp" method="POST">
         <p>
             <input type="hidden" name="PAYEE_ACCOUNT" id="accountNumber" value="U9498703"/>
             <input type="hidden" name="PAYEE_NAME" value="Smart Lott"/>
-            <input type="hidden" id="paymentAmount" name="PAYMENT_AMOUNT" value="0"/>
+            <!--id="paymentAmount"-->
+            <input type="hidden" name="PAYMENT_AMOUNT" value="0.01"/>
             <input type="hidden" name="PAYMENT_UNITS" value="USD"/>
             <input type="hidden" name="STATUS_URL"
-                   th:value="@{http://localhost:8080/stm-admin/transaction/handle/perfect-money/{transactionId}(transactionId=${transactionId})}"/>
+                   th:value="@{http://localhost:8080/stl-admin/transaction/handle/perfect-money(transactionId=${transactionId})}"/>
             <input type="hidden" name="PAYMENT_URL"
-                   th:value="@{http://localhost:8080/stm-admin/transaction/handle/perfect-money/{transactionId}(transactionId=${transactionId})}"/>
+                   th:value="@{http://localhost:8080/stl-admin/transaction/handle/perfect-money(transactionId=${transactionId})}"/>
             <input type="hidden" name="NOPAYMENT_URL"
-                   th:value="@{http://localhost:8080/stm-admin/transaction/error/{transactionId}(transactionId=${transactionId})}"/>
+                   th:value="@{http://localhost:8080/stm-admin/transaction/error(transactionId=${transactionId})}"/>
             <input type="hidden" name="BAGGAGE_FIELDS"
                    value="ORDER_NUM CUST_NUM"/>
             <input type="hidden" id="orderNum" name="ORDER_NUM" value=""/>
@@ -171,7 +178,7 @@
             });
 
 
-            if(id != null) {
+            if (id != null) {
                 //get detail with draw
                 var urlWithDraw = /*[[@{/api/transaction/withdraw-detail/{id}(id=${transactionId})}]]*/;
                 getData(urlWithDraw, showWithdrawDetail, showErrors);
@@ -214,17 +221,17 @@
             var withdrawAccountTitle = /*[[#{transaction.withdraw.account.number.text}]]*/;
 
             //set account number to from pm
-            $('#accountNumber').val( data.numberAccount.number);
+            $('#accountNumber').val(data.numberAccount.number);
 
             var extraRow = $('#extraRow');
             extraRow.html('');
 
             var strRow = '<div class="col-xs-12 col-md-6"> ' +
-                            '<div class="form-group"> ' +
-                            '<label for="accountNumber">' + withdrawAccountTitle + '</label> ' +
-                            '<input type="text" id="accountNumber" name="accountNumber" value="'+ data.numberAccount.number +'" class="form-control"/> ' +
-                            '</div> ' +
-                            '</div>';
+                '<div class="form-group"> ' +
+                '<label for="accountNumber">' + withdrawAccountTitle + '</label> ' +
+                '<input type="text" id="accountNumber" name="accountNumber" value="' + data.numberAccount.number + '" class="form-control"/> ' +
+                '</div> ' +
+                '</div>';
             extraRow.append(strRow);
         }
     </script>
