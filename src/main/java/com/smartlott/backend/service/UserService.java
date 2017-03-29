@@ -1,7 +1,9 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.*;
+import com.smartlott.backend.persistence.domain.elastic.UserElastic;
 import com.smartlott.backend.persistence.repositories.*;
+import com.smartlott.backend.persistence.repositories.elasticsearch.UserElasticRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +51,11 @@ public class UserService {
     @Value("${default.investment.package}")
     private int defaultInvestmentPackage;
 
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserElasticRepository userElasticRepository;
 
     /**
      * Findy a user by username
@@ -104,6 +108,10 @@ public class UserService {
 
         user.addUserInvestment(userInvestment);
 
+        UserElastic userElastic = new UserElastic(user);
+        LOGGER.info("Creating User elastic {} ", userElastic.toString());
+        userElasticRepository.save(userElastic);
+
         return user;
     }
 
@@ -125,7 +133,13 @@ public class UserService {
      */
     @Transactional
     public User updateUser(User user) {
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        //update user elastic searchAll
+        UserElastic userElastic = new UserElastic(user);
+        userElasticRepository.save(userElastic);
+
+        return user;
     }
 
     public User checkingPassword(String username, String currentPassword) {

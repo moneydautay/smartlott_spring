@@ -38,38 +38,39 @@
                         </select>
                     </div>
                     <div class="col-md-4 col-xs-12">
-                        <button type="submit" class="form-control btn btn-primary" >Do</button>
+                        <button type="submit" class="form-control btn btn-primary">Do</button>
                     </div>
                 </form>
             </div>
-            <form id="filterPost" method="GET" th:action="@{/stl-admin/post/all}">
-            <div class="form-group col-md-3 col-xs-12">
-                <select id="status" name="status" class="form-control" th:value="${status}">
-                    <option value="-1">Status</option>
-                    <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
-                    <option value="2" th:text="#{admin.member.block.text}">Block</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4 col-xs-12 navbar-right">
-                    <input type="text" id="query" name="query" class="form-control" placeholder="Search member" th:value="${query}"/>
-            </div>
+            <form id="searchMember" method="GET">
+                <div class="form-group col-md-3 col-xs-12">
+                    <select id="status" name="status" class="form-control" th:value="${status}">
+                        <option value="-1">Status</option>
+                        <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
+                        <option value="2" th:text="#{admin.member.block.text}">Block</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 col-xs-12 navbar-right">
+                    <input type="text" id="query" name="query" class="form-control" placeholder="Search member"
+                           th:value="${query}"/>
+                </div>
             </form>
         </div>
 
         <div class="row">
             <table class="table responsive" id="tableContent">
                 <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/></th>
-                        <th th:text="#{admin.member.username.text}">Username</th>
-                        <th th:text="#{admin.member.email.text}">Email</th>
-                        <th th:text="#{admin.member.cash.text}">Cash</th>
-                        <th th:text="#{admin.member.cash.investment.text}">Cash investment</th>
-                        <th th:text="#{admin.member.cash.trading.text}">Cash trading</th>
-                        <th th:text="#{admin.member.actived.text}">Actived</th>
-                        <th th:text="#{admin.member.enable.text}">Enabled</th>
-                        <th>#</th>
-                    </tr>
+                <tr class="dataFields">
+                    <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/></th>
+                    <th th:text="#{admin.member.username.text}" fields="username">Username</th>
+                    <th th:text="#{admin.member.email.text}" fields="email">Email</th>
+                    <th th:text="#{admin.member.cash.text}" fields="userCashes.0.value">Cash</th>
+                    <th th:text="#{admin.member.cash.investment.text}" fields="userCashes.1.value">Cash investment</th>
+                    <th th:text="#{admin.member.cash.trading.text}" fields="userCashes.2.value">Cash trading</th>
+                    <th th:text="#{admin.member.actived.text}" fields="actived">Actived</th>
+                    <th th:text="#{admin.member.enable.text}" fields="enabled">Enabled</th>
+                    <th>#</th>
+                </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -82,7 +83,7 @@
             </div>
             <a th:href="@{/stl-admin/member/add}" class="btn btn-primary">
                 <i class="entypo-plus"></i>
-               <span th:text="#{admin.member.button.add.text}">Add</span>
+                <span th:text="#{admin.member.button.add.text}">Add</span>
             </a>
         </div>
 
@@ -98,25 +99,26 @@
     jQuery(document).ready(function ($) {
         var urlApiMemberAll = /*[[@{/api/member/all}]]*/;
         var urlMember = /*[[@{/stl-admin/member/all}]]*/;
+        var urlMemberSearch = /*[[@{/api/user/search/all}]]*/;
+
         //set value to category selectbox
         var status = /*[[${status}]]*/;
         var query = /*[[${query}]]*/;
 
         //filter by categories
-        $('#categories').change(function () {
-            doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
+        $('#status').change(function () {
+            doSearchMember(urlMemberSearch, $('#status').val(), $('#query').val(), appendData);
         });
 
-        $('#filterPost').submit(function (e) {
+        $('#searchMember').submit(function (e) {
             e.preventDefault();
-            doSubmitPost(urlPostCl, $('#categories').val(), $('#title').val());
+            doSearchMember(urlMemberSearch, $('#status').val(), $('#query').val(), appendData);
         })
 
         //do action
         doActionPost();
 
-        var urlMemberSearch = /*[[@{/api/member/search}]]*/;
-        doSearchMember(urlApiMemberAll, urlMemberSearch, status, query, appendData);
+        getData(urlApiMemberAll, appendData, showErrors);
 
     });
 
@@ -131,32 +133,32 @@
 
             var data = [];
             //do nothing
-            if(action == -1)
+            if (action == -1)
                 return;
             //gets all checked
             var sizeData = 0;
-            $('input[name=_id]:checked','#tableContent').each(function (index,_id) {
-                data[index]=_id.value;
+            $('input[name=_id]:checked', '#tableContent').each(function (index, _id) {
+                data[index] = _id.value;
                 sizeData++;
             });
 
             //checks data equals zero to return nothing
-            if(0 >= sizeData){
+            if (0 >= sizeData) {
                 alert(msgErrorSizeZero);
                 return;
             }
 
             //action delete
-            if(action == 1){
-                if(confirm(msgConfirmDelete))
+            if (action == 1) {
+                if (confirm(msgConfirmDelete))
                     deletePosts(data);
-            }else{
+            } else {
                 //change status of posts
-                if(confirm(msgConfirmChangeStatus)){
+                if (confirm(msgConfirmChangeStatus)) {
                     //status publish
                     var status = true;
                     //status unpublish
-                    if(action==3)
+                    if (action == 3)
                         status = false;
                     //do change status
                     changeStatus(data, status);
@@ -170,64 +172,29 @@
      * Deletes datas
      * @param data
      */
-    function changeStatus(data,status=true) {
+    function changeStatus(data, status=true) {
         var urlChangeStatusPost = /*[[@{/api/post/change-status/}]]*/;
-        urlChangeStatusPost+=status;
-        saveOrupdateData(urlChangeStatusPost,'PUT',data,showSuccessAction,showErrors);
+        urlChangeStatusPost += status;
+        saveOrupdateData(urlChangeStatusPost, 'PUT', data, showSuccessAction, showErrors);
     }
 
     function appendData(data) {
-        console.log(data.content);
+
+        var urlEdit = /*[[@{/stl-admin/member/edit/}]]*/;
+        var urlDel = /*[[@{/stl-admin/member/delete/}]]*/;
         var area = $('#tableContent tbody');
         area.html('');
-        $.each(data.content, function (i, item) {
-            var _str = '<tr id="row_'+item.id+'">';
-            var urlEdit = /*[[@{/stl-admin/member/edit/}]]*/;
-            var urlDel = /*[[@{/stl-admin/member/delete/}]]*/;
-            urlEdit+=item.id;
-            urlDel+=item.id;
-            _str+='<td>';
-            _str+= '<input type="checkbox" class="_id" name="_id" value="'+item.id+'"/>';
-            _str+='</td>';
+        if (data.data != null) {
+            showMessages(data.messages);
+            data = data.data;
+        }
+        fieldData(data, urlEdit);
 
-            _str+='<td>';
-            _str+= '<a href="'+urlEdit+'" title="edit">'+item.username+'</a>';
-            _str+='</td>';
+        /*_str+='<td>';
+         _str+= '<a href="'+urlEdit+'" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+         _str+= '<a href="'+urlDel+'" title="delete"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+         _str+='</td>';*/
 
-            _str+='<td>';
-            _str+= item.email;
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= item.cash
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= item.status;
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= item.status;
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= item.actived;
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= item.enabled;
-            _str+='</td>';
-
-            _str+='<td>';
-            _str+= '<a href="'+urlEdit+'" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
-            _str+= '<a href="'+urlDel+'" title="delete"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-            _str+='</td>';
-
-            _str+='</tr>';
-            area.append(_str);
-
-            showPagination(data);
-        });
     }
 
 </script>

@@ -24,14 +24,16 @@
                 <a th:href="@{/stl-admin/transaction/all}">Transaction</a>
             </li>
             <li class="active">
-                <strong th:if="${transactionId == null and typeAction!='delete'}">Add transaction</strong>
-                <strong th:if="${transactionId != null and typeAction!='delete'}">Edit transaction</strong>
+                <strong th:if="${transactionId != null and action == null}">Detail transaction</strong>
+                <strong th:if="${transactionId != null and action =='handle'}">Handle transaction</strong>
+                <strong th:if="${transactionId != null and action =='cancel'}">Cancel transaction</strong>
             </li>
 
         </ol>
         <h2>
-            <strong th:if="${transactionId == null and typeAction!='delete'}">Add transaction</strong>
-            <strong th:if="${transactionId != null and typeAction!='delete'}">Edit transaction</strong>
+            <strong th:if="${transactionId != null and action== null}">Detail transaction</strong>
+            <strong th:if="${transactionId != null and action=='handle'}">Handle transaction</strong>
+            <strong th:if="${transactionId != null and action=='cancel'}">Cancel transaction</strong>
         </h2>
         <!--Message area-->
         <div class="row" id="messageArea">

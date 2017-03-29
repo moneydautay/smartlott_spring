@@ -3,6 +3,67 @@
  */
 var currentPage = 0;
 var totalPages = 0;
+
+/**
+ * Filed data to table given by data and columns of table.
+ * Defend on the name of fields in the th of head table
+ * the table will be field with the name of
+ * columns in the data respectively
+ *
+ * @param data
+ * @param urlDetail
+ */
+function fieldData(data, urlDetail) {
+
+    var dataFields = $('#tableContent .dataFields').find('th[fields]');
+    var area = $('#tableContent tbody');
+    area.html('');
+    $.each(data.content, function (i, item) {
+        var _str = '<tr id="row_' + item.id + '">';
+        urlDetail += item.id;
+
+        _str += '<td>';
+        _str += '<input type="checkbox" class="_id" name="_id" value="' + item.id + '"/>';
+        _str += '</td>';
+
+        dataFields.each(function (index, col) {
+            var field = $(col).attr('fields');
+            var row = '';
+            if ((typeof field !== typeof undefined) && field !== false) {
+
+                var fields = field.split('.');
+
+                if (fields.length > 1) {
+                    console.log(item);
+                        var obj = null;
+                        $.each(fields, function (i, fed) {
+
+                            if (i == 0)
+                                obj = item[fed];
+                            else if (obj != null)
+                                obj = obj[fed];
+                        })
+
+                    row = (obj != null) ? obj : '';
+                }  else row = (item[fields] != null ) ? item[fields] : '';
+            }
+
+            _str += '<td>';
+            _str += '<a href="' + urlDetail + '" title="edit">' + row + '</a>';
+            _str += '</td>';
+        });
+
+        _str += '<td>';
+        _str += '<a href="' + urlDetail + '" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+        _str += '</td>';
+
+        _str += '</tr>';
+        area.append(_str);
+
+        showPagination(data);
+    });
+}
+
 function pagination(url, callBack){
     var localUrl =url+'='+currentPage;
     getData(localUrl,callBack);

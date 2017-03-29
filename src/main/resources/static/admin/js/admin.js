@@ -1,18 +1,17 @@
-function doSearchPost(urlPostAll,urlPostSearch, catId = -1, title = null, callBack) {
+function doSearchPost(urlPostAll, urlPostSearch, catId = -1, title = null, callBack) {
     //search
-    if(catId != -1 || title != null){
+    if (catId != -1 || title != null) {
 
-        if(catId != -1){
-            urlPostSearch += "?catid="+catId;
-            if($.trim(title) != null && $.trim(title) != '')
-                urlPostSearch += "&title="+title;
+        if (catId != -1) {
+            urlPostSearch += "?catid=" + catId;
+            if ($.trim(title) != null && $.trim(title) != '')
+                urlPostSearch += "&title=" + title;
         }
-        else
-            if($.trim(title) != null && $.trim(title) != '')
-                urlPostSearch += "?title="+title;
+        else if ($.trim(title) != null && $.trim(title) != '')
+            urlPostSearch += "?title=" + title;
 
         getData(urlPostSearch, callBack, showErrors);
-    }else {
+    } else {
         getData(urlPostAll, callBack);
     }
 }
@@ -25,13 +24,13 @@ function doSearchPost(urlPostAll,urlPostSearch, catId = -1, title = null, callBa
  */
 function doSubmitPost(urlPostAll, catId = -1, title = null) {
     console.log(title);
-    if(catId != -1){
-        urlPostAll+="?catid="+catId;
-        if($.trim(title) != null && $.trim(title) != '')
-            urlPostAll+="&title="+title;
-    }else {
-        if(title != null && $.trim(title) != '')
-            urlPostAll+="?title="+title;
+    if (catId != -1) {
+        urlPostAll += "?catid=" + catId;
+        if ($.trim(title) != null && $.trim(title) != '')
+            urlPostAll += "&title=" + title;
+    } else {
+        if (title != null && $.trim(title) != '')
+            urlPostAll += "?title=" + title;
     }
     window.location.href = urlPostAll;
 }
@@ -44,7 +43,11 @@ function doSubmitPost(urlPostAll, catId = -1, title = null) {
  * @param query
  * @param callBack
  */
-function doSearchMember(urlAllMember,urlMemberSearch, status = -1, query = null, callBack) {
-    console.log(urlAllMember);
-    getData(urlAllMember,callBack,showErrors);
+function doSearchMember(urlMemberSearch, status = -1, query = null, callBack) {
+    console.log(query);
+    if (query != null) {
+        urlMemberSearch += "?q=" + query;
+        console.log(urlMemberSearch);
+        getData(urlMemberSearch, callBack, showErrors);
+    }
 }

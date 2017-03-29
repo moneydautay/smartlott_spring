@@ -96,7 +96,7 @@ public class PostRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
         System.out.println(post);
-        //add post elastice search
+        //add post elastice searchAll
         postElasticService.create(post);
 
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
@@ -131,7 +131,7 @@ public class PostRestController {
         if(post.isStatus())
             localPost.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
 
-        //update elastic post search
+        //update elastic post searchAll
         postElasticService.update(post);
 
         postService.update(localPost);

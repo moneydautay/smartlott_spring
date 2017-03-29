@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by greenlucky on 2/3/17.
  */
-@Document(indexName = "post_smartlott", type = "post",shards = 1, replicas = 0)
+@Document(indexName = "smartlott", type = "post",shards = 1, replicas = 0)
 public class PostElastic {
 
     @Id

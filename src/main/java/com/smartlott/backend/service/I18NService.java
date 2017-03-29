@@ -39,4 +39,8 @@ public class I18NService {
     public String getMessage(String messageId, String variable,Locale locale) {
         return messageSource.getMessage(messageId, new Object[]{variable}, locale);
     }
+
+    public String getMessage(String messageId, Object[] variables, Locale locale) {
+        return messageSource.getMessage(messageId, variables, locale);
+    }
 }

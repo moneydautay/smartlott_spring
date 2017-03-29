@@ -20,7 +20,7 @@
                 <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
             </li>
             <li class="active">
-                <strong>Member management</strong>
+                <strong>Transaction management</strong>
             </li>
         </ol>
 
@@ -167,54 +167,11 @@
         });
     });
 
+
     function appendData(data) {
-        var dataFields = $('#tableContent .dataFields').find('th[fields]');
 
-        var area = $('#tableContent tbody');
-        area.html('');
-        $.each(data.content, function (i, item) {
-            var _str = '<tr id="row_' + item.id + '">';
-            var urlDetail = /*[[@{/stl-admin/transaction/}]]*/;
-            urlDetail += item.id;
-
-            _str += '<td>';
-            _str += '<input type="checkbox" class="_id" name="_id" value="' + item.id + '"/>';
-            _str += '</td>';
-
-            dataFields.each(function (index, col) {
-                var field = $(col).attr('fields');
-                var row = '';
-                if ((typeof field !== typeof undefined) && field !== false) {
-
-                    var fields = field.split('.');
-
-                    if (fields.length > 1 && $.isPlainObject(item)) {
-                        var obj = null;
-                        $.each(fields, function (i, fed) {
-
-                            if (i == 0)
-                                obj = item[fed];
-                            else if (obj != null)
-                                obj = obj[fed];
-                        })
-                        row = (obj != null) ? obj : '';
-                    } else row = (item[fields] != null ) ? item[fields] : '';
-                }
-
-                _str += '<td>';
-                _str += '<a href="' + urlDetail + '" title="edit">' + row + '</a>';
-                _str += '</td>';
-            });
-
-            _str += '<td>';
-            _str += '<a href="' + urlDetail + '" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
-            _str += '</td>';
-
-            _str += '</tr>';
-            area.append(_str);
-
-            showPagination(data);
-        });
+        var urlDetail = /*[[@{/stl-admin/transaction/}]]*/;
+        fieldData(data, urlDetail);
     }
     //]]>
 </script>
