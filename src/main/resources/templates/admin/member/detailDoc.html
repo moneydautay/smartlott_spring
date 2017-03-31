@@ -15,23 +15,8 @@
 
         <hr/>
 
-        <ol class="breadcrumb bc-3">
-            <li>
-                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
-            </li>
-            <li>
-                <a th:href="@{/stl-admin/member/all}">Member</a>
-            </li>
-            <li class="active">
-                <strong th:if="${memberId == null and typeAction!='delete'}">Add member</strong>
-                <strong th:if="${memberId != null and typeAction!='delete'}">Edit member</strong>
-            </li>
+        <div th:replace="admin/member/script::member-breadcrumb"></div>
 
-        </ol>
-        <h2>
-            <strong th:if="${memberId == null and typeAction!='delete'}">Add member</strong>
-            <strong th:if="${memberId != null and typeAction!='delete'}">Edit memeber</strong>
-        </h2>
         <!--Message area-->
         <div class="row" id="messageArea"></div>
 
@@ -43,100 +28,22 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="username">Tên đăng nhập</label>
-                            <input type="text" id="username" name="username" class="form-control" readonly="readonly"/>
+                            <label th:text="#{admin.member.document.one.text}">Document 1</label>
+                            <img id="thumbnail1" th:src="@{/images/Perfect_Money.png}" alt="Image preview"
+                                 class="thumbnail fancybox"
+                                 style="max-width: 300px; max-height: 300px"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" id="email" name="email" class="form-control" readonly="readonly"/>
+                            <label th:text="#{admin.member.document.two.text}">Document 2</label>
+                            <img id="thumbnail2" th:src="@{/images/Perfect_Money.png}" alt="Image preview"
+                                 class="thumbnail fancybox"
+                                 style="max-width: 300px; max-height: 300px"/>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 has-right-icon">
-                        <div class="form-group">
-                            <label for="phoneNumber">Số điện thoại</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
-                                   readonly="readonly"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="lastName">Họ và tên đệm</label>
-                            <input type="text" id="lastName" name="lastName" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="firstName">Tên</label>
-                            <input type="text" id="firstName" name="firstName" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="sex">Giới tính</label>
-                            <div class="radio">
-                                <label><input id="sex" type="radio" name="sex" th:value="1" checked="checked"/>Nam</label>
-                                <label><input id="sex" type="radio" th:value="0" name="sex"/> Nữ</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 birthday-has-right-icon">
-                        <div class="form-group">
-                            <label for="birthday">Ngày sinh</label>
-                            <div class="input-group date" data-provide="datepicker" id="birthdayFormat">
-                                <input type="text" id="birthday" name="birthday" class="form-control"/>
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="address">Địa chỉ</label>
-                            <input type="text" id="address" name="address" class="form-control"/>
-                            <input type="hidden" id="addressId" name="addressId" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="city">Quận/Huyện</label>
-                            <input type="text" id="city" name="city" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 de-has-right-icon">
-                        <div class="form-group">
-                            <label for="province">Tỉnh/Thành Phố</label>
-                            <select name="province" id="province" class="form-control">
-
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group align-right">
-                    <button th:if="${memberId == null}" type="submit" class="btn btn-success"
-                            th:text="#{admin.post.button.publish.text}">Publish
-                    </button>
-                    <button th:if="${memberId != null}" type="submit" class="btn btn-success"
-                            th:text="#{admin.post.button.update.text}">Update
-                    </button>
-                </div>
-                <div class="form-group align-right">
-                    <button th:if="${memberId != null}" type="button" id="delete" class="btn btn-danger"
-                            th:text="#{admin.button.delete.text}"></button>
                 </div>
             </div>
         </form>
@@ -149,88 +56,27 @@
 
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
-<script th:src="@{/js/formValidation.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/admin/js/ckeditor/ckeditor.js}"></script>
-<script th:src="@{/admin/js/ckeditor/adapters/jquery.js}"></script>
-<script th:src="@{/admin/js/fileinput.js}"></script>
+
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
         var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
         var memberId = /*[[${memberId}]]*/;
-        var typeAction = /*[[${typeAction}]]*/;
-        var msgErrorTitle = /*[[#{admin.post.error.title.not.empty.text}]]*/;
-        var msgErrorSlug = /*[[#{admin.post.error.slug.not.empty.text}]]*/;
-        var msgErrorExceprt = /*[[#{admin.post.error.excerpt.not.empty.text}]]*/;
-        var msgErrorDelete = /*[[#{admin.post.delete.confirm.text}]]*/;
+        var url = /*[[@{/api/user/id/{userId}(userId=${memberId})}]]*/;
 
-        $('#frmAddPost').formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                title: {
-                    validators: {
-                        notEmpty: {
-                            message: msgErrorTitle
-                        }
-                    }
-                },
-                slug: {
-                    validators: {
-                        notEmpty: {
-                            message: msgErrorSlug
-                        }
-                    }
-                },
-                excerpt: {
-                    validators: {
-                        notEmpty: {
-                            message: msgErrorExceprt
-                        }
-                    }
-                },
+        getData(url, showDoc, showErrors);
 
-            }
-        }).on('success.form.fv', function (e) {
-            e.preventDefault();
-
-            var urlAdd = /*[[@{/api/user}]]*/;
-            var type = 'POST';
-            if (memberId != null) {
-                urlAdd += '/' + memberId;
-                type = 'PUT';
-            }
-            if (typeAction == 'delete')
-                type = 'DELETE';
-
-
-            var data = {};
-            var categories = [];
-            var memberId = $('#id').val();
-            if (memberId != null)
-                data['id'] = memberId;
-
-
-            //saveOrupdateData(urlAddPost, type, data, showSuccessPost);
-        });
-
-        if (memberId != null) {
-            var urlGetData = /*[[@{/api/user/id/{memberId}(memberId=${memberId})}]]*/;
-            getData(urlGetData, showDataPost, showErrorPost);
-        }
     });
 
-    function showDataPost(data) {
-        showDataToForm(data);
+    function showDoc(data) {
+        console.log(data);
+        var docOne = data.documentOne;
+        var docTwo = data.documentTwo;
+        if (docOne != null)
+            $('#thumbnail1').attr('src', docOne);
 
-    }
-    function showErrorPost(data) {
-        showErrors(data);
-        $('#frmAddPost').html('');
+        if (docTwo != null)
+            $('#thumbnail2').attr('src', docTwo);
+
     }
 
 </script>

@@ -14,13 +14,14 @@
         <li class="active">
             <strong>Edit</strong>
         </li>
+    </ol>
         <h2>
             <strong th:if="${param.tab[0] == 'general' || param.tab [0]==null}" th:text="#{admin.member.tab.general.text}"></strong>
             <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
             <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
             <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
         </h2>
-    </ol>
+
 </div>
 <div th:fragment="detail-tab">
     <div class="panel-options">

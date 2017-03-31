@@ -17,10 +17,13 @@ function fieldData(data, urlDetail) {
 
     var dataFields = $('#tableContent .dataFields').find('th[fields]');
     var area = $('#tableContent tbody');
+    var tool = false;
     area.html('');
-    $.each(data.content, function (i, item) {
+    data = (data.content != null) ? data.content : data;
+
+    $.each(data, function (i, item) {
         var _str = '<tr id="row_' + item.id + '">';
-        urlDetail += item.id;
+        var url = (urlDetail != null) ? urlDetail += item.id : "#";
 
         _str += '<td>';
         _str += '<input type="checkbox" class="_id" name="_id" value="' + item.id + '"/>';
@@ -34,28 +37,33 @@ function fieldData(data, urlDetail) {
                 var fields = field.split('.');
 
                 if (fields.length > 1) {
-                        var obj = null;
-                        $.each(fields, function (i, fed) {
+                    var obj = null;
+                    $.each(fields, function (i, fed) {
 
-                            if (i == 0)
-                                obj = item[fed];
-                            else if (obj != null)
-                                obj = obj[fed];
-                        })
+                        if (i == 0)
+                            obj = item[fed];
+                        else if (obj != null)
+                            obj = obj[fed];
+                    })
 
                     row = (obj != null) ? obj : '';
-                }  else row = (item[fields] != null ) ? item[fields] : '';
+                } else row = (item[fields] != null ) ? item[fields] : '';
             }
 
+
             _str += '<td>';
-            _str += '<a href="' + urlDetail + '" title="edit">' + row + '</a>';
+            _str += '<a href="' + url + '" title="edit">' + row + '</a>';
             _str += '</td>';
+
+            if(field == 'tool')
+                tool = true;
         });
 
-        _str += '<td>';
-        _str += '<a href="' + urlDetail + '" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
-        _str += '</td>';
-
+        if (tool) {
+            _str += '<td>';
+            _str += '<a href="' + url + '" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';
+            _str += '</td>';
+        }
         _str += '</tr>';
         area.append(_str);
 
@@ -63,32 +71,32 @@ function fieldData(data, urlDetail) {
     });
 }
 
-function pagination(url, callBack){
-    var localUrl =url+'='+currentPage;
-    getData(localUrl,callBack);
+function pagination(url, callBack) {
+    var localUrl = url + '=' + currentPage;
+    getData(localUrl, callBack);
 
     //select pagination number page
     selectPageNumber(url, callBack);
 }
 
 function selectPageNumber(url, callBack) {
-    $('body').on('click','.pagination .el_item', function () {
-        if($(this).attr('page') != currentPage) {
+    $('body').on('click', '.pagination .el_item', function () {
+        if ($(this).attr('page') != currentPage) {
             currentPage = $(this).attr('page');
             setActivePagiItem(url, callBack);
         }
     })
 
 
-    $('body').on('click','.pagination .previous' ,function () {
-        if(currentPage > 0){
+    $('body').on('click', '.pagination .previous', function () {
+        if (currentPage > 0) {
             currentPage--;
             setActivePagiItem(url, callBack);
         }
     });
 
-    $('body').on('click','.pagination .next', function () {
-        if(currentPage < (totalPages - 1)){
+    $('body').on('click', '.pagination .next', function () {
+        if (currentPage < (totalPages - 1)) {
             currentPage++;
             setActivePagiItem(url, callBack);
         }
@@ -100,8 +108,8 @@ function selectPageNumber(url, callBack) {
  */
 function setActivePagiItem(url, callBack) {
     $('.pagination li').removeClass('active');
-    $('#el_'+currentPage).addClass('active');
-    url+='='+currentPage;
+    $('#el_' + currentPage).addClass('active');
+    url += '=' + currentPage;
     //get all bonus
     getData(url, callBack);
 }
@@ -121,9 +129,9 @@ function showPagination(data) {
     pagination.append(strPrevious);
     totalPages = data.totalPages;
     /*<![CDATA[*/
-    for(var i=0 ; i < totalPages ; i++){
+    for (var i = 0; i < totalPages; i++) {
         var strNum = '';
-        strNum += '<li id="el_'+i+'" class="el_item" page="'+i+'"><a href="#" >'+(i+1)+'</a></li>';
+        strNum += '<li id="el_' + i + '" class="el_item" page="' + i + '"><a href="#" >' + (i + 1) + '</a></li>';
         pagination.append(strNum);
     }
     /*]]>*/
@@ -135,5 +143,5 @@ function showPagination(data) {
     pagination.append(strNext);
     currentPage = data.number;
     //select active
-    $('#el_'+currentPage).addClass('active');
+    $('#el_' + currentPage).addClass('active');
 }

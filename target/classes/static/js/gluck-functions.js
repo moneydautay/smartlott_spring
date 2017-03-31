@@ -163,3 +163,18 @@ $('#selectAll').change(function () {
         checked = true;
     $('input[name="_id"]').prop('checked',checked);
 })
+
+
+/**
+ * get all id of checked table data.
+ *
+ * @param idTable
+ * @returns {Array}
+ */
+function getIdsCheckedTable(idTable) {
+    var ids = [];
+    $('#' + idTable + ' input:checked').map(function (index) {
+        ids[index] = this.value;
+    });
+    return ids;
+}

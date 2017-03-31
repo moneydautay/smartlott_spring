@@ -1,6 +1,5 @@
 package com.smartlott.backend.persistence.domain.backend;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -28,6 +27,8 @@ public class NumberAccount {
 
     @Transient
     private String securityToken;
+
+    private boolean enabled = true;
 
     public NumberAccount() {
     }
@@ -78,6 +79,14 @@ public class NumberAccount {
         this.securityToken = securityToken;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "NumberAccount{" +
@@ -85,6 +94,7 @@ public class NumberAccount {
                 ", number='" + number + '\'' +
                 ", user=" + user +
                 ", numberAccountType=" + numberAccountType +
+                ", enabled=" + enabled +
                 '}';
     }
 

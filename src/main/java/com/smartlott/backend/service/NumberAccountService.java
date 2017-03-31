@@ -68,4 +68,14 @@ public class NumberAccountService {
     public void delete(NumberAccount numberAccount) {
         accountRepository.delete(numberAccount);
     }
+
+    @Transactional
+    public int activeNumberAccount(List<Long> ids) {
+        return accountRepository.changeStatus(ids, true);
+    }
+
+    @Transactional
+    public int inActiveNumberAccount(List<Long> ids) {
+        return accountRepository.changeStatus(ids, false);
+    }
 }

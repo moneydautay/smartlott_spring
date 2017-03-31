@@ -4,6 +4,7 @@ import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import com.smartlott.backend.persistence.domain.backend.SecurityToken;
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.backend.persistence.domain.dto.NumberAccountDTO;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import org.slf4j.Logger;
@@ -69,7 +70,12 @@ public class NumberAccountRestController {
 
         List<NumberAccount> numberAccounts = numberAccountService.findByUsername(userId);
 
-        return new ResponseEntity<Object>(numberAccounts, HttpStatus.OK);
+        //create number account dto
+        List<NumberAccountDTO> numberAccountDTOS = new ArrayList<>();
+
+        numberAccounts.forEach( na -> numberAccountDTOS.add(new NumberAccountDTO(na)));
+
+        return new ResponseEntity<Object>(numberAccountDTOS, HttpStatus.OK);
     }
 
     /**
@@ -241,6 +247,31 @@ public class NumberAccountRestController {
         return result;
     }
 
+
+    @GetMapping("/change-status")
+    public ResponseEntity<Object> active(@RequestParam("ids") List<Long> ids, boolean status, Locale locale) {
+        int numberChange = 0;
+        if(status == true)
+            numberChange = numberAccountService.activeNumberAccount(ids);
+        else
+            numberChange = numberAccountService.inActiveNumberAccount(ids);
+
+        return new ResponseEntity<Object>(numberChange, HttpStatus.OK);
+    }
+
+
+
+    /**
+     * Convert list number account to number account DTO.
+     *
+     * @param numberAccounts
+     * @return a list of Number account DTO or null if number account is null
+     */
+    private List<NumberAccountDTO> converToDTO(List<NumberAccount> numberAccounts) {
+        List<NumberAccountDTO>  numberAccountDTOS = new ArrayList<>();
+        numberAccounts.forEach(na -> numberAccountDTOS.add(new NumberAccountDTO(na)));
+        return numberAccountDTOS;
+    }
 
 
 }

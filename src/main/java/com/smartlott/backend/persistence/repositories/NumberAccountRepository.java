@@ -3,7 +3,10 @@ package com.smartlott.backend.persistence.repositories;
 import com.smartlott.backend.persistence.domain.backend.NumberAccount;
 import com.smartlott.backend.persistence.domain.backend.NumberAccountType;
 import com.smartlott.backend.persistence.domain.backend.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,4 +49,8 @@ public interface NumberAccountRepository extends CrudRepository<NumberAccount, L
      * @return a number account or null if not found
      */
     NumberAccount findByNumber(String number);
+
+    @Modifying
+    @Query("update NumberAccount as na set na.enabled = :enabled where na.id in (:ids)")
+    int changeStatus(@Param("ids") List<Long> ids, @Param("enabled") boolean enabled);
 }

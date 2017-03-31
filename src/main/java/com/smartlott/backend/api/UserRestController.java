@@ -6,6 +6,7 @@ import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.NotificationTypeEnum;
 import com.smartlott.enums.RolesEnum;
+import com.smartlott.exceptions.NotFoundException;
 import com.smartlott.exceptions.RoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,7 +216,8 @@ public class UserRestController {
 
         if (user == null) {
             LOGGER.error("UserId {} was not found", userId);
-            return new ResponseEntity<Object>(new Object[]{i18NService.getMessage("Username.not.found", String.valueOf(userId), locale)}, HttpStatus.EXPECTATION_FAILED);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR, i18NService.getMessage("Username.not.found", String.valueOf(userId), locale));
+            throw new NotFoundException(messageDTO);
         }
 
         return new ResponseEntity<Object>(user, HttpStatus.OK);
