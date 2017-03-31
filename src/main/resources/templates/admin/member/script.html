@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+</body>
+<div th:fragment="member-breadcrumb">
+    <ol class="breadcrumb bc-3">
+        <li>
+            <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+        </li>
+        <li>
+            <a th:href="@{/stl-admin/member/all}">Member</a>
+        </li>
+        <li class="active">
+            <strong>Edit</strong>
+        </li>
+        <h2>
+            <strong th:if="${param.tab[0] == 'general' || param.tab [0]==null}" th:text="#{admin.member.tab.general.text}"></strong>
+            <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
+            <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
+            <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
+        </h2>
+    </ol>
+</div>
+<div th:fragment="detail-tab">
+    <div class="panel-options">
+        <ul class="nav nav-tabs">
+            <li th:class="${(param.tab[0] == 'general' || param.tab [0]==null) ? 'active' : ''}" >
+                <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=general)}"
+                   th:text="#{admin.member.tab.general.text}">General</a></li>
+            <li th:class="${(param.tab[0] == 'password') ? 'active' : ''}" >
+                <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=password)}"
+                   th:text="#{admin.member.tab.password.text}">Second Tab </a></li>
+            <li th:class="${(param.tab[0] == 'doc') ? 'active' : ''}" >
+                <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=doc)}"
+                   th:text="#{admin.member.tab.doc.text}">Second Tab </a></li>
+            <li th:class="${(param.tab[0] == 'account') ? 'active' : ''}" >
+                <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=account)}"
+                   th:text="#{admin.member.tab.account.text}">Second Tab </a></li>
+        </ul>
+    </div>
+</div>
+
+<div th:fragment="detail-general">
+
+</div>
+</html>

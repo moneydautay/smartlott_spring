@@ -1,12 +1,15 @@
 package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.MessageDTO;
+import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.persistence.domain.elastic.UserElastic;
 import com.smartlott.backend.service.I18NService;
+import com.smartlott.backend.service.UserService;
 import com.smartlott.backend.service.elasticsearch.UserElasticService;
 import com.smartlott.enums.MessageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,9 @@ public class UserSearchRestController {
     @Autowired
     private UserElasticService userElasticService;
 
+    @Autowired
+    private UserService userService;
+
     private List<MessageDTO> messageDTOS;
 
     @Autowired
@@ -42,7 +48,18 @@ public class UserSearchRestController {
 
         PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
         Page<UserElastic> userElastics = userElasticService.searchAll(query, pageRequest);
-        responseData.put("data", userElastics);
+
+        List<Long> ids = new ArrayList<>();
+
+        userElastics.getContent().forEach(ue -> ids.add(ue.getId()));
+
+
+        List<User> users = userService.getUserByIds(ids);
+
+
+        Page<User> usersPage = new PageImpl<User>(users, pageRequest, userElastics.getTotalPages());
+
+        responseData.put("data", usersPage);
         if (userElastics.getTotalElements() == 0)
             messageDTOS.add(new MessageDTO(MessageType.WARNING, i18NService.getMessage("admin.member.search.not.found.text", query, locale)));
         else

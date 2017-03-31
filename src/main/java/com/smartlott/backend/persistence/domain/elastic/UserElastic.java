@@ -5,7 +5,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Id;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
 
 /**
  * Created by greenlucky on 3/29/17.
@@ -29,10 +28,6 @@ public class UserElastic {
     private String phoneNumber;
 
     private boolean enabled = true;
-
-    private int status;
-
-    private Set<Object> cash;
 
     private String createDate;
 
@@ -59,8 +54,6 @@ public class UserElastic {
         this.birthday = (user.getBirthday() != null) ? user.getBirthday().format(formatter) : null;
         this.phoneNumber = user.getPhoneNumber();
         this.enabled = user.isEnabled();
-        this.status = user.getStatus();
-        user.getUserCashes().forEach(cash -> this.cash.add(cash.getCash()));
         this.createDate = user.getCreateDate().toString();
         this.actived = user.isActived();
         this.activeBy = (user.getActiveBy() != null) ? user.getActiveBy().getUsername() : null;
@@ -132,22 +125,6 @@ public class UserElastic {
         this.enabled = enabled;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public Set<Object> getCash() {
-        return cash;
-    }
-
-    public void setCash(Set<Object> cash) {
-        this.cash = cash;
-    }
-
     public String getCreateDate() {
         return createDate;
     }
@@ -199,8 +176,6 @@ public class UserElastic {
                 ", birthday='" + birthday + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", enabled=" + enabled +
-                ", status=" + status +
-                ", cash=" + cash +
                 ", createDate='" + createDate + '\'' +
                 ", actived=" + actived +
                 ", activeBy='" + activeBy + '\'' +

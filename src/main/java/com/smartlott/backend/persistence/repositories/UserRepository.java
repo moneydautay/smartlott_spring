@@ -2,7 +2,6 @@ package com.smartlott.backend.persistence.repositories;
 
 import com.smartlott.backend.persistence.domain.backend.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -74,4 +73,6 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Modifying
     @Query("update User u set u.introducedKey = :introducedKey where  u.id = :userId")
     void updateIntroducedKey(@Param("userId") long userId,@Param("introducedKey") String introducedKey);
+
+    List<User> findByIdIn(List<Long> ids);
 }

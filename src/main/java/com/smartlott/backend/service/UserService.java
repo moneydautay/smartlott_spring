@@ -101,7 +101,7 @@ public class UserService {
         user = userRepository.save(user);
 
         //add cash to user
-        addCashToUser(user);
+        user.setUserCashes(addCashToUser(user));
 
         //add basic user investment package is CUSTOMER
         UserInvestment userInvestment = addInvestmentPackage(user, defaultInvestmentPackage, now);
@@ -206,6 +206,10 @@ public class UserService {
             userRepository.updateIntroducedKey(user.getId(), createIntroducedKey(user.getUsername()));
         }
 
+        //update user elastic
+        UserElastic userElastic = userElasticRepository.findOne(user.getId());
+        userElastic.setUserInvestment(userInvestment.getInvestmentPackage().getName());
+
         return userInvestment;
     }
 
@@ -221,10 +225,20 @@ public class UserService {
      *
      * @param user
      */
-    private void addCashToUser(User user) {
+    private Set<UserCash> addCashToUser(User user) {
         //get all cash
+        Set<UserCash> userCashes = new HashSet<>();
         List<Cash> cashes = cashRepository.findByEnabled(true);
-        cashes.forEach(ru -> userCashRepository.save(new UserCash(user, ru, defaultUserCash)));
+        cashes.forEach(ru -> userCashes.add(userCashRepository.save(new UserCash(user, ru, defaultUserCash))));
+        return userCashes;
+    }
 
+    /**
+     * @param ids
+     * @return
+     */
+    public List<User> getUserByIds(List<Long> ids) {
+
+        return userRepository.findByIdIn(ids);
     }
 }

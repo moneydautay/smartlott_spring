@@ -1,5 +1,6 @@
 package com.smartlott.backend.api;
 
+
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
@@ -341,4 +342,5 @@ public class UserRestController {
         notificationService.create(notif4);
         LOGGER.info("Add notification {} for user {}", notif4, user);
     }
+
 }

@@ -414,8 +414,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		fiveReward.setCoupleNumber(1);
 		rewardService.create(fiveReward);
 
-
-
 		IncomeComponent incomeComponent1 = new IncomeComponent();
 		incomeComponent1.setName("Hoa hồng bán hàng F1");
 		incomeComponent1.setValue(20);

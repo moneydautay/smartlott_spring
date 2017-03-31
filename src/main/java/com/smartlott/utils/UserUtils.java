@@ -28,7 +28,6 @@ public class UserUtils {
         user.setPhoneNumber("0000000000000");
         user.setPassword("123456");
         user.setEnabled(true);
-        user.setStatus(1);
 
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         user.setCreateDate(now);

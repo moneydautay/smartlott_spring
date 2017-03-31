@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by greenlucky on 3/29/17.
  */
@@ -17,6 +19,14 @@ public class UserElasticService {
 
     @Autowired
     private UserElasticRepository userElasticRepository;
+
+    public List<UserElastic> searchAll(String search) {
+
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        queryBuilder.must(QueryBuilders.matchQuery("_all", search));
+
+        return (List<UserElastic>) userElasticRepository.search(queryBuilder);
+    }
 
     public Page<UserElastic> searchAll(String search, Pageable pageable) {
 

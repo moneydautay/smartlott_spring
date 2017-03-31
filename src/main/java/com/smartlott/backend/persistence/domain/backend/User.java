@@ -78,8 +78,6 @@ public class User implements Serializable, UserDetails{
 
     private boolean enabled = true;
 
-    private int status;
-
     @Value(value = "0")
     @Column(updatable = false)
     private double cash;
@@ -234,14 +232,6 @@ public class User implements Serializable, UserDetails{
 
     public void setSex(int sex) {
         this.sex = sex;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public double getCash() {
@@ -428,7 +418,6 @@ public class User implements Serializable, UserDetails{
                 ", documentTwo='" + documentTwo + '\'' +
                 ", sex=" + sex +
                 ", enabled=" + enabled +
-                ", status=" + status +
                 ", cash=" + cash +
                 ", createDate=" + createDate +
                 ", actived=" + actived +

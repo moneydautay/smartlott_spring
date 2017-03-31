@@ -34,7 +34,6 @@ function fieldData(data, urlDetail) {
                 var fields = field.split('.');
 
                 if (fields.length > 1) {
-                    console.log(item);
                         var obj = null;
                         $.each(fields, function (i, fed) {
 

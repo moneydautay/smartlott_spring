@@ -34,6 +34,10 @@
         </h2>
         <!--Message area-->
         <div class="row" id="messageArea"></div>
+
+        <!--Include tab-->
+        <div th:replace="admin/member/script::detail-tab"></div>
+
         <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
             <div class="col-md-9">
                 <div class="row">

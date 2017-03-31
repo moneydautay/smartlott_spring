@@ -27,20 +27,20 @@ public class MemberController {
         return MEMBER_VIEW_NAME + "/index";
     }
 
-    @RequestMapping("/view/{memberId}")
-    public String viewMember(@PathVariable long memberId, Model model) {
-        model.addAttribute("memberId", memberId);
-        return MEMBER_VIEW_NAME + "/addMember";
-    }
 
     @RequestMapping("/edit/{memberId}")
-    public String editMember(@PathVariable long memberId, Model model) {
+    public String editMember(@PathVariable long memberId, @RequestParam(value = "tab", required = false) String tab, Model model) {
         model.addAttribute("memberId", memberId);
-        return MEMBER_VIEW_NAME + "/addMember";
+        switch (tab) {
+            case "password":return MEMBER_VIEW_NAME + "/detailPassword";
+            case "doc": return MEMBER_VIEW_NAME + "/detailDoc";
+            case "account": return MEMBER_VIEW_NAME + "/detailAccount";
+        }
+        return MEMBER_VIEW_NAME + "/detailGeneral";
     }
 
     @RequestMapping("/add")
     public String addMember() {
-        return MEMBER_VIEW_NAME + "/addMember";
+        return MEMBER_VIEW_NAME + "/detail";
     }
 }
