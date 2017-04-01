@@ -7,6 +7,7 @@ import com.smartlott.enums.MessageType;
 import com.smartlott.enums.NotificationTypeEnum;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.NotFoundException;
+import com.smartlott.exceptions.OccurException;
 import com.smartlott.exceptions.RoleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,6 +305,90 @@ public class UserRestController {
 
         return new ResponseEntity<Object>(localUser, HttpStatus.OK);
     }
+
+
+    @GetMapping(API_USER_REST_URL + "/active/{userId}/{byUserId}")
+    public ResponseEntity<Object> activeMember(@PathVariable long userId, @PathVariable long byUserId, Locale locale) {
+
+        List<MessageDTO> messages = new ArrayList<>();
+        User localUser = userService.findOne(userId);
+        User byUser = userService.findOne(byUserId);
+
+        if (localUser == null) {
+            LOGGER.error("Id {} was not found", userId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("Id.user.not.found", String.valueOf(userId), locale));
+            throw new NotFoundException(messageDTO);
+        }
+
+        if (byUser == null) {
+            LOGGER.error("Id {} was not found", byUserId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("Id.user.not.found", String.valueOf(byUserId), locale));
+            throw new NotFoundException(messageDTO);
+        }
+
+        if (userService.active(userId, byUser) == 0) {
+            LOGGER.error("Active member {} was failed", userId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.member.error.active.text", String.valueOf(userId), locale));
+            throw new OccurException(messageDTO);
+        }
+
+        messages.add(new MessageDTO(MessageType.SUCCESS,
+                i18NService.getMessage("admin.member.active.success.text", String.valueOf(byUserId), locale)));
+
+        localUser = userService.findOne(userId);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("messages", messages);
+        data.put("data", localUser);
+
+        return new ResponseEntity<Object>(data, HttpStatus.OK);
+    }
+
+    @GetMapping(API_USER_REST_URL + "/change-status/{status}/{userId}/{byUserId}")
+    public ResponseEntity<Object> activeMember(@PathVariable boolean status, @PathVariable long userId,
+                                               @PathVariable long byUserId, Locale locale) {
+
+        List<MessageDTO> messages = new ArrayList<>();
+        User localUser = userService.findOne(userId);
+        User byUser = userService.findOne(byUserId);
+
+        if (localUser == null) {
+            LOGGER.error("Id {} was not found", userId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("Id.user.not.found", String.valueOf(userId), locale));
+            throw new NotFoundException(messageDTO);
+        }
+
+        if (byUser == null) {
+            LOGGER.error("Id {} was not found", byUserId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("Id.user.not.found", String.valueOf(byUserId), locale));
+            throw new NotFoundException(messageDTO);
+        }
+        Object[] objs = new Object[] {String.valueOf(status), String.valueOf(userId)};
+        if (userService.changeStatus(status, userId, byUser) == 0) {
+            LOGGER.error("Change status member {} was failed", userId);
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.member.error.change.status.text",
+                            objs, locale));
+            throw new OccurException(messageDTO);
+        }
+
+        messages.add(new MessageDTO(MessageType.SUCCESS,
+                i18NService.getMessage("admin.member.change.status.success.text", objs, locale)));
+
+        localUser = userService.findOne(userId);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("messages", messages);
+        data.put("data", localUser);
+
+        return new ResponseEntity<Object>(data, HttpStatus.OK);
+    }
+
 
     public void setNotification(User user) {
 

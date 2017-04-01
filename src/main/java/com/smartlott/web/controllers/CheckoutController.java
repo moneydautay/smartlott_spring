@@ -82,7 +82,7 @@ public class CheckoutController {
     private SecurityTokenSevice securityTokenSevice;
 
     @Autowired
-    private UserInvestmentService investmentService;
+    private UserService userService;
 
     private List<MessageDTO> messageDTOS;
 
@@ -308,16 +308,9 @@ public class CheckoutController {
         InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
 
         LocalDateTime from = currentLottDialing.getToDate();
-        LocalDateTime to = from.plusDays(investmentPackage.getDurationTime());
+        User ofUser = transaction.getOfUser();
 
-        //add investment package to user
-        UserInvestment userInvestment = new UserInvestment();
-        userInvestment.setInvestmentPackage(investmentPackage);
-        userInvestment.setUser(transaction.getOfUser());
-        userInvestment.setFromDate(from);
-        userInvestment.setToDate(to);
-
-        userInvestment = investmentService.create(userInvestment);
+        UserInvestment userInvestment = userService.addInvestmentPackage(ofUser, investmentPackage.getId(), from);
 
         model.addAttribute("userInvestment", userInvestment);
 

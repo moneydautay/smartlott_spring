@@ -11,6 +11,9 @@ import javax.persistence.*;
 @Table(name = "user_cash")
 public class UserCash {
 
+    /** The Serial Version UID for Serializable classes */
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

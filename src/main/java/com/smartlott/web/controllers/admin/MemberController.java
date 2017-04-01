@@ -29,7 +29,7 @@ public class MemberController {
 
 
     @RequestMapping("/edit/{memberId}")
-    public String editMember(@PathVariable long memberId, @RequestParam(value = "tab", required = false) String tab, Model model) {
+    public String editMember(@PathVariable long memberId, @RequestParam(value = "tab", defaultValue = "general") String tab, Model model) {
         model.addAttribute("memberId", memberId);
         switch (tab) {
             case "password":return MEMBER_VIEW_NAME + "/detailPassword";

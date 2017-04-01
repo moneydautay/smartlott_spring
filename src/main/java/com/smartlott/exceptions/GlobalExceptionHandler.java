@@ -28,9 +28,16 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> notFoundExceptionHandler(NotFoundException e) {
-        LOGGER.error(e.getMessage());
         messageDTOS = new ArrayList<>();
         messageDTOS.add(e.getMessageDTO());
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
+    }
+
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    @ExceptionHandler(OccurException.class)
+    public ResponseEntity<Object> occurExceptionHandler(OccurException e) {
+        messageDTOS = new ArrayList<>();
+        messageDTOS.add(e.getMessageDTO());
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
     }
 }

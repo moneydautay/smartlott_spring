@@ -15,34 +15,72 @@
             <strong>Edit</strong>
         </li>
     </ol>
-        <h2>
-            <strong th:if="${param.tab[0] == 'general' || param.tab [0]==null}" th:text="#{admin.member.tab.general.text}"></strong>
-            <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
-            <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
-            <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
-        </h2>
+    <h2>
+        <strong th:if="${param.tab == null || param.tab[0] == 'general'}"
+                th:text="#{admin.member.tab.general.text}"></strong>
+        <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
+        <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
+        <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
+    </h2>
 
 </div>
 <div th:fragment="detail-tab">
     <div class="panel-options">
         <ul class="nav nav-tabs">
-            <li th:class="${(param.tab[0] == 'general' || param.tab [0]==null) ? 'active' : ''}" >
+            <li th:class="${(param.tab[0] == 'general' || param.tab [0]==null) ? 'active' : ''}">
                 <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=general)}"
                    th:text="#{admin.member.tab.general.text}">General</a></li>
-            <li th:class="${(param.tab[0] == 'password') ? 'active' : ''}" >
+            <li th:class="${(param.tab[0] == 'password') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=password)}"
                    th:text="#{admin.member.tab.password.text}">Second Tab </a></li>
-            <li th:class="${(param.tab[0] == 'doc') ? 'active' : ''}" >
+            <li th:class="${(param.tab[0] == 'doc') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=doc)}"
                    th:text="#{admin.member.tab.doc.text}">Second Tab </a></li>
-            <li th:class="${(param.tab[0] == 'account') ? 'active' : ''}" >
+            <li th:class="${(param.tab[0] == 'account') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/member/edit/{id}(id=${memberId},tab=account)}"
                    th:text="#{admin.member.tab.account.text}">Second Tab </a></li>
         </ul>
     </div>
 </div>
 
-<div th:fragment="detail-general">
+<div th:fragment="detail-tool">
+    <div class="col-md-2">
+        <div class="form-group align-right">
+            <button th:if="${memberId != null}" type="button" id="btnActiveMember" class="btn btn-success"
+                    th:text="#{admin.member.button.active.text}">Active
+            </button>
+        </div>
+        <div class="form-group align-right">
+            <button th:if="${memberId != null}" type="button" id="btnLockMember" class="btn btn-danger"
+                    th:text="#{admin.member.block.text}">Block
+            </button>
+        </div>
+    </div>
+    <script th:inline="javascript" type="application/javascript">
+        //<![CDATA[
+        jQuery(document).ready(function ($) {
+            var urlActiveMember = /*[[@{/api/user/active/{userId}/{byUserId}(userId=${memberId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+            var urlLockMember = /*[[@{/api/user/change-status/false/{userId}/{byUserId}(userId=${memberId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+            var activeConfirm = /*[[#{admin.member.active.confirm.text}]]*/;
+            var lockConfirm = /*[[#{admin.member.lock.confirm.text}]]*/;
 
+            $('#btnActiveMember').click(function () {
+                if (confirm(activeConfirm)) {
+                    getData(urlActiveMember, reloadPage, showErrors);
+                }
+            });
+
+            $('#btnLockMember').click(function () {
+                if (confirm(lockConfirm)) {
+                    getData(urlLockMember, reloadPage, showErrors);
+                }
+            });
+
+            function reloadPage(data) {
+                window.location.reload();
+            }
+        });
+        //]]>
+    </script>
 </div>
 </html>

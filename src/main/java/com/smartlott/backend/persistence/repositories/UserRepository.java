@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -75,4 +76,16 @@ public interface UserRepository extends CrudRepository<User, Long>{
     void updateIntroducedKey(@Param("userId") long userId,@Param("introducedKey") String introducedKey);
 
     List<User> findByIdIn(List<Long> ids);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.actived = true, u.activeBy = :byUser, u.activeDate = :activeDate where u.id = :userId")
+    int active(@Param("userId") long userId, @Param("byUser") User byUser,
+               @Param("activeDate") LocalDateTime activeDate);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.enabled = :status, u.changeStatusBy = :byUser, u.changeStatusDate = :changeDate where u.id = :userId")
+    int changeStatus(@Param("status") boolean status, @Param("userId") long userId,
+                     @Param("byUser") User byUser, @Param("changeDate") LocalDateTime changeDate);
 }

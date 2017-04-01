@@ -124,11 +124,9 @@ public class CheckoutRestController {
             type = localTransaction.getTransactionType();
 
         if(type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage))){
-
             investmentPackageHandler(localTransaction, messageDTOS, locale);
 
         }else {
-
             //handle lottery
             lotteryHandler(localTransaction, messageDTOS, locale);
         }
@@ -147,16 +145,10 @@ public class CheckoutRestController {
         InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
 
         LocalDateTime from = LocalDateTime.now(Clock.systemDefaultZone());
-        LocalDateTime to = (investmentPackage.getDurationTime() != 0) ? from.plusDays(investmentPackage.getDurationTime()): null;
         User ofUser = transaction.getOfUser();
-        //add investment package to user
-        UserInvestment userInvestment = new UserInvestment();
-        userInvestment.setInvestmentPackage(investmentPackage);
-        userInvestment.setUser(ofUser);
-        userInvestment.setFromDate(from);
-        userInvestment.setToDate(to);
 
-        userInvestment = investmentService.create(userInvestment);
+        //add investment package to user
+        UserInvestment userInvestment = userService.addInvestmentPackage(ofUser, investmentPackage.getId(), from);
 
         LOGGER.info("Added investment package {}", userInvestment);
         //add message success

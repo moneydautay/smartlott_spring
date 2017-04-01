@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Mrs Hoang on 18/12/2016.
@@ -133,6 +136,7 @@ public class UserService {
      */
     @Transactional
     public User updateUser(User user) {
+
         user = userRepository.save(user);
 
         //update user elastic searchAll
@@ -206,10 +210,6 @@ public class UserService {
             userRepository.updateIntroducedKey(user.getId(), createIntroducedKey(user.getUsername()));
         }
 
-        //update user elastic
-        UserElastic userElastic = userElasticRepository.findOne(user.getId());
-        userElastic.setUserInvestment(userInvestment.getInvestmentPackage().getName());
-
         return userInvestment;
     }
 
@@ -240,5 +240,17 @@ public class UserService {
     public List<User> getUserByIds(List<Long> ids) {
 
         return userRepository.findByIdIn(ids);
+    }
+
+    @Transactional
+    public int active(long userId, User byUser) {
+        LocalDateTime localDateTime = LocalDateTime.now(Clock.systemDefaultZone());
+        return userRepository.active(userId, byUser, localDateTime);
+    }
+
+    @Transactional
+    public int changeStatus(boolean status, long userId, User byUser) {
+        LocalDateTime changeDate = LocalDateTime.now(Clock.systemDefaultZone());
+        return userRepository.changeStatus(status, userId, byUser, changeDate);
     }
 }

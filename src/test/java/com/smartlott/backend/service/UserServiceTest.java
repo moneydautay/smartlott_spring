@@ -18,6 +18,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceTest {
 
+
     @Autowired
     private UserService userService;
 
@@ -30,6 +31,20 @@ public class UserServiceTest {
 
         Assert.assertEquals(1, userList.size());
 
+    }
+
+    @Test
+    public void activeUser() throws Exception {
+        User byUser = userService.findOne(1);
+        int userNum = userService.active(1, byUser);
+        Assert.assertEquals(1, userNum);
+    }
+
+    @Test
+    public void changeStatus() throws Exception {
+        User byUser = userService.findOne(1);
+        int userNum = userService.changeStatus(false,1, byUser);
+        Assert.assertEquals(1, userNum);
     }
 
 }

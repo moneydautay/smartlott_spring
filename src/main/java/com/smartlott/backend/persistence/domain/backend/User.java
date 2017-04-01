@@ -78,6 +78,14 @@ public class User implements Serializable, UserDetails{
 
     private boolean enabled = true;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(updatable = false)
+    private User changeStatusBy;
+
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @Column(updatable = false)
+    private LocalDateTime changeStatusDate;
+
     @Value(value = "0")
     @Column(updatable = false)
     private double cash;
@@ -87,11 +95,17 @@ public class User implements Serializable, UserDetails{
     @Column(name = "create_date", updatable = false)
     private LocalDateTime createDate;
 
+    @Column(updatable = false)
     private boolean actived = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "active_by", updatable = false)
     private User activeBy;
+
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @Column(updatable = false)
+    private LocalDateTime activeDate;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -218,12 +232,29 @@ public class User implements Serializable, UserDetails{
         this.documentTwo = documentTwo;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    public User getChangeStatusBy() {
+        return changeStatusBy;
+    }
+
+    public void setChangeStatusBy(User changeStatusBy) {
+        this.changeStatusBy = changeStatusBy;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public LocalDateTime getChangeStatusDate() {
+        return changeStatusDate;
+    }
+
+    public void setChangeStatusDate(LocalDateTime changeStatusDate) {
+        this.changeStatusDate = changeStatusDate;
     }
 
     public int getSex() {
@@ -261,6 +292,14 @@ public class User implements Serializable, UserDetails{
 
     public User getActiveBy() {
         return activeBy;
+    }
+
+    public LocalDateTime getActiveDate() {
+        return activeDate;
+    }
+
+    public void setActiveDate(LocalDateTime activeDate) {
+        this.activeDate = activeDate;
     }
 
     public void setActiveBy(User activeBy) {
