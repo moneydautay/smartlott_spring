@@ -9,6 +9,8 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,6 +33,7 @@ import java.util.*;
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable, UserDetails{
 
     /** The Serial Version UID for Serializable classes */
@@ -82,6 +85,7 @@ public class User implements Serializable, UserDetails{
     @JoinColumn(updatable = false)
     private User changeStatusBy;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     @Column(updatable = false)
     private LocalDateTime changeStatusDate;
@@ -93,6 +97,7 @@ public class User implements Serializable, UserDetails{
     @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     @Column(name = "create_date", updatable = false)
+    @CreatedDate
     private LocalDateTime createDate;
 
     @Column(updatable = false)

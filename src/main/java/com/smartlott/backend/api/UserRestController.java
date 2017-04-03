@@ -217,7 +217,7 @@ public class UserRestController {
 
         if (user == null) {
             LOGGER.error("UserId {} was not found", userId);
-            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR, i18NService.getMessage("Username.not.found", String.valueOf(userId), locale));
+            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR, i18NService.getMessage("Id.user.not.found", String.valueOf(userId), locale));
             throw new NotFoundException(messageDTO);
         }
 

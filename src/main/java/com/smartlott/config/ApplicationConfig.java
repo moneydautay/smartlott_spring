@@ -15,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableElasticsearchRepositories(basePackages =  "com.smartlott.backend.persistence.repositories.elasticsearch")
 @EnableTransactionManagement
 @PropertySource("file:///${user.home}/.gluck/smartlott/application-common.properties")
+@EnableJpaAuditing
 public class ApplicationConfig {
     
     /** The application logger */

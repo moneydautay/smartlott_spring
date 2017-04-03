@@ -96,7 +96,6 @@ public class UserService {
         user.setPassword(encryptPassword);
 
         user.setPasswords(passwords);
-        user.setCreateDate(now);
 
         //reset introducedKey to null
         user.setIntroducedKey(null);
@@ -252,5 +251,10 @@ public class UserService {
     public int changeStatus(boolean status, long userId, User byUser) {
         LocalDateTime changeDate = LocalDateTime.now(Clock.systemDefaultZone());
         return userRepository.changeStatus(status, userId, byUser, changeDate);
+    }
+
+    public User findOne(long userId, String role) {
+
+        return userRepository.findByIdAndUserRoles_RoleName(userId, role);
     }
 }

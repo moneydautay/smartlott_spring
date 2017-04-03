@@ -109,7 +109,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
 		NumberAccountType pm = numberAccountTypeService.getOne(2);
 
-		List<Role> roles = new ArrayList<>();
 		//createSecurityTokenForUsername role
 		Role custRole = new Role(RolesEnum.CUSTOMER);
 		Role seoRole = new Role(RolesEnum.SEO);
@@ -118,12 +117,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		Role mantRole = new Role(RolesEnum.MANAGER);
 		Role addRole = new Role(RolesEnum.ADMIN);
 
-		roles.add(custRole);
-		roles.add(seoRole);
-		roles.add(staffRole);
-		roles.add(editRole);
-		roles.add(mantRole);
-		roles.add(addRole);
+		List<Role> roles = Arrays.asList(custRole, seoRole, staffRole, editRole, mantRole, addRole);
+
 		LOGGER.info("Create roles into database..");
 		roleService.createRoles(roles);
 

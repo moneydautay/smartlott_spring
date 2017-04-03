@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-</body>
+
 <div th:fragment="member-breadcrumb">
     <ol class="breadcrumb bc-3">
         <li>
@@ -15,14 +15,18 @@
             <strong>Edit</strong>
         </li>
     </ol>
-    <h2>
-        <strong th:if="${param.tab == null || param.tab[0] == 'general'}"
-                th:text="#{admin.member.tab.general.text}"></strong>
-        <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
-        <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
-        <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
-    </h2>
-
+    <div class="col-md-6">
+        <h2>
+            <strong th:if="${param.tab == null || param.tab[0] == 'general'}"
+                    th:text="#{admin.member.tab.general.text}"></strong>
+            <strong th:if="${param.tab[0] == 'password'}" th:text="#{admin.member.tab.password.text}"></strong>
+            <strong th:if="${param.tab[0] == 'doc'}" th:text="#{admin.member.tab.doc.text}"></strong>
+            <strong th:if="${param.tab[0] == 'account'}" th:text="#{admin.member.tab.account.text}"></strong>
+        </h2>
+    </div>
+    <!-- include button tool -->
+    <div th:include="admin/member/script::detail-tool"></div>
+    <div class="clearfix"></div>
 </div>
 <div th:fragment="detail-tab">
     <div class="panel-options">
@@ -42,45 +46,100 @@
         </ul>
     </div>
 </div>
-
 <div th:fragment="detail-tool">
-    <div class="col-md-2">
-        <div class="form-group align-right">
-            <button th:if="${memberId != null}" type="button" id="btnActiveMember" class="btn btn-success"
-                    th:text="#{admin.member.button.active.text}">Active
-            </button>
-        </div>
-        <div class="form-group align-right">
-            <button th:if="${memberId != null}" type="button" id="btnLockMember" class="btn btn-danger"
-                    th:text="#{admin.member.block.text}">Block
-            </button>
+    <div class="col-md-12">
+        <div class="form-group align-right" id="toolBar">
+
         </div>
     </div>
+</div>
+<div th:fragment="member-toolbar">
     <script th:inline="javascript" type="application/javascript">
         //<![CDATA[
         jQuery(document).ready(function ($) {
             var urlActiveMember = /*[[@{/api/user/active/{userId}/{byUserId}(userId=${memberId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
             var urlLockMember = /*[[@{/api/user/change-status/false/{userId}/{byUserId}(userId=${memberId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
+            var urlUnLockMember = /*[[@{/api/user/change-status/true/{userId}/{byUserId}(userId=${memberId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
             var activeConfirm = /*[[#{admin.member.active.confirm.text}]]*/;
             var lockConfirm = /*[[#{admin.member.lock.confirm.text}]]*/;
 
-            $('#btnActiveMember').click(function () {
+            $(document).on('click', '#btnActiveMember', function () {
                 if (confirm(activeConfirm)) {
                     getData(urlActiveMember, reloadPage, showErrors);
                 }
             });
 
-            $('#btnLockMember').click(function () {
+            $(document).on('click', '#btnLockMember', function () {
                 if (confirm(lockConfirm)) {
                     getData(urlLockMember, reloadPage, showErrors);
                 }
             });
 
+            $(document).on('click', '#btnUnLockMember', function () {
+                if (confirm(lockConfirm)) {
+                    getData(urlUnLockMember, reloadPage, showErrors);
+                }
+            });
+
+            if(memberData != null)
+                toolBarMember(memberData);
+
             function reloadPage(data) {
                 window.location.reload();
             }
         });
+
+        /**
+         * Build toolbar
+         * @param data
+         */
+        function toolBarMember(data) {
+            var activeMemberText = /*[[#{admin.member.button.active.text}]]*/;
+            var enabledMemberText = /*[[#{admin.member.enabled.text}]]*/;
+            var disabledMemberText = /*[[#{admin.member.disabled.text}]]*/;
+            var strBtn = '';
+            if (!data.actived)
+                strBtn += '<button type="button" id="btnActiveMember" class="btn btn-success"> ' + activeMemberText + '</button>';
+
+            if (data.enabled)
+                strBtn += '<button type="button" id="btnLockMember" class="btn btn-danger" ' +
+                    '>' + enabledMemberText + '</button>';
+            else
+                strBtn += '<button type="button" id="btnUnLockMember" class="btn btn-success" ' +
+                    '>' + disabledMemberText + ' </button>';
+
+            $('#toolBar').append(strBtn);
+        }
         //]]>
     </script>
 </div>
+<div th:fragment="member-load-data">
+    <script th:inline="javascript" type="text/javascript">
+        var memberData = null;
+        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var memberId = /*[[${memberId}]]*/;
+        jQuery(document).ready(function ($) {
+
+            if (memberId != null) {
+                var urlGetData = /*[[@{/api/member/{memberId}(memberId=${memberId})}]]*/;
+                $.getData(urlGetData, assignData, showMemberErrors);
+            }
+        });
+
+        function assignData(data) {
+            memberData = data;
+        }
+
+        function showMemberErrors(data) {
+            showErrors(data);
+            $('.mainContent').html('');
+        }
+
+
+
+    </script>
+    <!-- include button tool -->
+    <div th:include="admin/member/script::member-toolbar"></div>
+</div>
+</body>
 </html>

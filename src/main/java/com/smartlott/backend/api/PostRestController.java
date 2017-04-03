@@ -77,7 +77,6 @@ public class PostRestController {
     public ResponseEntity<Object> createPost(@RequestBody Post post, Locale locale){
         messageDTOS = new ArrayList<>();
 
-        post.setPostDate(LocalDateTime.now(Clock.systemDefaultZone()));
         if(post.isStatus())
             post.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
 
@@ -95,8 +94,8 @@ public class PostRestController {
                     i18NService.getMessage("admin.post.error.add.text", locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
-        System.out.println(post);
-        //add post elastice searchAll
+
+        //add post elastic searchAll
         postElasticService.create(post);
 
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
@@ -127,7 +126,7 @@ public class PostRestController {
         localPost.setContent(post.getContent());
         localPost.setStatus(post.isStatus());
         localPost.setFeaturedImage(post.getFeaturedImage());
-        localPost.setPostEditDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
         if(post.isStatus())
             localPost.setPublishDate(LocalDateTime.now(Clock.systemDefaultZone()));
 

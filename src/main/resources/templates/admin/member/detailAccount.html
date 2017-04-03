@@ -20,37 +20,40 @@
         <!--Message area-->
         <div class="row" id="messageArea"></div>
 
-        <!--Include tab-->
-        <div th:replace="admin/member/script::detail-tab"></div>
 
-        <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
-            <div class="col-md-9">
-                <div class="form-group col-md-6">
-                    <div role="tabpanel" class="tab-pane active" id="accountNumber">
-                        <table class="table table-striped" id="tableContent">
-                            <thead>
+        <div class="mainContent">
+            <!--Include tab-->
+            <div th:replace="admin/member/script::detail-tab"></div>
+
+            <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
+                <div class="col-md-12">
+                    <div class="form-group col-md-6">
+                        <div role="tabpanel" class="tab-pane active" id="accountNumber">
+                            <table class="table table-striped" id="tableContent">
+                                <thead>
                                 <tr class="dataFields">
                                     <th>#</th>
                                     <th fields="number">Số tài khoản</th>
                                     <th fields="numberAccountType.name">Loại tài khoản</th>
                                     <th fields="enabled">Kích hoạt</th>
                                 </tr>
-                            </thead>
-                            <tbody class="text-center">
+                                </thead>
+                                <tbody class="text-center">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btnActiveAccount"
+                                th:text="#{admin.member.button.active.text}"></button>
+                        <button type="button" class="btn btn-danger btnInactiveAccount"
+                                th:text="#{admin.member.button.inactive.text}"></button>
                     </div>
                 </div>
-                <div class="clearfix"></div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary btnActiveAccount"
-                            th:text="#{admin.member.button.active.text}"></button>
-                    <button type="button" class="btn btn-danger btnInactiveAccount"
-                            th:text="#{admin.member.button.inactive.text}"></button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
         <div class="clearfix"></div>
         <!-- Footer -->
         <footer class="main">
@@ -60,17 +63,15 @@
 
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
+<div th:replace="admin/member/script::member-load-data"></div>
 <script th:inline="javascript" type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function ($) {
-        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
-        var memberId = /*[[${memberId}]]*/;
-
 
         var url = /*[[@{/api/number-account/by-user}]]*/;
         url += "/" + memberId;
-
-        getData(url, showNumberAccountToTable);
+        if (memberData != null)
+            getData(url, showNumberAccountToTable);
 
 
         function showNumberAccountToTable(data) {
@@ -107,7 +108,7 @@
          * @param data
          */
         function changeSuccess(data) {
-            if(data > 0)
+            if (data > 0)
                 window.location.reload();
         }
 

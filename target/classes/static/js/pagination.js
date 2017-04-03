@@ -13,7 +13,7 @@ var totalPages = 0;
  * @param data
  * @param urlDetail
  */
-function fieldData(data, urlDetail) {
+function fieldData(data, urlDetail, extendParamUrl = null) {
 
     var dataFields = $('#tableContent .dataFields').find('th[fields]');
     var area = $('#tableContent tbody');
@@ -23,7 +23,7 @@ function fieldData(data, urlDetail) {
 
     $.each(data, function (i, item) {
         var _str = '<tr id="row_' + item.id + '">';
-        var url = (urlDetail != null) ? urlDetail += item.id : "#";
+        var url = (urlDetail != null) ? (urlDetail += (item.id + extendParamUrl)) : "#";
 
         _str += '<td>';
         _str += '<input type="checkbox" class="_id" name="_id" value="' + item.id + '"/>';

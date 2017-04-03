@@ -20,36 +20,18 @@
                 <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
             </li>
             <li class="active">
-                <strong>Memeber management</strong>
+                <strong>Member management</strong>
             </li>
         </ol>
 
-        <h2>Memeber management</h2>
+        <h2>Member management</h2>
         <!--Message area-->
         <div class="row" id="messageArea"></div>
         <div class="row">
             <div class="form-group col-md-4 col-xs-12">
-                <form id="actionPost" method="GET" th:action="@{/api/post/category}">
-                    <div class="col-md-8 col-xs-12">
-                        <select id="action" name="action" class="form-control">
-                            <option value="-1">Action</option>
-                            <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
-                            <option value="2" th:text="#{admin.member.block.text}">Block</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 col-xs-12">
-                        <button type="submit" class="form-control btn btn-primary">Do</button>
-                    </div>
-                </form>
+
             </div>
             <form id="searchMember" method="GET">
-                <div class="form-group col-md-3 col-xs-12">
-                    <select id="status" name="status" class="form-control" th:value="${status}">
-                        <option value="-1">Status</option>
-                        <option value="1" th:text="#{admin.member.enable.text}">Enabled</option>
-                        <option value="2" th:text="#{admin.member.block.text}">Block</option>
-                    </select>
-                </div>
                 <div class="form-group col-md-4 col-xs-12 navbar-right">
                     <input type="text" id="query" name="query" class="form-control" placeholder="Search member"
                            th:value="${query}"/>
@@ -69,7 +51,6 @@
                     <th th:text="#{admin.member.cash.trading.text}" fields="userCashes.2.value">Cash trading</th>
                     <th th:text="#{admin.member.actived.text}" fields="actived">Actived</th>
                     <th th:text="#{admin.member.enable.text}" fields="enabled">Enabled</th>
-                    <th>#</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -181,14 +162,14 @@
     function appendData(data) {
 
         var urlEdit = /*[[@{/stl-admin/member/edit/}]]*/;
-        var urlDel = /*[[@{/stl-admin/member/delete/}]]*/;
         var area = $('#tableContent tbody');
+        var extendParamUrl = "?tab=General";
         area.html('');
         if (data.data != null) {
             showMessages(data.messages);
             data = data.data;
         }
-        fieldData(data, urlEdit);
+        fieldData(data, urlEdit, extendParamUrl);
 
         /*_str+='<td>';
          _str+= '<a href="'+urlEdit+'" title="edit"><i class="fa fa-pencil-square" aria-hidden="true"></i></a> ';

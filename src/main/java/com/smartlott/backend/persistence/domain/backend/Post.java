@@ -3,6 +3,10 @@ package com.smartlott.backend.persistence.domain.backend;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +20,7 @@ import java.util.List;
 @Table(name = "post")
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
+@EntityListeners(AuditingEntityListener.class)
 public class Post implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
@@ -34,6 +39,7 @@ public class Post implements Serializable{
 
     @Column(name = "post_date", updatable = false)
     @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @CreatedDate
     private LocalDateTime postDate;
 
     @Column(name = "publish_date")
@@ -42,6 +48,7 @@ public class Post implements Serializable{
 
     @Column(name = "post_edit_date")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @LastModifiedDate
     private LocalDateTime postEditDate;
 
     private boolean status=true;
@@ -51,6 +58,7 @@ public class Post implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_by")
+    @CreatedBy
     private User user;
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER, targetEntity = Category.class)

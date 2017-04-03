@@ -88,4 +88,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Query("update User u set u.enabled = :status, u.changeStatusBy = :byUser, u.changeStatusDate = :changeDate where u.id = :userId")
     int changeStatus(@Param("status") boolean status, @Param("userId") long userId,
                      @Param("byUser") User byUser, @Param("changeDate") LocalDateTime changeDate);
+
+
+    User findByIdAndUserRoles_RoleName(long userId, String role);
 }

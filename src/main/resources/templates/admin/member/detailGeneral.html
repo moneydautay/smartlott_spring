@@ -21,101 +21,147 @@
         <!--Message area-->
         <div class="row" id="messageArea"></div>
 
-        <!--Include tab-->
-        <div th:replace="admin/member/script::detail-tab"></div>
+        <div class="mainContent">
+            <!--Include tab-->
+            <div th:replace="admin/member/script::detail-tab"></div>
 
-        <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
-            <div class="col-md-10">
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="username">Tên đăng nhập</label>
-                            <input type="text" id="username" name="username" class="form-control" readonly="readonly"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" id="email" name="email" class="form-control" readonly="readonly"/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 has-right-icon">
-                        <div class="form-group">
-                            <label for="phoneNumber">Số điện thoại</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
-                                   readonly="readonly"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="lastName">Họ và tên đệm</label>
-                            <input type="text" id="lastName" name="lastName" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="firstName">Tên</label>
-                            <input type="text" id="firstName" name="firstName" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="sex">Giới tính</label>
-                            <div class="radio">
-                                <label><input id="sex" type="radio" name="sex" th:value="1"
-                                              checked="checked"/>Nam</label>
-                                <label><input id="sex" type="radio" th:value="0" name="sex"/> Nữ</label>
+            <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="username">Tên đăng nhập</label>
+                                <input type="text" id="username" name="username" class="form-control"
+                                       readonly="readonly"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 birthday-has-right-icon">
-                        <div class="form-group">
-                            <label for="birthday">Ngày sinh</label>
-                            <div class="input-group date" data-provide="datepicker" id="birthdayFormat">
-                                <input type="text" id="birthday" name="birthday" class="form-control"/>
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" id="email" name="email" class="form-control" readonly="readonly"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 has-right-icon">
+                            <div class="form-group">
+                                <label for="phoneNumber">Số điện thoại</label>
+                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
+                                       readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="lastName">Họ và tên đệm</label>
+                                <input type="text" id="lastName" name="lastName" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="firstName">Tên</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="sex">Giới tính</label>
+                                <div class="radio">
+                                    <label><input id="sex" type="radio" name="sex" th:value="1"
+                                                  checked="checked"/>Nam</label>
+                                    <label><input id="sex" type="radio" th:value="0" name="sex"/> Nữ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 birthday-has-right-icon">
+                            <div class="form-group">
+                                <label for="birthday">Ngày sinh</label>
+                                <div class="input-group date" data-provide="datepicker" id="birthdayFormat">
+                                    <input type="text" id="birthday" name="birthday" class="form-control"/>
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="form-group">
-                            <label for="address">Địa chỉ</label>
-                            <input type="text" id="address" name="address" class="form-control"/>
-                            <input type="hidden" id="addressId" name="addressId" class="form-control"/>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                                <label for="address">Địa chỉ</label>
+                                <input type="text" id="address" name="address" class="form-control"/>
+                                <input type="hidden" id="addressId" name="addressId" class="form-control"/>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="city">Quận/Huyện</label>
-                            <input type="text" id="city" name="city" class="form-control"/>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="city">Quận/Huyện</label>
+                                <input type="text" id="city" name="city" class="form-control"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 de-has-right-icon">
-                        <div class="form-group">
-                            <label for="province">Tỉnh/Thành Phố</label>
-                            <select name="province" id="province" class="form-control">
+                        <div class="col-xs-12 col-md-6 de-has-right-icon">
+                            <div class="form-group">
+                                <label for="province">Tỉnh/Thành Phố</label>
+                                <select name="province" id="province" class="form-control">
 
-                            </select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="page-header">Status</h3>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="enabled">Enabled</label>
+                                <input type="text" id="enabled" name="enabled" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="changeStatusBy">Change Status By</label>
+                                <input type="text" id="changeStatusBy" name="changeStatusBy" fields="username" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="changeStatusDate">Change Status Date</label>
+                                <input type="text" id="changeStatusDate" name="changeStatusDate" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="city">Activated</label>
+                                <input type="text" id="actived" name="actived" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="activeBy">Activated by</label>
+                                <input type="text" id="activeBy" name="activeBy" fields="username" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="city">Activated date</label>
+                                <input type="text" id="activeDate" name="activeDate" class="form-control"/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- include button tool -->
-            <div th:include="admin/member/script::detail-tool"></div>
-        </form>
+            </form>
+        </div>
         <div class="clearfix"></div>
         <!-- Footer -->
         <footer class="main">
@@ -127,28 +173,14 @@
 <div th:replace="admin/common/header :: common-before-scripts"></div>
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/admin/js/ckeditor/ckeditor.js}"></script>
-<script th:src="@{/admin/js/ckeditor/adapters/jquery.js}"></script>
-<script th:src="@{/admin/js/fileinput.js}"></script>
+<div th:replace="admin/member/script::member-load-data"></div>
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
-        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
-        var memberId = /*[[${memberId}]]*/;
 
-        if (memberId != null) {
-            var urlGetData = /*[[@{/api/user/id/{memberId}(memberId=${memberId})}]]*/;
-            getData(urlGetData, showDataPost, showErrorPost);
-        }
+        if (memberData != null)
+            showDataToForm(memberData);
     });
 
-    function showDataPost(data) {
-        showDataToForm(data);
-
-    }
-    function showErrorPost(data) {
-        showErrors(data);
-        $('#frmAddPost').html('');
-    }
 
 </script>
 </body>
