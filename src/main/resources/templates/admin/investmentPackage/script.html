@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="breadcrumb">
+
+    <ol class="breadcrumb bc-3">
+        <li>
+            <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+        </li>
+        <li>
+            <a th:href="@{/stl-admin/investment-package/all}" th:text="#{admin.investment.package.breadcrumb.text}">Investment
+                Package</a>
+        </li>
+        <li class="active">
+            <strong th:if="${investmentPackageId != null and action == 'edit'}">Edit investment package</strong>
+            <strong th:if="${investmentPackageId != null and action == 'add'}">Add investment package</strong>
+        </li>
+
+    </ol>
+    <div class="col-md-6">
+        <h2>
+            <strong th:if="${investmentPackageId != null and action == 'edit'}">Edit investment package</strong>
+            <strong th:if="${investmentPackageId != null and action == 'add'}">Add investment package</strong>
+        </h2>
+    </div>
+    <!-- include button tool -->
+    <div th:include="admin/member/script::detail-tool"></div>
+    <div class="clearfix"></div>
+</div>
+<div th:fragment="detail-load">
+    <script th:inline="javascript" type="text/javascript">
+        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var id = /*[[${investmentPackageId}]]*/;
+        jQuery(document).ready(function ($) {
+            var typeAction = /*[[${action}]]*/;
+
+            var messages = /*[[${messages}]]*/;
+
+            if (id != null) {
+                var urlGetData = /*[[@{/api/investment-package/{id}(id=${investmentPackageId})}]]*/;
+                getData(urlGetData, showDataPost, showErrorPost);
+            }
+
+            //show messages
+            if (messages != null)
+                showMessages(messages);
+        });
+
+        function showErrorPost(data) {
+            showErrors(data);
+        }
+
+        function showDataPost(data) {
+            showDataToForm(data);
+
+            var action = /*[[${action}]]*/;
+            var handleButton = $('#toolBar');
+            var disableText = /*[[#{admin.investment.package.button.disable.text}]]*/;
+            var saveText = /*[[#{button.save.text}]]*/;
+            var enabledText = /*[[#{admin.investment.package.button.enable.text}]]*/;
+            var deleteText = /*[[#{admin.investment.package.button.delete.text}]]*/;
+            var deleteUrl = /*[[@{/stl-admin/investment-package/delete/{id}(id=${investmentPackageId})}]]*/;
+
+            if (id != null) {
+                var strButton = '';
+                strButton += '<button type="button" id="btnSavePackage" class="btn btn-primary">' + saveText + '</button> ';
+                if (!data.enabled)
+                    strButton += '<button type="button" id="btnEnabledPackage" class="btn btn-success">' + enabledText + '</button> ';
+                else
+                    strButton += '<button type="button" id="btnDisabledPackage" class="btn btn-danger"> ' + disableText + ' </button> ';
+                strButton += '<a href="' + deleteUrl + '" type="submit" class="btn btn-danger"> ' + deleteText + ' </a>';
+                handleButton.append(strButton);
+            }
+        }
+    </script>
+</div>
+
+<div th:fragment="detail-cancel">
+    <script th:inline="javascript" type="text/javascript">
+        jQuery(document).ready(function ($) {
+            var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+            var id = /*[[${transactionId}]]*/;
+            var typeAction = /*[[${action}]]*/;
+
+            if (id != null) {
+                var urlGetData = /*[[@{/api/transaction/detail/{id}(id=${transactionId})}]]*/;
+                getData(urlGetData, showDataPost, showErrorPost);
+            }
+        });
+
+        function showDataPost(data) {
+            showDataToForm(data);
+
+            var status = data.transactionStatus;
+            var type = data.transactionType;
+            var action = /*[[${action}]]*/;
+            var handleButton = $('.handleButton');
+            var handleText = /*[[#{admin.transaction.button.handle.text}]]*/;
+            var cancelText = /*[[#{admin.transaction.button.cancel.text}]]*/;
+            var cancelUrl = /*[[@{/stl-admin/transaction/{id}(id=${transactionId})}]]*/;
+
+            handleButton.html('');
+            if (status.id == 1) {
+                var strButton = '';
+                strButton += '<button onclick="handleCancel(' + data.id + ')" type="button" class="btn btn-success">' + handleText + '</button>';
+                strButton += '<a href="' + cancelUrl + '" type="submit" class="btn btn-danger"> ' + cancelText + ' </a>';
+                handleButton.append(strButton);
+            } else if (status.id == 3) {
+                var msg = /*[[#{transaction.canceled.text}]]*/;
+                showMessage(msg, 'alert-success', false);
+            }
+        }
+        function handleCancel(id) {
+            var confirmCancelInfo = /*[[@{admin.transaction.info.cancel.text}]]*/;
+            var urlCancel = /*[[@{/api/transaction/cancel/{id}(id=${transactionId})}]]*/;
+            if (confirm(confirmCancelInfo)) {
+                saveOrUpdateDataByGet(urlCancel, cancelSuccess, showErrors);
+            }
+        }
+
+        function cancelSuccess(data) {
+            $('.handleButton').html('');
+            showSuccess(data);
+        }
+    </script>
+</div>
+<div th:fragment="detail-handle">
+    <div class="form-group">
+        <label for="accountType" th:text="#{order.gate.checkout.text}"></label>
+        <select id="accountType" name="accountType" class="form-control">
+            <option th:value="-1" th:text="#{transaction.choice.gate.checkout.text}"></option>
+            <option th:value="1">Perfect money</option>
+        </select>
+    </div>
+    <input type="hidden" name="transactionId" th:value="${transactionId}"/>
+    <input type="hidden" name="amount" id="frmAmount" value="0"/>
+    <input type="hidden" name="transactionId" th:value="${transactionId}"/>
+</div>
+<div th:fragment="detail-handle-perfect-money">
+    <form id="frmCheckoutByPerfectMoney" action="https://perfectmoney.is/api/step1.asp" method="POST">
+        <p>
+            <input type="hidden" name="PAYEE_ACCOUNT" id="accountNumber" value="U9498703"/>
+            <input type="hidden" name="PAYEE_NAME" value="Smart Lott"/>
+            <!--id="paymentAmount"-->
+            <input type="hidden" name="PAYMENT_AMOUNT" value="0.01"/>
+            <input type="hidden" name="PAYMENT_UNITS" value="USD"/>
+            <input type="hidden" name="STATUS_URL"
+                   th:value="@{http://localhost:8080/stl-admin/transaction/handle/perfect-money(transactionId=${transactionId})}"/>
+            <input type="hidden" name="PAYMENT_URL"
+                   th:value="@{http://localhost:8080/stl-admin/transaction/handle/perfect-money(transactionId=${transactionId})}"/>
+            <input type="hidden" name="NOPAYMENT_URL"
+                   th:value="@{http://localhost:8080/stm-admin/transaction/error(transactionId=${transactionId})}"/>
+            <input type="hidden" name="BAGGAGE_FIELDS"
+                   value="ORDER_NUM CUST_NUM"/>
+            <input type="hidden" id="orderNum" name="ORDER_NUM" value=""/>
+            <input type="hidden" id="custNum" name="CUST_NUM" value=""/>
+        </p>
+    </form>
+</div>
+<div th:fragment="detail-handle-script">
+    <script th:src="@{/js/formValidation.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:inline="javascript" type="text/javascript">
+        jQuery(document).ready(function ($) {
+
+            var choiceGateCheckout = /*[[#{transaction.choice.gate.checkout.text}]]*/;
+
+            /* Signup form validation */
+            $('#frmDetailTransaction').formValidation({
+                framework: 'bootstrap',
+                icon: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    accountType: {
+                        validators: {
+                            greaterThan: {
+                                value: 0,
+                                message: choiceGateCheckout
+                            }
+                        }
+                    },
+                }
+            }).on('success.form.fv', function (e) {
+                e.preventDefault();
+                var accountType = $('#accountType').val();
+
+                var url = '';
+                var msgConfirm = /*[[#{order.checkout.confirm.text}]]*/;
+                if (confirm(msgConfirm)) {
+                    switch ($('#accountType').val()) {
+                        case "1":
+                            $('#frmCheckoutByPerfectMoney').submit();
+                            break;
+                        default:
+
+
+                    }
+                }
+            });
+
+
+            if (id != null) {
+                //get detail with draw
+                var urlWithDraw = /*[[@{/api/transaction/withdraw-detail/{id}(id=${transactionId})}]]*/;
+                getData(urlWithDraw, showWithdrawDetail, showErrors);
+            }
+
+        });
+
+        function showDataPost(data) {
+            showDataToForm(data);
+
+            //set amount to form perfect money
+            $('#paymentAmount').val(data.amount);
+            $('#orderNum').val(data.id);
+            $('#custNum').val(data.ofUser.id);
+
+            var status = data.transactionStatus;
+            var type = data.transactionType;
+            var action = /*[[${action}]]*/;
+            var handleButton = $('.handleButton');
+            var handleText = /*[[#{admin.transaction.button.handle.text}]]*/;
+            var cancelText = /*[[#{admin.transaction.button.cancel.text}]]*/;
+            var handleUrl = /*[[@{/stl-admin/transaction/handle/{id}(id=${transactionId})}]]*/;
+            var cancelUrl = /*[[@{/stl-admin/transaction/cancel/{id}(id=${transactionId})}]]*/;
+
+            if (status.id == 1) {
+                var strButton = '';
+                strButton += '<button type="submit" class="btn btn-success">' + handleText + '</button>';
+                strButton += '<a href="' + cancelUrl + '" type="submit" class="btn btn-danger"> ' + cancelText + ' </a>';
+                handleButton.append(strButton);
+            }
+
+        }
+
+        /**
+         * Show withdraw detail
+         * @param data
+         */
+        function showWithdrawDetail(data) {
+            console.log(data);
+            var withdrawAccountTitle = /*[[#{transaction.withdraw.account.number.text}]]*/;
+
+            //set account number to from pm
+            $('#accountNumber').val(data.numberAccount.number);
+
+            var extraRow = $('#extraRow');
+            extraRow.html('');
+
+            var strRow = '<div class="col-xs-12 col-md-6"> ' +
+                '<div class="form-group"> ' +
+                '<label for="accountNumber">' + withdrawAccountTitle + '</label> ' +
+                '<input type="text" id="accountNumber" name="accountNumber" value="' + data.numberAccount.number + '" class="form-control"/> ' +
+                '</div> ' +
+                '</div>';
+            extraRow.append(strRow);
+        }
+    </script>
+
+</div>
+</body>
+</html>

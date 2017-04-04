@@ -57,10 +57,13 @@ public class InvestmentPackageRestController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<Object> getAll(Pageable pageable, Locale locale){
+        Sort sort = new Sort(Sort.Direction.DESC, "price");
+        if(pageable.getSort() != null)
+            sort = pageable.getSort();
         PageRequest pageRequest = new PageRequest(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                new Sort(Sort.Direction.DESC, "price"));
+                sort);
 
         Page<InvestmentPackage> packages = packageService.getAll(true, pageRequest);
 

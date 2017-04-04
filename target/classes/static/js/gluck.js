@@ -88,7 +88,7 @@ function objHandle(name, value) {
 
     //fields to show data
     var fields = null;
-    if( id.attr('fields') != null)
+    if (id.attr('fields') != null)
         fields = id.attr('fields').split(",");
 
     if (fields != null && fields.length > 0) {
@@ -146,6 +146,33 @@ function getAddress(userId, callBack = null) {
  * @param callBack function will be call after retrieve data successfully
  * @param errorCallBack function will be call after function has error
  */
+$.extend({
+    getData: function (url, callBack=null, errorCallBack=null) {
+        var responseData = null;
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            url: url,
+            dataType: 'json',
+            async: false,
+            global: false,
+            timeout: 10000,
+            success: function (data) {
+                responseData = data;
+                if (callBack != null)
+                    callBack(data);
+            },
+            error: function (e) {
+                if (errorCallBack != null)
+                    errorCallBack(JSON.parse(e.responseText));
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        });
+        return responseData;
+    }
+});
 function getData(url, callBack=null, errorCallBack=null) {
     $.ajax({
         type: 'GET',

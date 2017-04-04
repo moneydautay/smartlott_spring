@@ -23,7 +23,7 @@ function fieldData(data, urlDetail, extendParamUrl = null) {
 
     $.each(data, function (i, item) {
         var _str = '<tr id="row_' + item.id + '">';
-        var url = (urlDetail != null) ? (urlDetail += (item.id + extendParamUrl)) : "#";
+        var url = (urlDetail != null) ? (urlDetail + (item.id + extendParamUrl)) : "#";
 
         _str += '<td>';
         _str += '<input type="checkbox" class="_id" name="_id" value="' + item.id + '"/>';

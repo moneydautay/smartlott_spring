@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i><span th:text="#{admin.dashboard.text}">Dashboard</span></a>
+            </li>
+            <li class="active">
+                <strong th:text="#{admin.investment.package.breadcrumb.text}">Investment package management</strong>
+            </li>
+        </ol>
+
+        <h2 th:text="#{admin.investment.package.title.text}">Member management</h2>
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+
+        <div class="row">
+            <div class="form-group col-md-12 col-xs-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <table class="table responsive" id="tableContent">
+                <thead>
+                <tr class="dataFields">
+                    <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/>
+                    </th>
+                    <th th:text="#{admin.investment.package.id.text}" fields="id">ID</th>
+                    <th th:text="#{admin.investment.package.name.text}" fields="name">Name</th>
+                    <th th:text="#{admin.investment.package.price.text}" fields="price">Price</th>
+                    <th th:text="#{admin.investment.package.level.network.text}" fields="levelNetwork">Level network</th>
+                    <th th:text="#{admin.investment.package.limit.time.text}" fields="limitTime">Is Limit</th>
+                    <th th:text="#{admin.investment.package.duration.text}" fields="durationTime">Duration</th>
+                    <th th:text="#{admin.investment.package.requirement.text}" fields="parent">Requirement</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="navigaion">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                    </ul>
+                </nav>
+            </div>
+            <a th:href="@{/stl-admin/member/add}" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                <span th:text="#{admin.investment.package.add.text}">Add</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co"
+                                                                target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function ($) {
+        var urlApiAll = /*[[@{/api/investment-package/all(sort=id,name.dir=ASC, size=10, page=)}]]*/;
+
+        $('#filterPost').submit(function (e) {
+            e.preventDefault();
+            doSubmitPost(urlPostCl, null, $('#name').val());
+        })
+
+        pagination(urlApiAll, appendData);
+
+    });
+
+
+    function appendData(data) {
+
+        var urlDetail = /*[[@{/stl-admin/investment-package/edit/}]]*/;
+        fieldData(data, urlDetail);
+    }
+    //]]>
+</script>
+</body>
+</html>

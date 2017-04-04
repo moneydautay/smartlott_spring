@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by Mrs Hoang on 16/12/2016.
  */
 @Controller
-@RequestMapping("/stl-admin")
+@RequestMapping(DashBoardController.ADMIN_URL)
 public class DashBoardController {
+
+    public static final String ADMIN_URL = "/stl-admin" ;
+
 
     @RequestMapping("")
     public String dashboard(){
         return "admin/index";
     }
+
 }

@@ -117,6 +117,14 @@
                 <span th:text="#{admin.transaction.text}"></span>
             </a>
         </li>
+
+        <!-- INVESTMENT PACKAGE MANAGEMENT -->
+        <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/investment-package/all')?'active opened':''}">
+            <a th:href="@{/stl-admin/investment-package/all}">
+                <i class="entypo-gauge"></i>
+                <span th:text="#{admin.investment.package.text}"></span>
+            </a>
+        </li>
     </ul>
 </div>
 </body>
