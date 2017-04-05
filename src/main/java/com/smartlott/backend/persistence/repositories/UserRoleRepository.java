@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserRoleRepository extends CrudRepository<UserRole, Long>{
 
     /**
-     * Deletes role by User if exist or nothing if not not
+     * Deletes role by User if exists or nothing if not not
      * @param user
      */
     public void deleteByUser(User user);

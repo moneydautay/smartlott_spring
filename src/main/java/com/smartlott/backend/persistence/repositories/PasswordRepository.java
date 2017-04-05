@@ -40,7 +40,7 @@ public interface PasswordRepository extends CrudRepository<Password, Long>{
     /**
      * Find list password by user
      * @param user
-     * @return A list password or null if not exist
+     * @return A list password or null if not exists
      */
     public List<Password> findByUser(User user);
 

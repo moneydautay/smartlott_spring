@@ -14,7 +14,7 @@ public interface NumberAccountTypeRepository extends CrudRepository<NumberAccoun
 
     /**
      * Find all number account type
-     * @return A list of number account or null if not exist
+     * @return A list of number account or null if not exists
      */
     public List<NumberAccountType> findAll();
 }

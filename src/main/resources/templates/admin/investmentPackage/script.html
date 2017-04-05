@@ -13,14 +13,13 @@
         </li>
         <li class="active">
             <strong th:if="${investmentPackageId != null and action == 'edit'}">Edit investment package</strong>
-            <strong th:if="${investmentPackageId != null and action == 'add'}">Add investment package</strong>
+            <strong th:if="${investmentPackageId == null and action == 'add'}">Add investment package</strong>
         </li>
-
     </ol>
     <div class="col-md-6">
         <h2>
             <strong th:if="${investmentPackageId != null and action == 'edit'}">Edit investment package</strong>
-            <strong th:if="${investmentPackageId != null and action == 'add'}">Add investment package</strong>
+            <strong th:if="${investmentPackageId == null and action == 'add'}">Add investment package</strong>
         </h2>
     </div>
     <!-- include button tool -->
@@ -31,9 +30,10 @@
     <script th:inline="javascript" type="text/javascript">
         var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
         var id = /*[[${investmentPackageId}]]*/;
-        jQuery(document).ready(function ($) {
-            var typeAction = /*[[${action}]]*/;
 
+        jQuery(document).ready(function ($) {
+            var saveText = /*[[#{button.save.text}]]*/;
+            var typeAction = /*[[${action}]]*/;
             var messages = /*[[${messages}]]*/;
 
             if (id != null) {
@@ -41,9 +41,14 @@
                 getData(urlGetData, showDataPost, showErrorPost);
             }
 
+            var strButton = '<button type="button" id="btnSavePackage" class="btn btn-primary">' + saveText + '</button> ';
+            $('#toolBar').append(strButton);
+
             //show messages
             if (messages != null)
                 showMessages(messages);
+
+
         });
 
         function showErrorPost(data) {
@@ -56,21 +61,22 @@
             var action = /*[[${action}]]*/;
             var handleButton = $('#toolBar');
             var disableText = /*[[#{admin.investment.package.button.disable.text}]]*/;
-            var saveText = /*[[#{button.save.text}]]*/;
+
             var enabledText = /*[[#{admin.investment.package.button.enable.text}]]*/;
             var deleteText = /*[[#{admin.investment.package.button.delete.text}]]*/;
             var deleteUrl = /*[[@{/stl-admin/investment-package/delete/{id}(id=${investmentPackageId})}]]*/;
 
+
+            var strButton = '';
+
             if (id != null) {
-                var strButton = '';
-                strButton += '<button type="button" id="btnSavePackage" class="btn btn-primary">' + saveText + '</button> ';
                 if (!data.enabled)
                     strButton += '<button type="button" id="btnEnabledPackage" class="btn btn-success">' + enabledText + '</button> ';
                 else
                     strButton += '<button type="button" id="btnDisabledPackage" class="btn btn-danger"> ' + disableText + ' </button> ';
-                strButton += '<a href="' + deleteUrl + '" type="submit" class="btn btn-danger"> ' + deleteText + ' </a>';
-                handleButton.append(strButton);
+                strButton += '<button href="' + deleteUrl + '" type="button" id="btnDeletePackage" class="btn btn-danger"> ' + deleteText + ' </button>';
             }
+            handleButton.append(strButton);
         }
     </script>
 </div>
@@ -103,7 +109,7 @@
             if (status.id == 1) {
                 var strButton = '';
                 strButton += '<button onclick="handleCancel(' + data.id + ')" type="button" class="btn btn-success">' + handleText + '</button>';
-                strButton += '<a href="' + cancelUrl + '" type="submit" class="btn btn-danger"> ' + cancelText + ' </a>';
+                strButton += '<a href="' + cancelUrl + '" type="button" class="btn btn-danger"> ' + cancelText + ' </a>';
                 handleButton.append(strButton);
             } else if (status.id == 3) {
                 var msg = /*[[#{transaction.canceled.text}]]*/;

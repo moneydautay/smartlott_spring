@@ -21,7 +21,7 @@
         <!--Message area-->
         <div class="row" id="messageArea">
         </div>
-        <form role="form" id="frmDetailTransaction" method="post" class="form-groups-bordered">
+        <form role="form" id="frmDetailPackage" method="post" class="form-groups-bordered">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
@@ -41,31 +41,37 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="price" th:text="#{admin.investment.package.price.text}">Price</label>
-                            <input type="text" id="price" name="price" class="form-control" />
+                            <input type="text" id="price" name="price" class="form-control" th:value="0"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="levelNetwork" th:text="#{admin.investment.package.level.network.text}">Level network</label>
-                            <input type="text" id="levelNetwork" name="levelNetwork" class="form-control"/>
+                            <label for="levelNetwork" th:text="#{admin.investment.package.level.network.text}">Level
+                                network</label>
+                            <select class="form-control" id="levelNetwork" name="levelNetwork">
+
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="limitTime" th:text="#{admin.investment.package.limit.time.text}">Limit time</label>
+                            <label for="limitTime" th:text="#{admin.investment.package.limit.time.text}">Limit
+                                time</label>
                             <div class="limitTime">
                                 <label><input id="limitTime" type="radio" name="limitTime" th:value="true"
                                               checked="checked"/>Limit</label>
-                                <label><input id="limitTime" type="radio" th:value="false" name="limitTime"/> Unlimit</label>
+                                <label><input id="limitTime" type="radio" th:value="false" name="limitTime"/>
+                                    Unlimit</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="durationTime" th:text="#{admin.investment.package.duration.text}">Duration</label>
-                            <input type="text" id="durationTime" name="durationTime" class="form-control"/>
+                            <label for="durationTime"
+                                   th:text="#{admin.investment.package.duration.text}">Duration</label>
+                            <input type="text" id="durationTime" name="durationTime" class="form-control" th:value="0"/>
                         </div>
                     </div>
                 </div>
@@ -73,8 +79,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="parent" th:text="#{admin.investment.package.requirement.text}">Requirement</label>
-                            <input type="text" id="parent" name="parent" class="form-control"/>
+                            <label for="parent"
+                                   th:text="#{admin.investment.package.requirement.text}">Requirement</label>
+                            <input type="text" id="parent" name="parent" class="form-control" th:value="0"/>
                         </div>
                     </div>
                 </div>
@@ -108,6 +115,161 @@
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/admin/js/fileinput.js}"></script>
 <div th:include="/admin/investmentPackage/script :: detail-load"></div>
+<script th:inline="javascript" type="application/javascript">
+    jQuery(document).ready(function ($) {
 
+        showOptionSelect(7, 'levelNetwork');
+        var urlInvPackageMN = /*[[@{/stl-admin/investment-package/all}]]*/;
+        var msgErrorName =/*[[#{admin.investment.package.name.not.null.text}]]*/;
+        var msgErrorPrice =/*[[#{admin.investment.package.price.greater.than.text}]]*/;
+        var msgErrorLevelNetwork =/*[[#{admin.investment.package.level.network.greater.than.text}]]*/;
+        var msgErrorDurationTime =/*[[#{admin.investment.package.duration.time.greater.than.text}]]*/;
+        var msgErrorRequirement =/*[[#{admin.investment.package.requirement.greater.than.text}]]*/;
+        var msgNotNull =/*[[#{admin.investment.package.input.not.null.text}]]*/;
+        var msgConfirmDelete =/*[[#{admin.investment.package.confirm.delete.text}]]*/;
+
+        $('#frmDetailPackage').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: msgErrorName
+                        }
+                    }
+                },
+                price: {
+                    validators: {
+                        notEmpty: {
+                            message: msgNotNull
+                        },
+                        greaterThan: {
+                            value: 0,
+                            message: msgErrorPrice
+                        }
+                    }
+                },
+                levelNetwork: {
+                    validators: {
+                        notEmpty: {
+                            message: msgNotNull
+                        },
+                        greaterThan: {
+                            value: 0,
+                            message: msgErrorLevelNetwork
+                        }
+                    }
+                },
+                limitTime: {
+                    validators: {
+                        notEmpty: {
+                            message: msgNotNull
+                        }
+                    }
+                },
+                durationTime: {
+                    validators: {
+                        notEmpty: {
+                            message: msgNotNull
+                        },
+                        greaterThan: {
+                            value: 0,
+                            message: msgErrorDurationTime
+                        }
+                    }
+                },
+                parent: {
+                    validators: {
+                        notEmpty: {
+                            message: msgNotNull
+                        },
+                        greaterThan: {
+                            value: 0,
+                            message: msgErrorRequirement
+                        }
+                    }
+                },
+
+            }
+        }).on('click', '[name="limitTime"]', function (e) {
+            var isLimitTime = $('input[name="limitTime"]:checked').val();
+
+            var fv = $('#frmDetailPackage').data('formValidation');
+            if (isLimitTime == 'true') {
+
+                fv.enableFieldValidators('durationTime', true).revalidateField('durationTime');
+            }
+            else {
+                console.log(isLimitTime);
+                fv.enableFieldValidators('durationTime', false).revalidateField('durationTime');
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+
+            var data = {};
+            $("#frmDetailPackage :input, #frmDetailPackage select").each(function () {
+                if (this.type == "radio")
+                    data[this.name] = $('input:radio[name="' + this.name + '"]:checked').val();
+                else
+                    data[this.name] = this.value;
+            })
+            var urlSavePackage = /*[[@{/api/investment-package/{id}(id=${investmentPackageId})}]]*/;
+            var type = (id == null) ? 'POST' : 'PUT';
+            saveOrupdateData(urlSavePackage, type, data, saveSuccess, showErrors);
+        });
+
+        $(document).on('click', '#btnSavePackage', function () {
+            $('#frmDetailPackage').submit();
+        });
+
+        $(document).on('click', '#btnEnabledPackage', function () {
+            var urlChangeStatus = /*[[@{/api/investment-package/change-status/{id}/true(id=${investmentPackageId})}]]*/;
+            getData(urlChangeStatus, showChangeStatusSuccess, showErrors);
+        });
+
+        $(document).on('click', '#btnDisabledPackage', function () {
+            var urlChangeStatus = /*[[@{/api/investment-package/change-status/{id}/false(id=${investmentPackageId})}]]*/;
+            getData(urlChangeStatus, showChangeStatusSuccess, showErrors);
+        });
+
+        $(document).on('click', '#btnDeletePackage', function () {
+            if (confirm(msgConfirmDelete)) {
+                var urlDelete = /*[[@{/api/investment-package/{id}(id=${investmentPackageId})}]]*/;
+                saveOrupdateData(urlDelete, 'DELETE', null, showDeleteSuccessPackage, showErrors);
+            }
+        })
+
+        function showDeleteSuccessPackage(data) {
+            showMessages(data);
+            console.log(data);
+            setTimeout(function () {
+                window.location.href = urlInvPackageMN;
+             },500);
+        }
+
+        function saveSuccess(data) {
+
+            if (data.messages != null)
+                showMessages(data.messages);
+            setTimeout(function () {
+                window.location.href = urlInvPackageMN;
+            },500);
+        }
+
+        function showChangeStatusSuccess(data) {
+            showMessages(data);
+            setTimeout(function () {
+                window.location.reload();
+            },500);
+        }
+
+
+    });
+</script>
 </body>
 </html>

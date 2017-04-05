@@ -17,21 +17,21 @@ public interface NetworkRepository extends PagingAndSortingRepository<Network, L
 
     /**
      * Find all network
-     * @return A list of network or null if not exist
+     * @return A list of network or null if not exists
      */
     public Page<Network> findAll(Pageable pageable);
 
     /**
      * Find all network of user
      * @param userId
-     * @return A list ancestor of user or null if not exist
+     * @return A list ancestor of user or null if not exists
      */
     public List<Network> findByOfUserId(long userId);
 
     /**
      * Find all ancestor of user
      * @param userId
-     * @return A list ancestor of user or null if not exist
+     * @return A list ancestor of user or null if not exists
      */
     public Page<Network> findByOfUserId(Long userId, Pageable pageable);
 
@@ -46,7 +46,7 @@ public interface NetworkRepository extends PagingAndSortingRepository<Network, L
     /**
      * Find all descendant network of user
      * @param ancestorId
-     * @return A list of descendant network or null if not exist
+     * @return A list of descendant network or null if not exists
      */
     public Page<Network> findByAncestorId(Long ancestorId, Pageable pageable);
 

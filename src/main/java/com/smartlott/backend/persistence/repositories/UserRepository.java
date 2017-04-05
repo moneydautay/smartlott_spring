@@ -40,7 +40,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
      * Find user by username and password
      * @param username
      * @param password
-     * @return A user or null if not exist
+     * @return A user or null if not exists
      */
     public User findByUsernameAndPassword(String username, String password);
 

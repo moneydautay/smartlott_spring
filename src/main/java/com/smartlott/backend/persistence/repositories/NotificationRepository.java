@@ -20,7 +20,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
     /**
      * Find all notifications
      *
-     * @return A list of notification or null if not exist
+     * @return A list of notification or null if not exists
      */
     public List<Notification> findAll();
 
@@ -28,7 +28,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
      * Find notifications by user
      *
      * @param user
-     * @return A list of notification or null if not exist
+     * @return A list of notification or null if not exists
      */
     public List<Notification> findByUser(User user);
 
@@ -54,7 +54,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Lon
     /**
      * Find notifications by user id
      * @param userId
-     * @return A list of notification or null if not exist
+     * @return A list of notification or null if not exists
      */
     public List<Notification> findByUserId(long userId);
 

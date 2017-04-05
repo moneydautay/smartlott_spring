@@ -155,11 +155,11 @@ public class PostRestController {
     }
 
     /**
-     * Gets a post given by category id or null if not exist
+     * Gets a post given by category id or null if not exists
      * @param categoryId
      * @param pageable
      * @param locale
-     * @return A post or null if not exist
+     * @return A post or null if not exists
      */
     @RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
     public ResponseEntity<Object> getPostsByCategoryId(@PathVariable int categoryId, Pageable pageable,Locale locale){

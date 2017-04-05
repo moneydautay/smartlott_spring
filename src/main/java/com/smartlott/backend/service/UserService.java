@@ -193,7 +193,7 @@ public class UserService {
     @Transactional
     public UserInvestment addInvestmentPackage(User user, int investmentPackageId, LocalDateTime from) {
 
-        InvestmentPackage investmentPackage = investmentPackageRepository.findOne(investmentPackageId);
+        InvestmentPackage investmentPackage = investmentPackageRepository.findOne(investmentPackageId).get();
 
         UserInvestment userInvestment = new UserInvestment();
         userInvestment.setUser(user);
@@ -204,7 +204,7 @@ public class UserService {
 
         userInvestment = investmentRepository.save(userInvestment);
 
-        //add user introduced key if not exist
+        //add user introduced key if not exists
         if (investmentPackage.getLevelNetwork() > 0 && user.getIntroducedKey() == null) {
             userRepository.updateIntroducedKey(user.getId(), createIntroducedKey(user.getUsername()));
         }

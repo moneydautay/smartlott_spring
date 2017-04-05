@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Mrs Hoang on 09/02/2017.
@@ -56,48 +57,53 @@ public class InvestmentPackageService {
     }
 
     /**
-     * Deletes investment package given by package id or nothing if id not exist
+     * Deletes investment package given by package id or nothing if id not exists
      * @param id of investment package
      */
     @Transactional
-    public void delete(int id){
+    public void delete(int id) {
         packageRepository.delete(id);
     }
 
     /**
-     * Gets a Investment Package given by id or null if not exist
+     * Gets a Investment Package given by id or null if not exists
      * @param id
-     * @return A investment package or null if not exist
+     * @return A investment package or null if not exists
      */
     @Lock(LockModeType.READ)
-    public InvestmentPackage getOne(int id){
+    public Optional<InvestmentPackage> getOneOption(int id){
         return packageRepository.findOne(id);
+    }
+
+    @Lock(LockModeType.READ)
+    public InvestmentPackage getOne(int id){
+        return packageRepository.findOne(id).get();
     }
 
 
     /**
-     * Gets all package exist in database
-     * @return A list of package or list is empty if investment package is not exist
+     * Gets all package exists in database
+     * @return A list of package or list is empty if investment package is not exists
      */
     public List<InvestmentPackage> getAll(){
         return packageRepository.findAll();
     }
 
     /**
-     * Gets all package have enabled is equals enabled given by enabled or null if not exist.
+     * Gets all package have enabled is equals enabled given by enabled or null if not exists.
      *
      * @param enabled true or false
-     * @return A list of package or list is empty if investment package is not exist
+     * @return A list of package or list is empty if investment package is not exists
      */
     public List<InvestmentPackage> getAll(boolean enabled) {
         return packageRepository.findByEnabled(enabled);
     }
 
     /**
-     * Gets all investment package given by pageable or null if not exist
+     * Gets all investment package given by pageable or null if not exists
      * @param pageable
      * @return A page of investment package or page is empty
-     * if package is not exist
+     * if package is not exists
      * @see Pageable
      */
     public Page<InvestmentPackage> getAll(Pageable pageable) {
@@ -105,11 +111,11 @@ public class InvestmentPackageService {
     }
 
     /**
-     * Gets all investment package give by enabled and pageable or null if not exist
+     * Gets all investment package give by enabled and pageable or null if not exists
      * @param enabled
      * @param pageable
      * @return A page of investment package or page is empty
-     * if package is not exist
+     * if package is not exists
      * @see Pageable
      */
     public Page<InvestmentPackage> getAll(boolean enabled,Pageable pageable) {
@@ -126,11 +132,25 @@ public class InvestmentPackageService {
     @Transactional
     public InvestmentPackage addInvestmentPackageCash(int invpId, List<InvestmentPackageCash> investmentPackageCashes) {
 
-        InvestmentPackage investmentPackage = packageRepository.findOne(invpId);
+        InvestmentPackage investmentPackage = packageRepository.findOne(invpId).get();
         investmentPackage.setInvestmentPackageCashes(investmentPackageCashes);
 
         return packageRepository.save(investmentPackage);
     }
 
 
+    /**
+     * Checking investment package was existed.
+     * @param investmentPackageId
+     * @return true if exists or false
+     */
+    @Transactional
+    public boolean exists(int investmentPackageId) {
+        return packageRepository.exists(investmentPackageId);
+    }
+
+    @Transactional
+    public int changeStatus(int investmentPackageId, boolean status) {
+        return packageRepository.changeStatus(investmentPackageId, status);
+    }
 }

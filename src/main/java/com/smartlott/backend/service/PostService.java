@@ -98,7 +98,7 @@ public class PostService {
     /**
      * Checks exist post given by post id
      * @param postId
-     * @return True if post exist post id or null if not exist
+     * @return True if post exists post id or null if not exists
      */
     public boolean exist(int postId) {
         return postRepository.exists(Long.valueOf(postId));

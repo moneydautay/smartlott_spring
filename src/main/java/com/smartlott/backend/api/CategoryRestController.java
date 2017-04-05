@@ -107,10 +107,10 @@ public class CategoryRestController {
     }
 
     /**
-     * Retrieves a page of category or null if not exist
+     * Retrieves a page of category or null if not exists
      * @param pageable
      * @param locale
-     * @return A page of category or null if not exist
+     * @return A page of category or null if not exists
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<Object> getAllCategory(Pageable pageable, Locale locale){

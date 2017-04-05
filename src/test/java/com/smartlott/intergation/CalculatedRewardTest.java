@@ -151,7 +151,7 @@ public class CalculatedRewardTest {
                 System.out.println("Number lotteries is: "+lotteries.size());
                 //checking all list result will be deleted from lotteries
                 if(lotteries.containsAll(listResult)){
-                    System.out.println("List result still exist in lotteries");
+                    System.out.println("List result still exists in lotteries");
                 }
             }
 

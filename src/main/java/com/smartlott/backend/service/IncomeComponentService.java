@@ -90,7 +90,7 @@ public class IncomeComponentService {
 
 
     /**
-     * Gets all Income component exist all database or null if not exist.
+     * Gets all Income component exists all database or null if not exists.
      * This function using  of IncomeComponentRepository
      * Pageable is method of CRUDRepository to pagination page; Pageable has
      * 3 main parameters as: page number return current page, page size is number

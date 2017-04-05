@@ -88,7 +88,7 @@ public class LotteryDialingResultHandler {
                  LOGGER.info("Number award found: {}", listResult.size());
                 //checking all list result will be deleted from lotteries
                 if(lotteries.containsAll(listResult))
-                    LOGGER.warn("List result still exist in lotteries");
+                    LOGGER.warn("List result still exists in lotteries");
 
                 //save to lottery dialing result
                 dialingResultService.save(currentLotteryDialing, reward, lotteries);

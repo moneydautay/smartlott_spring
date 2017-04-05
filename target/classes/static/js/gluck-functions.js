@@ -178,3 +178,22 @@ function getIdsCheckedTable(idTable) {
     });
     return ids;
 }
+
+/**
+ * show number data to select given by number and id select
+ * @param levelNetwork
+ * @param idSelect
+ */
+//<![CDATA[
+function showOptionSelect(levelNetwork=0, idSelect) {
+    var select = $('#' + idSelect);
+    for (var i = 0; i <= levelNetwork; i++) {
+        var selected = (i == 0) ? 'selected="selected"' : '';
+        var strOption = '<option value="' + i + '">' + i + '</option>';
+        select.append(strOption);
+    }
+
+    $('#levelNetwork').val('0').prop('selected', true);
+}
+
+//]]>

@@ -1,6 +1,8 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 import com.smartlott.enums.InvestmentPackageEnum;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -38,7 +40,9 @@ public class InvestmentPackage implements Serializable {
 
     private int parent = 0;
 
-    @OneToMany(mappedBy = "investmentPackage", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "investmentPackage",
+            fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<InvestmentPackageCash> investmentPackageCashes;
 
 

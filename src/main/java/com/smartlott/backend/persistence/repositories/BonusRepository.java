@@ -31,14 +31,14 @@ public interface BonusRepository extends PagingAndSortingRepository<Bonus, Long>
     /**
      * Retrieve all bonus of user
      * @param ofUserId
-     * @return A list of bonus of user or null if not exist
+     * @return A list of bonus of user or null if not exists
      */
     public List<Bonus> findByOfUserId(long ofUserId);
 
     /**
      * Retrieve all bonus of user
      * @param ofUserId
-     * @return A list of bonus of user or null if not exist
+     * @return A list of bonus of user or null if not exists
      */
     public Page<Bonus> findByOfUserId(long ofUserId, Pageable pageable);
 }
