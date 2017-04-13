@@ -19,9 +19,9 @@ function fieldData(data, urlDetail, extendParamUrl = null) {
     var area = $('#tableContent tbody');
     var tool = false;
     area.html('');
-    data = (data.content != null) ? data.content : data;
+    var content = (data.content != null) ? data.content : data;
 
-    $.each(data, function (i, item) {
+    $.each(content, function (i, item) {
         var _str = '<tr id="row_' + item.id + '">';
         var url = (urlDetail != null) ? (urlDetail + (item.id + extendParamUrl)) : "#";
 
@@ -66,9 +66,9 @@ function fieldData(data, urlDetail, extendParamUrl = null) {
         }
         _str += '</tr>';
         area.append(_str);
-
-        showPagination(data);
     });
+
+    showPagination(data);
 }
 
 function pagination(url, callBack) {

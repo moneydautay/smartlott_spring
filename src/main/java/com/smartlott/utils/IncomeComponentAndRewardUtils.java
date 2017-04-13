@@ -35,7 +35,6 @@ public class IncomeComponentAndRewardUtils {
         IncomeComponent incomeComponent1 = new IncomeComponent();
         incomeComponent1.setName("A");
         incomeComponent1.setValue(47.5);
-        incomeComponent1.setCreateBy(user);
         incomeComponent1.setEnabled(true);
         incomeComponent1.setDescription("A");
         incomeComponent1 = componentService.create(incomeComponent1);
@@ -43,7 +42,6 @@ public class IncomeComponentAndRewardUtils {
         IncomeComponent incomeComponent2 = new IncomeComponent();
         incomeComponent2.setName("B");
         incomeComponent2.setValue(20);
-        incomeComponent2.setCreateBy(user);
         incomeComponent2.setEnabled(true);
         incomeComponent2.setDescription("B");
         incomeComponent2 = componentService.create(incomeComponent2);
@@ -51,7 +49,6 @@ public class IncomeComponentAndRewardUtils {
         IncomeComponent incomeComponent3 = new IncomeComponent();
         incomeComponent3.setName("C");
         incomeComponent3.setValue(20);
-        incomeComponent3.setCreateBy(user);
         incomeComponent3.setEnabled(true);
         incomeComponent3.setDescription("C");
         incomeComponent3 = componentService.create(incomeComponent3);
@@ -59,7 +56,6 @@ public class IncomeComponentAndRewardUtils {
         IncomeComponent incomeComponent4 = new IncomeComponent();
         incomeComponent4.setName("D");
         incomeComponent4.setValue(5);
-        incomeComponent4.setCreateBy(user);
         incomeComponent4.setEnabled(true);
         incomeComponent4.setDescription("D");
         incomeComponent4 = componentService.create(incomeComponent4);
@@ -67,7 +63,6 @@ public class IncomeComponentAndRewardUtils {
         IncomeComponent incomeComponent5 = new IncomeComponent();
         incomeComponent5.setName("D");
         incomeComponent5.setValue(5);
-        incomeComponent5.setCreateBy(user);
         incomeComponent5.setEnabled(true);
         incomeComponent5.setDescription("D");
         incomeComponent5 = componentService.create(incomeComponent5);

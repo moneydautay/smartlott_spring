@@ -1,13 +1,22 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
  */
 @Entity
 @Table(name = "income_component")
+@EntityListeners(AuditingEntityListener.class)
 public class IncomeComponent implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
@@ -21,11 +30,22 @@ public class IncomeComponent implements Serializable{
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User createBy;
+    @CreatedDate
+    @Column(updatable = false)
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime createdDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User modifyBy;
+
+    @CreatedBy
+    @JoinColumn(updatable = false)
+    private String createdBy;
+
+    @LastModifiedDate
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime modifiedDate;
+
+    @LastModifiedBy
+    private String modifiedBy;
 
     private double value = 0.0;
 
@@ -62,22 +82,6 @@ public class IncomeComponent implements Serializable{
         this.description = description;
     }
 
-    public User getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(User createBy) {
-        this.createBy = createBy;
-    }
-
-    public User getModifyBy() {
-        return modifyBy;
-    }
-
-    public void setModifyBy(User modifyBy) {
-        this.modifyBy = modifyBy;
-    }
-
     public double getValue() {
         return value;
     }
@@ -102,14 +106,36 @@ public class IncomeComponent implements Serializable{
         this.reward = reward;
     }
 
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+
     @Override
     public String toString() {
         return "IncomeComponent{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", createBy=" + createBy +
-                ", modifyBy=" + modifyBy +
+                ", createdDate=" + createdDate +
+                ", createBy=" + createdBy +
+                ", modifiedDate=" + modifiedDate +
+                ", modifyBy=" + modifiedBy +
                 ", value=" + value +
                 ", enabled=" + enabled +
                 ", reward=" + reward +

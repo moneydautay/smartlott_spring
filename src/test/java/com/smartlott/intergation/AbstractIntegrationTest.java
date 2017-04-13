@@ -126,7 +126,6 @@ public abstract class AbstractIntegrationTest {
 
     public IncomeComponent createIncomeComponent(User user, String name, String description, double value){
         IncomeComponent incomeComponent = new IncomeComponent();
-        incomeComponent.setCreateBy(user);
         incomeComponent.setName(name);
         incomeComponent.setDescription(description);
         incomeComponent.setValue(value);

@@ -412,7 +412,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent1 = new IncomeComponent();
 		incomeComponent1.setName("Hoa hồng bán hàng F1");
 		incomeComponent1.setValue(20);
-		incomeComponent1.setCreateBy(user);
 		incomeComponent1.setEnabled(true);
 		incomeComponent1.setDescription("Hoa hồng bán hàng F1");
 		incomeComponent1 = componentService.create(incomeComponent1);
@@ -420,7 +419,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent2 = new IncomeComponent();
 		incomeComponent2.setName("Hoa hồng bán hàng F2");
 		incomeComponent2.setValue(2);
-		incomeComponent2.setCreateBy(user);
 		incomeComponent2.setEnabled(true);
 		incomeComponent2.setDescription("Hoa hồng bán hàng F2");
 		incomeComponent2 = componentService.create(incomeComponent2);
@@ -428,7 +426,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent3 = new IncomeComponent();
 		incomeComponent3.setName("Hoa hồng bán hàng F3");
 		incomeComponent3.setValue(2);
-		incomeComponent3.setCreateBy(user);
 		incomeComponent3.setEnabled(true);
 		incomeComponent3.setDescription("Hoa hồng bán hàng F2");
 		incomeComponent3 = componentService.create(incomeComponent3);
@@ -436,7 +433,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent4 = new IncomeComponent();
 		incomeComponent4.setName("Hoa hồng bán hàng F4");
 		incomeComponent4.setValue(2);
-		incomeComponent4.setCreateBy(user);
 		incomeComponent4.setEnabled(true);
 		incomeComponent4.setDescription("Hoa hồng bán hàng F4");
 		incomeComponent4 = componentService.create(incomeComponent4);
@@ -444,7 +440,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent5 = new IncomeComponent();
 		incomeComponent5.setName("Hoa hồng bán hàng F5");
 		incomeComponent5.setValue(2);
-		incomeComponent5.setCreateBy(user);
 		incomeComponent5.setEnabled(true);
 		incomeComponent5.setDescription("Hoa hồng bán hàng F5");
 		incomeComponent5 = componentService.create(incomeComponent5);
@@ -452,7 +447,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent6 = new IncomeComponent();
 		incomeComponent6.setName("Hoa hồng bán hàng F6");
 		incomeComponent6.setValue(2);
-		incomeComponent6.setCreateBy(user);
 		incomeComponent6.setEnabled(true);
 		incomeComponent6.setDescription("Hoa hồng bán hàng F6");
 		incomeComponent6 = componentService.create(incomeComponent6);
@@ -460,7 +454,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent incomeComponent7 = new IncomeComponent();
 		incomeComponent7.setName("Hoa hồng bán hàng F7");
 		incomeComponent7.setValue(2);
-		incomeComponent7.setCreateBy(user);
 		incomeComponent7.setEnabled(true);
 		incomeComponent7.setDescription("Hoa hồng bán hàng F7");
 		incomeComponent7 = componentService.create(incomeComponent7);
@@ -470,7 +463,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		ja.setName("Giải đặc biệt");
 		ja.setReward(jackpots);
 		ja.setValue(40);
-		ja.setCreateBy(user);
 		ja.setEnabled(true);
 		ja.setDescription("Giải đặc biệt");
 		ja = componentService.create(ja);
@@ -479,7 +471,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		oneth.setName("Giải nhất");
 		oneth.setReward(firstReward);
 		oneth.setValue(6);
-		oneth.setCreateBy(user);
 		oneth.setEnabled(true);
 		oneth.setDescription("Giải nhất");
 		oneth = componentService.create(oneth);
@@ -488,7 +479,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		second.setName("Giải nhì");
 		second.setReward(secondReward);
 		second.setValue(4);
-		second.setCreateBy(user);
 		second.setEnabled(true);
 		second.setDescription("Giải nhì");
 		second = componentService.create(second);
@@ -497,7 +487,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		third.setName("Giải ba");
 		third.setReward(thirdReward);
 		third.setValue(4);
-		third.setCreateBy(user);
 		third.setEnabled(true);
 		third.setDescription("Giải ba");
 		third = componentService.create(third);
@@ -506,7 +495,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		four.setName("Giải tư");
 		four.setReward(fourReward);
 		four.setValue(3);
-		four.setCreateBy(user);
 		four.setEnabled(true);
 		four.setDescription("Giải tư");
 		four = componentService.create(four);
@@ -515,7 +503,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		five.setName("Giải năm");
 		five.setReward(fiveReward);
 		five.setValue(3);
-		five.setCreateBy(user);
 		five.setEnabled(true);
 		five.setDescription("Giải năm");
 		five = componentService.create(five);
@@ -523,7 +510,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent management = new IncomeComponent();
 		management.setName("Quản lý web, server");
 		management.setValue(5);
-		management.setCreateBy(user);
 		management.setEnabled(true);
 		management.setDescription("Quản lý web, server");
 		management = componentService.create(management);
@@ -532,7 +518,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent agent = new IncomeComponent();
 		agent.setName("Agent");
 		agent.setValue(0);
-		agent.setCreateBy(user);
 		agent.setEnabled(true);
 		agent.setDescription("The bonus agent investment package");
 		agent = componentService.create(agent);
@@ -541,7 +526,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		IncomeComponent invest = new IncomeComponent();
 		invest.setName("Invest");
 		invest.setValue(0.01);
-		invest.setCreateBy(user);
 		invest.setEnabled(true);
 		invest.setDescription("The bonus invest investment package");
 		componentService.create(invest);
