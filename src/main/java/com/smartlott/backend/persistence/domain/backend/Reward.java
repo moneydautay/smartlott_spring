@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -27,7 +28,7 @@ public class Reward implements Serializable{
     private double value;
 
     @Value("false")
-    private boolean jeckpots;
+    private boolean jackpots;
 
     private int defaultNumericReward = 0;
 
@@ -35,8 +36,11 @@ public class Reward implements Serializable{
 
     private boolean accumulation = false;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "reward")
     private IncomeComponent incomeComponent;
+
+    private boolean enabled = true;
 
     public Reward() {
     }
@@ -77,12 +81,12 @@ public class Reward implements Serializable{
         this.defaultNumericReward = defaultNumericReward;
     }
 
-    public boolean isJeckpots() {
-        return jeckpots;
+    public boolean isJackpots() {
+        return jackpots;
     }
 
-    public void setJeckpots(boolean jeckpots) {
-        this.jeckpots = jeckpots;
+    public void setJackpots(boolean jackpots) {
+        this.jackpots = jackpots;
     }
 
 
@@ -110,16 +114,25 @@ public class Reward implements Serializable{
         this.accumulation = accumulation;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "Reward{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", value=" + value +
-                ", jeckpots=" + jeckpots +
+                ", jackpots=" + jackpots +
                 ", defaultNumericReward=" + defaultNumericReward +
                 ", coupleNumber=" + coupleNumber +
                 ", accumulation=" + accumulation +
+                ", enabled=" + enabled +
                 ", incomeComponent=" + ((incomeComponent != null ) ? incomeComponent.getName() : null) +
                 '}';
     }

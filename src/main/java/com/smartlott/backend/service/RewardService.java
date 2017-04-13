@@ -3,6 +3,8 @@ package com.smartlott.backend.service;
 import com.smartlott.backend.persistence.domain.backend.Reward;
 import com.smartlott.backend.persistence.repositories.RewardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +39,14 @@ public class RewardService {
         return rewardRepository.findAll();
     }
 
+    public Page<Reward> getAll(Pageable pageable){
+        return rewardRepository.findAll(pageable);
+    }
+
+
     @Transactional
-    public void delete(int id) {
-        rewardRepository.delete(id);
+    public int delete(int id) {
+        return rewardRepository.deleteById(id);
     }
 
     public Reward getRewardByIncomeComponentId(long id) {

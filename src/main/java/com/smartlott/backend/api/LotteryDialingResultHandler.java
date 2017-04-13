@@ -61,7 +61,7 @@ public class LotteryDialingResultHandler {
                 int numberReward = (int) (component.getValue() / reward.getValue());
 
                 //checking if jackpot
-                if(component.getIncomeComponent().getReward().isJeckpots())
+                if(component.getIncomeComponent().getReward().isJackpots())
                     if (numberReward > 0) numberReward = 1;
 
                 //if numeric reward < 0 then get default reward
@@ -77,7 +77,7 @@ public class LotteryDialingResultHandler {
 
                 LOGGER.info("Number of lottery: {}", lotteries.size());
 
-                if(component.getIncomeComponent().getReward().isJeckpots()) {
+                if(component.getIncomeComponent().getReward().isJackpots()) {
                     listResult = findJackpots(lotteries, numberReward);
                     lotteries.removeAll(listResult);
                 }

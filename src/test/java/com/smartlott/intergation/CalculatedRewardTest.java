@@ -122,7 +122,7 @@ public class CalculatedRewardTest {
                 System.out.println("[Value of jackpot]: "+component.getValue());
                 System.out.println("[Defalut value of jackpot]: "+ reward.getValue());
                 int numberReward = (int) (component.getValue() / reward.getValue());
-                if(component.getIncomeComponent().getReward().isJeckpots())
+                if(component.getIncomeComponent().getReward().isJackpots())
                     if (numberReward > 0)
                         numberReward = 1;
 
@@ -138,7 +138,7 @@ public class CalculatedRewardTest {
                 System.out.println("[========================================================]");
                 System.out.println("[========================================================]");
                 List<Lottery> listResult = new ArrayList<>();
-                if(component.getIncomeComponent().getReward().isJeckpots()) {
+                if(component.getIncomeComponent().getReward().isJackpots()) {
                     listResult = findJackpots(lotteries, numberReward);
                     lotteries.removeAll(listResult);
                 }

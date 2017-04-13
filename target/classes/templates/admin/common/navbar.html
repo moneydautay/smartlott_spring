@@ -125,6 +125,14 @@
                 <span th:text="#{admin.investment.package.text}"></span>
             </a>
         </li>
+
+        <!-- REWARD MANAGEMENT -->
+        <li th:classappend="${#httpServletRequest.getRequestURI().contains('stl-admin/reward/all')?'active opened':''}">
+            <a th:href="@{/stl-admin/reward/all}">
+                <i class="entypo-gauge"></i>
+                <span th:text="#{admin.reward.text}"></span>
+            </a>
+        </li>
     </ul>
 </div>
 </body>
