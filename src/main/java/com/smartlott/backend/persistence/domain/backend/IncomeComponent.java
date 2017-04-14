@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
  * Created by Mrs Hoang on 17/12/2016.
  */
 @Entity
-@Table(name = "income_component")
+@Table(name = "income_component", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "reward_id")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class IncomeComponent implements Serializable{
 
@@ -106,7 +108,6 @@ public class IncomeComponent implements Serializable{
         this.reward = reward;
     }
 
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -115,16 +116,13 @@ public class IncomeComponent implements Serializable{
         return createdBy;
     }
 
-
     public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-
     public String getModifiedBy() {
         return modifiedBy;
     }
-
 
     @Override
     public String toString() {

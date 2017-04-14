@@ -197,3 +197,34 @@ function showOptionSelect(levelNetwork=0, idSelect) {
 }
 
 //]]>
+
+/**
+ * Assigns data of form to obj
+ *
+ * @param id
+ * @returns object data to submit
+ */
+
+function assignDataFromToObj(id) {
+    var data = {};
+    $(id + " :input, " + id + " select").each(function () {
+        if(this.type != 'button' && this.type != 'submit') {
+            var obj = this.name.split(".");
+            var name = this.name;
+            if (obj.length > 1 && this.value > 0) {
+                name = obj[0];
+                var ite = obj[1];
+                if (this.type == "radio") {
+                    var val = ('input:radio[name="' + this.name + '"]:checked').val();
+                    data[name] = {[ite]: val};
+                }
+                else
+                    data[name] = {[ite]: this.value};
+            } else if (this.type == "radio")
+                data[name] = $('input:radio[name="' + this.name + '"]:checked').val();
+            else
+                data[name] = this.value;
+        }
+    })
+    return data;
+}

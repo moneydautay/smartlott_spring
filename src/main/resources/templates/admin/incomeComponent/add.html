@@ -16,23 +16,23 @@
 
         <hr/>
 
-        <div th:replace="admin/reward/script :: breadcrumb"></div>
+        <div th:replace="admin/incomeComponent/script :: breadcrumb"></div>
 
         <!--Message area-->
         <div class="row" id="messageArea">
         </div>
-        <form role="form" id="frmDetailReward" method="post" class="form-groups-bordered">
+        <form role="form" id="frmDetailIncome" method="post" class="form-groups-bordered">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="id" th:text="#{admin.reward.id.text}">ID</label>
+                            <label for="id" th:text="#{admin.income.component.id.text}">ID</label>
                             <input type="text" id="id" name="id" class="form-control" readonly="readonly"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="name" th:text="#{admin.reward.name.text}">Names</label>
+                            <label for="name" th:text="#{admin.income.component.name.text}">Names</label>
                             <input type="text" id="name" name="name" class="form-control"/>
                         </div>
                     </div>
@@ -40,55 +40,33 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="value" th:text="#{admin.reward.value.text}">Value</label>
-                            <input type="text" id="value" name="value" class="form-control" th:value="0"/>
+                            <label for="description"
+                                   th:text="#{admin.income.component.description.text}">Description</label>
+                            <input type="text" id="description" name="description" class="form-control"/>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="jackpots" th:text="#{admin.reward.is.jackpots.text}">Level
-                                network</label>
-                            <div>
-                                <label><input type="radio" name="jackpots" id="jackpots" value="true"/> Yes</label>
-                                <label><input type="radio" name="jackpots" id="jackpots" value="false" checked="checked"/> No</label>
-                            </div>
+                            <label for="value" th:text="#{admin.income.component.value.text}">Value</label>
+                            <input type="text" name="value" id="value" class="form-control" th:value="0"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="defaultNumericReward" th:text="#{admin.reward.default.numberal.reward.text}">defaultNumbericReward</label>
-                            <input type="text" name="defaultNumericReward" id="defaultNumericReward"
-                                   class="form-control" th:value="0"/>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="coupleNumber"
-                                   th:text="#{admin.reward.couple.number.text}">Couple number</label>
-                            <input type="text" id="coupleNumber" name="coupleNumber" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="accumulation"
-                                   th:text="#{admin.reward.accumulation.text}">Accumulation</label>
-                            <div>
-                                <label><input type="radio" id="accumulation" name="accumulation" value="true"/>
-                                    Yes</label>
-                                <label><input type="radio" id="accumulation" name="accumulation" value="false" checked="checked"/>
-                                    No</label>
-                            </div>
+                            <label for="reward"
+                                   th:text="#{admin.income.component.reward.text}">Reward</label>
+                            <select id="reward" name="reward.id" class="form-control reward" fields="id">
+                                <option th:value="-1" th:text="#{admin.income.component.reward.select.text}">Reward
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
                             <label for="enabled"
-                                   th:text="#{admin.reward.enabled.text}">Status</label>
+                                   th:text="#{admin.income.component.status.text}">Status</label>
                             <div>
                                 <label><input type="radio" id="enabled" name="enabled" value="true" checked="checked"/>
                                     Yes</label>
@@ -121,18 +99,16 @@
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/admin/js/fileinput.js}"></script>
-<div th:include="/admin/reward/script :: detail-load"></div>
+<div th:include="/admin/incomeComponent/script :: detail-load"></div>
 <script th:inline="javascript" type="application/javascript">
     jQuery(document).ready(function ($) {
 
-        var urlInvPackageMN = /*[[@{/stl-admin/reward/all}]]*/;
-        var msgErrorName =/*[[#{admin.reward.name.not.null.text}]]*/;
-        var msgErrorValue =/*[[#{admin.reward.value.greater.than.text}]]*/;
-        var msgErrorDefaultReward =/*[[#{admin.reward.default.numeric.reward.greater.than.text}]]*/;
-        var msgErrorCoupleNumber =/*[[#{admin.reward.couple.number.greater.than.text}]]*/;
-        var msgNotNull =/*[[#{admin.reward.input.not.null.text}]]*/;
-        var msgConfirmDelete=/*[[#{admin.reward.confirm.delete.text}]]*/;
-        $('#frmDetailReward').formValidation({
+        var urlInvPackageMN = /*[[@{/stl-admin/income-component/all}]]*/;
+        var msgErrorName =/*[[#{admin.income.component.name.not.null.text}]]*/;
+        var msgErrorValue =/*[[#{admin.income.component.value.greater.than.text}]]*/;
+        var msgNotNull =/*[[#{admin.income.component.input.not.null.text}]]*/;
+        var msgConfirmDelete =/*[[#{admin.income.component.confirm.delete.text}]]*/;
+        $('#frmDetailIncome').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -157,62 +133,26 @@
                             message: msgErrorValue
                         }
                     }
-                },
-                defaultNumericReward: {
-                    validators: {
-                        notEmpty: {
-                            message: msgNotNull
-                        },
-                        greaterThan : {
-                            value: -1,
-                            message: msgErrorDefaultReward
-                        }
-                    }
-                },
-                coupleNumber: {
-                    validators: {
-                        notEmpty: {
-                            message: msgNotNull
-                        },
-                        greaterThan: {
-                            value: 0,
-                            message: msgErrorCoupleNumber
-                        }
-                    }
                 }
             }
         }).on('success.form.fv', function (e) {
             e.preventDefault();
 
-            var data = {};
-            $("#frmDetailReward :input, #frmDetailReward select").each(function () {
-                if (this.type == "radio")
-                    data[this.name] = $('input:radio[name="' + this.name + '"]:checked').val();
-                else
-                    data[this.name] = this.value;
-            })
-            var urlSaveReward = /*[[@{/api/reward/{id}(id=${rewardId})}]]*/;
+            var data = assignDataFromToObj('#frmDetailIncome');
+            console.log(data);
+            var urlSaveReward = /*[[@{/api/income-component/{id}(id=${incomeComponentId})}]]*/;
             var type = (id == null) ? 'POST' : 'PUT';
             saveOrupdateData(urlSaveReward, type, data, saveSuccess, showErrors);
         });
 
         $(document).on('click', '#btnSave', function () {
-            $('#frmDetailReward').submit();
+            $('#frmDetailIncome').submit();
         });
 
-        $(document).on('click', '#btnEnabled', function () {
-            var urlChangeStatus = /*[[@{/api/reward/change-status/{id}/true(id=${rewardId})}]]*/;
-            getData(urlChangeStatus, showChangeStatusSuccess, showErrors);
-        });
-
-        $(document).on('click', '#btnDisabled', function () {
-            var urlChangeStatus = /*[[@{/api/reward/change-status/{id}/false(id=${rewardId})}]]*/;
-            getData(urlChangeStatus, showChangeStatusSuccess, showErrors);
-        });
 
         $(document).on('click', '#btnDelete', function () {
             if (confirm(msgConfirmDelete)) {
-                var urlDelete = /*[[@{/api/reward/{id}(id=${rewardId})}]]*/;
+                var urlDelete = /*[[@{/api/income-component/{id}(id=${incomeComponentId})}]]*/;
                 saveOrupdateData(urlDelete, 'DELETE', null, showDeleteSuccessPackage, showErrors);
             }
         })
@@ -220,7 +160,7 @@
         function showDeleteSuccessPackage(data) {
             showMessages(data);
             setTimeout(function () {
-                //window.location.href = urlInvPackageMN;
+                window.location.href = urlInvPackageMN;
             }, 500);
         }
 
@@ -232,15 +172,6 @@
                 window.location.href = urlInvPackageMN;
             }, 500);
         }
-
-        function showChangeStatusSuccess(data) {
-            showMessages(data);
-            setTimeout(function () {
-                window.location.reload();
-            }, 500);
-        }
-
-
     });
 </script>
 </body>

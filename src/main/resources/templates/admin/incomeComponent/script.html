@@ -8,17 +8,18 @@
             <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
         </li>
         <li>
-            <a th:href="@{/stl-admin/reward/all}" th:text="#{admin.reward.breadcrumb.text}">Reward Management</a>
+            <a th:href="@{/stl-admin/income-component/all}" th:text="#{admin.income.component.breadcrumb.text}">Income
+                component Management</a>
         </li>
         <li class="active">
-            <strong th:if="${rewardId != null and action == 'edit'}">Edit reward</strong>
-            <strong th:if="${rewardId == null and action == 'add'}">Add reward</strong>
+            <strong th:if="${incomeComponentId != null and action == 'edit'}">Edit income component</strong>
+            <strong th:if="${incomeComponentId == null and action == 'add'}">Add income component</strong>
         </li>
     </ol>
     <div class="col-md-6">
         <h2>
-            <strong th:if="${rewardId != null and action == 'edit'}">Edit reward</strong>
-            <strong th:if="${rewardId == null and action == 'add'}">Add reward</strong>
+            <strong th:if="${incomeComponentId != null and action == 'edit'}">Edit income component</strong>
+            <strong th:if="${incomeComponentId == null and action == 'add'}">Add income component</strong>
         </h2>
     </div>
     <!-- include button tool -->
@@ -28,23 +29,29 @@
 <div th:fragment="detail-load">
     <script th:inline="javascript" type="text/javascript">
         var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
-        var id = /*[[${rewardId}]]*/;
+        var id = /*[[${incomeComponentId}]]*/;
 
         jQuery(document).ready(function ($) {
             var saveText = /*[[#{button.save.text}]]*/;
             var messages = /*[[${messages}]]*/;
+            var urlReward = /*[[@{/api/reward/list-all}]]*/;
 
-            if (id != null) {
-                var urlGetData = /*[[@{/api/reward/{id}(id=${rewardId})}]]*/;
-                getData(urlGetData, showDataPost, showErrorPost);
-            }
+            //get list reward
+            getData(urlReward, showSelectReward, showErrors);
 
-            var strButton = '<button type="button" id="btnSave" class="btn btn-primary">' + saveText + '</button> ';
-            $('#toolBar').append(strButton);
+            setTimeout(function () {
+                if (id != null) {
+                    var urlGetData = /*[[@{/api/income-component/{id}(id=${incomeComponentId})}]]*/;
+                    getData(urlGetData, showDataPost, showErrorPost);
+                }
 
-            //show messages
-            if (messages != null)
-                showMessages(messages);
+                var strButton = '<button type="button" id="btnSave" class="btn btn-primary">' + saveText + '</button> ';
+                $('#toolBar').append(strButton);
+
+                //show messages
+                if (messages != null)
+                    showMessages(messages);
+            },100);
         });
 
         function showErrorPost(data) {
@@ -56,15 +63,22 @@
 
             var handleButton = $('#toolBar');
             var deleteText = /*[[#{admin.investment.package.button.delete.text}]]*/;
-            var deleteUrl = /*[[@{/stl-admin/investment-package/delete/{id}(id=${rewardId})}]]*/;
-
-
             var strButton = '';
 
             if (id != null) {
-                strButton += '<button href="' + deleteUrl + '" type="button" id="btnDelete" class="btn btn-danger"> ' + deleteText + ' </button>';
+                strButton += '<button type="button" id="btnDelete" class="btn btn-danger"> ' + deleteText + ' </button>';
             }
             handleButton.append(strButton);
+        }
+
+        function showSelectReward(data)
+        {
+            var id = $('.reward');
+
+            $.each(data, function (index, reward) {
+                var strOpt = '<option value="' + reward.id + '">' + reward.name + '</option>';
+                id.append(strOpt);
+            })
         }
     </script>
 </div>

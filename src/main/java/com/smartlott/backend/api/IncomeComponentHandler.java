@@ -2,11 +2,16 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.IncomeComponent;
 import com.smartlott.backend.persistence.domain.backend.MessageDTO;
+import com.smartlott.backend.persistence.domain.backend.Reward;
 import com.smartlott.backend.service.I18NService;
 import com.smartlott.backend.service.IncomeComponentService;
+import com.smartlott.backend.service.RewardService;
 import com.smartlott.enums.MessageType;
 import com.smartlott.exceptions.NotFoundException;
+import com.smartlott.exceptions.OccurException;
 import com.smartlott.utils.ResponseUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +28,16 @@ import java.util.*;
 @RequestMapping(IncomeComponentHandler.API_INCOME_COMPONENT)
 public class IncomeComponentHandler {
 
+    /** The application logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeComponentHandler.class);
+
     public static final String API_INCOME_COMPONENT = "/api/income-component";
 
     @Autowired
     private IncomeComponentService incomeComponentService;
+
+    @Autowired
+    private RewardService rewardService;
 
     @Autowired
     private I18NService i18NService;
@@ -54,7 +65,18 @@ public class IncomeComponentHandler {
 
         messageDTOS = new ArrayList<>();
 
-        incomeComponent = incomeComponentService.create(incomeComponent);
+        Reward reward = null;
+        if(incomeComponent.getReward() != null && incomeComponent.getReward().getId() > 0) {
+            reward = rewardService.getOne(incomeComponent.getReward().getId());
+        }
+        try {
+            incomeComponent = incomeComponentService.create(incomeComponent);
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage());
+            throw  new OccurException(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.income.component.error.update.unique.reward.text",
+                            new Object[]{reward.getName(), incomeComponent.getName()}, locale)));
+        }
 
         MessageDTO messageDTO = new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.income.component.success.created.text",
@@ -69,8 +91,18 @@ public class IncomeComponentHandler {
     public ResponseEntity<Object> updateIncomeComponent(@PathVariable int incomeComponentId,
                                                         @RequestBody IncomeComponent incomeComponent, Locale locale) {
         IncomeComponent localIncomeComponent = getLocalIncomeComponent(incomeComponentId, locale);
-
-        incomeComponent = incomeComponentService.update(incomeComponent);
+        Reward reward = null;
+        if(incomeComponent.getReward() != null && incomeComponent.getReward().getId() > 0) {
+            reward = rewardService.getOne(incomeComponent.getReward().getId());
+        }
+        try {
+            incomeComponent = incomeComponentService.update(incomeComponent);
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage());
+            throw  new OccurException(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.income.component.error.update.unique.reward.text",
+                            new Object[]{reward.getName(), localIncomeComponent.getName()}, locale)));
+        }
 
         MessageDTO messageDTO = new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.income.component.success.updated.text",
@@ -82,8 +114,7 @@ public class IncomeComponentHandler {
     }
 
     @DeleteMapping("/{incomeComponentId}")
-    public ResponseEntity<Object> deleteIncomeComponent(@PathVariable int incomeComponentId,
-                                                        @RequestBody IncomeComponent incomeComponent, Locale locale) {
+    public ResponseEntity<Object> deleteIncomeComponent(@PathVariable int incomeComponentId, Locale locale) {
         IncomeComponent localIncomeComponent = getLocalIncomeComponent(incomeComponentId, locale);
 
         try {
@@ -95,13 +126,14 @@ public class IncomeComponentHandler {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.BAD_REQUEST);
         }
 
+        messageDTOS = new ArrayList<>();
         MessageDTO messageDTO = new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.income.component.success.deleted.text",
-                        incomeComponent.getName(), locale));
+                        localIncomeComponent.getName(), locale));
 
-        Map<String, Object> response = ResponseUtil.Response(messageDTO, incomeComponent);
+        messageDTOS.add(messageDTO);
 
-        return new ResponseEntity<Object>(response, HttpStatus.OK);
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.OK);
     }
 
 

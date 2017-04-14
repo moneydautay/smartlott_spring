@@ -105,6 +105,4 @@ public class IncomeComponentService {
     public Page<IncomeComponent> getAll(Pageable pageable){
         return incomeComponentRepository.findAll(pageable);
     }
-
-
 }

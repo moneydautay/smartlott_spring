@@ -34,6 +34,14 @@ public class RewardHandler {
 
     private List<MessageDTO> messageDTOs;
 
+    @RequestMapping("/list-all")
+    public ResponseEntity<Object> getListAllReward() {
+
+        List<Reward> rewards = rewardService.getAll();
+
+        return new ResponseEntity<Object>(rewards, HttpStatus.OK);
+    }
+
     @RequestMapping("/all")
     public ResponseEntity<Object> getAllReward(Pageable pageable) {
 
