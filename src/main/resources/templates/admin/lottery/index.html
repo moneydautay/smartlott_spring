@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i><span th:text="#{admin.dashboard.text}">Dashboard</span></a>
+            </li>
+            <li class="active">
+                <strong th:text="#{admin.lottery.breadcrumb.text}">Lottery management</strong>
+            </li>
+        </ol>
+
+        <h2 th:text="#{admin.lottery.title.text}">Lottery management</h2>
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+
+        <div class="row">
+            <div class="form-group col-md-12 col-xs-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4 col-xs-12">
+
+            </div>
+            <form id="searchLottery" method="GET">
+                <div class="form-group col-md-4 col-xs-12 navbar-right">
+                    <input type="text" id="query" name="query" class="form-control" placeholder="Search"
+                           th:value="${query}"/>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <table class="table responsive" id="tableContent">
+                <thead>
+                <tr class="dataFields">
+                    <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/>
+                    </th>
+                    <th th:text="#{admin.lottery.id.text}" fields="id">ID</th>
+                    <th th:text="#{admin.lottery.number.text}" fields="sequense">Lottery</th>
+                    <th th:text="#{admin.lottery.buy.date.text}" fields="buyDate">Buy date</th>
+                    <th th:text="#{admin.lottery.buy.by.text}" fields="buyBy"></th>
+                    <th th:text="#{admin.lottery.dialing.text}" fields="lotteryDialing">Dialing</th>
+                    <th th:text="#{admin.lottery.status.text}" fields="enabled">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="navigaion">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co"
+                                                                target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function ($) {
+        var urlApiAll = /*[[@{/api/lottery/all?sort=id,desc&size=20&page=}]]*/;
+
+        $('#filterPost').submit(function (e) {
+            e.preventDefault();
+            doSubmitPost(urlPostCl, null, $('#name').val());
+        })
+
+        pagination(urlApiAll, appendData);
+
+        $('#searchLottery').submit(function (e) {
+            e.preventDefault();
+            var q = $('#query').val();
+            if(q != "") {
+                var urlApiSearch = /*[[@{/api/lottery/search}]]*/;
+                urlApiSearch += "?q="+q;
+                urlApiSearch += "&sort=id,desc&size=20&page=";
+                pagination(urlApiSearch, appendData);
+            }else
+                pagination(urlApiAll, appendData);
+        })
+
+
+    });
+
+
+    function appendData(data) {
+
+        var urlDetail = /*[[@{/stl-admin/lottery/detail/}]]*/;
+        if(data.messages != null)
+            showMessages(data.messages);
+        fieldData(data.content, urlDetail);
+    }
+    //]]>
+</script>
+</body>
+</html>

@@ -1,11 +1,16 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.Lottery;
+import com.smartlott.backend.persistence.domain.elastic.LotteryElastic;
 import com.smartlott.backend.persistence.repositories.LotteryRepository;
+import com.smartlott.backend.persistence.repositories.elasticsearch.LotteryElasticRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +23,9 @@ public class LotterySerivce {
     @Autowired
     private LotteryRepository lotteryRepository;
 
+    @Autowired
+    private LotteryElasticRepository lotteryElasticRepository;
+
     /**
      * Creates new lottery given by lottery or exception if occurs error
      * @param lottery
@@ -25,7 +33,10 @@ public class LotterySerivce {
      * @return A lottery after create or exception if occurs errors
      */
     public Lottery createNewLottery(Lottery lottery) throws Exception{
-        return lotteryRepository.save(lottery);
+        lottery = lotteryRepository.save(lottery);
+        LotteryElastic lotteryElastic = new LotteryElastic(lottery);
+        lotteryElasticRepository.save(lotteryElastic);
+        return lottery;
     }
 
     /**
@@ -35,7 +46,10 @@ public class LotterySerivce {
      */
     @Transactional
     public Lottery update(Lottery lottery) {
-        return lotteryRepository.save(lottery);
+        lottery = lotteryRepository.save(lottery);
+        LotteryElastic lotteryElastic = new LotteryElastic(lottery);
+        lotteryElasticRepository.save(lotteryElastic);
+        return lottery;
     }
 
     /**
@@ -45,11 +59,19 @@ public class LotterySerivce {
      */
     @Transactional
     public Iterable<Lottery> update(List<Lottery> lotteries) {
-        return lotteryRepository.save(lotteries);
+        Iterable<Lottery> localLotteries= lotteryRepository.save(lotteries);
+        List<LotteryElastic> lotteryElastics = new ArrayList<>();
+        localLotteries.forEach(lottery -> lotteryElastics.add(new LotteryElastic(lottery)));
+        lotteryElasticRepository.save(lotteryElastics);
+        return lotteries;
     }
 
     public List<Lottery> getAll() {
         return lotteryRepository.findAll();
+    }
+
+    public Page<Lottery> getAll(Pageable pageable) {
+        return lotteryRepository.findAll(pageable);
     }
 
     public List<Lottery> getByLotteryDialingId(long id) {

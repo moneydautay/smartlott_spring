@@ -1,10 +1,15 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by Mrs Hoang on 17/12/2016.
@@ -38,13 +43,28 @@ public class Lottery implements Serializable{
     @Length(max = 2, min = 2)
     private String coupleSix;
 
+    @Transient
+    private String sequense;
+
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Transient
+    private LocalDateTime buyDate;
+
+    @Transient
+    private String buyBy;
+
+    @Transient
+    private String lotteryDialing;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_type_id")
     private LotteryType lotteryType;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @Fetch(FetchMode.JOIN)
     private LotteryDetail lotteryDetail;
+
 
     private boolean enabled = false;
 
@@ -142,6 +162,26 @@ public class Lottery implements Serializable{
 
     public void setLotteryDetail(LotteryDetail lotteryDetail) {
         this.lotteryDetail = lotteryDetail;
+    }
+
+    public String getSequense() {
+        sequense = coupleOne + "-" + coupleTwo + "-" + coupleThree+ "-" + coupleFour + "-" + coupleFive + "-" + coupleSix;
+        return sequense;
+    }
+
+    public LocalDateTime getBuyDate() {
+        return lotteryDetail.getTransaction().getCreatedDate();
+    }
+
+    public String getBuyBy() {
+        return lotteryDetail.getTransaction().getOfUser().getUsername();
+    }
+
+    public String getLotteryDialing() {
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("kk:mm:ss dd/MM/yyyy");
+
+        return lotteryDetail.getLotteryDialing().getFromDate().format(df) + "-" + lotteryDetail.getLotteryDialing().getToDate().format(df);
     }
 
     @Override
