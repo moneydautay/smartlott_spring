@@ -170,7 +170,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		//create new Lottery dialing has income component
 		createLotDialHasIncome();
 
-		//createCusts(user);
+		createCusts(user);
 
 	}
 

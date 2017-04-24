@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <div th:replace="admin/user/script::member-breadcrumb"></div>
+
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+
+
+        <div class="mainContent">
+            <!--Include tab-->
+            <div th:replace="admin/user/script::detail-tab"></div>
+
+            <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
+                <div class="col-md-12">
+                    <div class="row col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label th:text="#{admin.member.document.one.text}">Document 1</label>
+                            <img id="thumbnail1" th:src="@{/images/Perfect_Money.png}" alt="Image preview"
+                                 class="thumbnail fancybox"
+                                 style="max-width: 300px; max-height: 300px"/>
+                        </div>
+                    </div>
+                    <div class="row col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label th:text="#{admin.member.document.two.text}">Document 2</label>
+                            <img id="thumbnail2" th:src="@{/images/Perfect_Money.png}" alt="Image preview"
+                                 class="thumbnail fancybox"
+                                 style="max-width: 300px; max-height: 300px"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="clearfix"></div>
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<div th:replace="admin/user/script::member-load-data"></div>
+<script th:inline="javascript" type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var logonId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var id = /*[[${userId}]]*/;
+        var url = /*[[@{/api/staff/{userId}(userId=${userId})}]]*/;
+        if(userData != null)
+            showDoc(userData);
+    });
+
+    function showDoc(data) {
+
+        var docOne = data.documentOne;
+        var docTwo = data.documentTwo;
+        if (docOne != null)
+            $('#thumbnail1').attr('src', docOne);
+
+        if (docTwo != null)
+            $('#thumbnail2').attr('src', docTwo);
+
+    }
+
+</script>
+</body>
+</html>

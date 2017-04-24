@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <div th:replace="admin/user/script::member-breadcrumb"></div>
+
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+
+
+        <div class="mainContent">
+            <!--Include tab-->
+            <div th:replace="admin/user/script::detail-tab"></div>
+
+            <form role="form" id="frmUserRole" action="/api/user/reset-password" method="post"
+                  class="form-groups-bordered">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div id="roleArea">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="clearfix"></div>
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<div th:replace="admin/user/script::member-load-data"></div>
+<script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function ($) {
+        var urlRole = /*[[@{/api/role/all}]]*/;
+        getData(urlRole, showRoles);
+
+        if (userData != null) {
+            var roles = userData.roles.split(", ");
+
+            $('#frmUserRole input[type="checkbox"]').each(function () {
+                console.log(roles);
+                console.log(this);
+            })
+        }
+    });
+
+    function showRoles(data) {
+        var roleArea = $('#roleArea');
+        //clear area
+        roleArea.html('');
+        $.each(data, function (i, role) {
+            roleArea.append(checkboxHtml(role));
+        })
+    }
+
+    function checkboxHtml(role) {
+        var checked = "";
+        if (userData != null) {
+            var roles = userData.roles.split(", ");
+            $.each(roles, function (i, r) {
+                if(r == role.description)
+                    checked = "checked";
+            })
+        }
+
+        var str = ' <div class="group-form"><label>' +
+            '<input type="checkbox" name="role" ' + checked + ' value="' + role.id + '" attr-name="' + role.description + '"/> ' + role.description;
+        '</label></div>';
+        return str;
+    }
+    //]]>
+</script>
+</body>
+</html>

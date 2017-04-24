@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by greenlucky on 3/29/17.
@@ -41,21 +42,47 @@ public class UserSearchRestController {
     @Autowired
     private I18NService i18NService;
 
-    @GetMapping("/all")
-    public ResponseEntity<Object> searchAll(@RequestParam("q") String query, Pageable pageable, Locale locale) {
-        Map<String, Object> responseData = new HashMap<>();
-        messageDTOS = new ArrayList<>();
+    @GetMapping("/member")
+    public ResponseEntity<Object> searchMember(@RequestParam("q") String query, Pageable pageable, Locale locale) {
 
         PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
-        Page<UserElastic> userElastics = userElasticService.searchAll(query, pageRequest);
+        Page<UserElastic> userElastics = userElasticService.searchAll(query, true, pageRequest);
 
-        List<Long> ids = new ArrayList<>();
+        Map<String, Object> responseData = search(query, userElastics, pageRequest, locale);
+        return new ResponseEntity<Object>(responseData, HttpStatus.OK);
+    }
 
-        userElastics.getContent().forEach(ue -> ids.add(ue.getId()));
+    @GetMapping("/staff")
+    public ResponseEntity<Object> searchUser(@RequestParam("q") String query, Pageable pageable, Locale locale) {
 
+
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize());
+        Page<UserElastic> userElastics = userElasticService.searchAll(query, false, pageRequest);
+
+
+        Map<String, Object> responseData = search(query, userElastics, pageRequest, locale);
+
+        return new ResponseEntity<Object>(responseData, HttpStatus.OK);
+    }
+
+
+    /**
+     * Searches user given by a page of user elastic.
+     *
+     * @param query
+     * @param userElastics
+     * @param pageRequest
+     * @param locale
+     * @return Map<String, Object> contains: first one is messages and second one is content data search.
+     */
+    private Map<String,Object> search(String query, Page<UserElastic> userElastics, PageRequest pageRequest, Locale locale) {
+        messageDTOS = new ArrayList<>();
+
+        Map<String, Object> responseData = new HashMap<>();
+
+        List<Long> ids = userElastics.getContent().stream().map(eu -> eu.getId()).collect(Collectors.toList());
 
         List<User> users = userService.getUserByIds(ids);
-
 
         Page<User> usersPage = new PageImpl<User>(users, pageRequest, userElastics.getTotalPages());
 
@@ -65,9 +92,9 @@ public class UserSearchRestController {
         else
             messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                     i18NService.getMessage("admin.member.search.found.text",
-                    new Object[] {String.valueOf(userElastics.getTotalElements()), query}, locale)));
+                            new Object[] {String.valueOf(userElastics.getTotalElements()), query}, locale)));
         responseData.put("messages", messageDTOS);
-        return new ResponseEntity<Object>(responseData, HttpStatus.OK);
+        return responseData;
     }
 
 }

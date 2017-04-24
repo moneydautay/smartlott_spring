@@ -91,4 +91,8 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
 
     User findByIdAndUserRoles_RoleName(long userId, String role);
+
+    Page<User> findByUserRolesRoleNameIn(List<String> roleNames, Pageable pageable);
+
+    User findByIdAndUserRoles_RoleNameIn(long userId, List<String> roleNames);
 }

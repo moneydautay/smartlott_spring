@@ -72,7 +72,7 @@ function fieldData(data, urlDetail, extendParamUrl = null) {
 }
 
 function pagination(url, callBack) {
-    var localUrl = url + '=' + currentPage;
+    var localUrl = url + currentPage;
     getData(localUrl, callBack);
 
     //select pagination number page

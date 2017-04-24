@@ -202,18 +202,15 @@
                             break;
                         default:
 
-
                     }
                 }
             });
-
 
             if (id != null) {
                 //get detail with draw
                 var urlWithDraw = /*[[@{/api/transaction/withdraw-detail/{id}(id=${transactionId})}]]*/;
                 getData(urlWithDraw, showWithdrawDetail, showErrors);
             }
-
         });
 
         function showDataPost(data) {
@@ -239,7 +236,6 @@
                 strButton += '<a href="' + cancelUrl + '" type="submit" class="btn btn-danger"> ' + cancelText + ' </a>';
                 handleButton.append(strButton);
             }
-
         }
 
         /**
@@ -265,7 +261,6 @@
             extraRow.append(strRow);
         }
     </script>
-
 </div>
 </body>
 </html>

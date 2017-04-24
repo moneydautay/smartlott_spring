@@ -28,15 +28,17 @@ import java.util.*;
 @Entity
 @Table(
         name = "user",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"email","phone_number","username"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email", "phone_number", "username"})
 )
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate
 @EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable, UserDetails{
+public class User implements Serializable, UserDetails {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -49,10 +51,10 @@ public class User implements Serializable, UserDetails{
 
 
     @NotEmpty(message = "NotEmpty.user.username")
-    @Size(min=4, max=50, message = "Size.user.username")
+    @Size(min = 4, max = 50, message = "Size.user.username")
     private String username;
 
-    @Size(min=6, max = 100, message = "Size.user.password")
+    @Size(min = 6, max = 100, message = "Size.user.password")
     @Column(updatable = false)
     private String password;
 
@@ -71,10 +73,10 @@ public class User implements Serializable, UserDetails{
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name="document_1")
+    @Column(name = "document_1")
     private String documentOne;
 
-    @Column(name="document_2")
+    @Column(name = "document_2")
     private String documentTwo;
 
     private int sex;
@@ -129,7 +131,7 @@ public class User implements Serializable, UserDetails{
     private Set<SecurityToken> securityTokens = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Address> addresses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -149,6 +151,9 @@ public class User implements Serializable, UserDetails{
 
     @Transient
     private UserInvestment userInvestment;
+
+    @Transient
+    private String roles = "";
 
     public User() {
     }
@@ -368,8 +373,14 @@ public class User implements Serializable, UserDetails{
         this.userInvestments = userInvestments;
     }
 
-    public void addUserInvestment(UserInvestment userInvestment){
+    public void addUserInvestment(UserInvestment userInvestment) {
         this.userInvestments.add(userInvestment);
+    }
+
+    public String getRoles() {
+        roles = "";
+        userRoles.forEach(ur -> roles += ((roles.isEmpty()) ? "" : ", ") + ur.getRole().getDescription());
+        return roles;
     }
 
     public UserInvestment getUserInvestment() {
@@ -378,23 +389,23 @@ public class User implements Serializable, UserDetails{
         Iterator<UserInvestment> userInvestmentIterator = userInvestments.iterator();
         while (userInvestmentIterator.hasNext()) {
             UserInvestment next = userInvestmentIterator.next();
-            if((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
-                    && next.isEnabled()){
-                if(investmentPackage == null)
+            if ((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
+                    && next.isEnabled()) {
+                if (investmentPackage == null)
                     investmentPackage = next;
-                else if(investmentPackage.getInvestmentPackage().getLevelNetwork() < next.getInvestmentPackage().getLevelNetwork())
+                else if (investmentPackage.getInvestmentPackage().getLevelNetwork() < next.getInvestmentPackage().getLevelNetwork())
                     investmentPackage = next;
             }
         }
         return investmentPackage;
     }
 
-    public InvestmentPackage getRequriedInvestmentPackage(int packageId){
+    public InvestmentPackage getRequriedInvestmentPackage(int packageId) {
         Iterator<UserInvestment> userInvestmentIterator = userInvestments.iterator();
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         while (userInvestmentIterator.hasNext()) {
             UserInvestment next = userInvestmentIterator.next();
-            if((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
+            if ((next.getFromDate().isBefore(now) && (next.getToDate() == null || next.getToDate().isAfter(now)))
                     && next.isEnabled() && next.getInvestmentPackage().getId() == packageId)
                 return next.getInvestmentPackage();
         }
@@ -423,10 +434,10 @@ public class User implements Serializable, UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        userRoles.forEach(ur->authorities.add(new Authority(ur.getRole().getName())));
+
+        userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
         return authorities;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -467,6 +478,7 @@ public class User implements Serializable, UserDetails{
                 ", actived=" + actived +
                 ", activeBy=" + activeBy +
                 ", userRoles=" + userRoles +
+                ", roles=" + roles +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.smartlott.backend.persistence.domain.elastic;
 
 import com.smartlott.backend.persistence.domain.backend.User;
+import com.smartlott.enums.RolesEnum;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Id;
@@ -39,12 +40,16 @@ public class UserElastic {
 
     private String userInvestment;
 
+    private String roles;
+
+    private boolean customer = false;
+
     public UserElastic() {
     }
 
     public UserElastic(User user) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 
         this.id = user.getId();
         this.email = user.getEmail();
@@ -59,6 +64,8 @@ public class UserElastic {
         this.activeBy = (user.getActiveBy() != null) ? user.getActiveBy().getUsername() : null;
         this.introducedBy = (user.getIntroducedBy() != null) ? user.getIntroducedBy().getUsername() : null;
         this.userInvestment = user.getUserInvestment().getInvestmentPackage().getName();
+        this.roles = user.getRoles();
+        this.customer = (user.getRoles().equals(RolesEnum.CUSTOMER.getDescription())) ? true : false;
     }
 
     public long getId() {
@@ -163,6 +170,14 @@ public class UserElastic {
 
     public void setUserInvestment(String userInvestment) {
         this.userInvestment = userInvestment;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public boolean isCustomer() {
+        return customer;
     }
 
     @Override

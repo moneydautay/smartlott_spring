@@ -190,6 +190,10 @@ public class UserService {
         return userRepository.findByUserRolesRoleName(roleName, pageable);
     }
 
+    public Page<User> getByRoles(List<String> roleNames, Pageable pageable) {
+        return userRepository.findByUserRolesRoleNameIn(roleNames, pageable);
+    }
+
     @Transactional
     public UserInvestment addInvestmentPackage(User user, int investmentPackageId, LocalDateTime from) {
 
@@ -256,5 +260,9 @@ public class UserService {
     public User findOne(long userId, String role) {
 
         return userRepository.findByIdAndUserRoles_RoleName(userId, role);
+    }
+
+    public User findOneByIdAndRoleNamesIn(long userId, List<String> roleNames) {
+        return userRepository.findByIdAndUserRoles_RoleNameIn(userId, roleNames);
     }
 }

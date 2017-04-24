@@ -1,6 +1,6 @@
 package com.smartlott.intergation;
 
-import com.smartlott.backend.api.UserRestController;
+import com.smartlott.backend.api.UserHandler;
 import com.smartlott.backend.persistence.domain.backend.Notification;
 import com.smartlott.backend.persistence.domain.backend.NotificationType;
 import com.smartlott.backend.persistence.domain.backend.User;
@@ -79,21 +79,21 @@ public class NotificationTest extends AbstractIntegrationTest{
         Notification notifUrl = notificationRepository.findByUserIdAndNotificationTypeUrlAndProcessed(user.getId(), DashboardController.PROFILE_GENERAL_URL,false);
         Assert.assertNotNull(notifUrl);
         //find by api url
-        Notification notifApiUrl = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserRestController.API_USER_REST_URL,false);
+        Notification notifApiUrl = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserHandler.API_USER_REST_URL,false);
         Assert.assertNotNull(notifApiUrl);
 
         noto1.setProcessed(true);
         notificationRepository.save(noto1);
 
         //find by api url
-        Notification notifApiUrlAspect = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserRestController.API_USER_REST_URL,true);
+        Notification notifApiUrlAspect = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserHandler.API_USER_REST_URL,true);
         Assert.assertNotNull(notifApiUrlAspect);
 
         //delete notification
         notificationRepository.delete(noto1.getId());
 
         //find by api url
-        Notification notifApiUrlDelete = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserRestController.API_USER_REST_URL,true);
+        Notification notifApiUrlDelete = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), UserHandler.API_USER_REST_URL,true);
         Assert.assertNull(notifApiUrlDelete);
 
 

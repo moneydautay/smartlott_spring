@@ -22,6 +22,8 @@ public class Role implements Serializable{
 
     private String name;
 
+    private String description;
+
     @Max(value = 10)
     private int priority;
 
@@ -32,6 +34,7 @@ public class Role implements Serializable{
         this.id = rolesEnum.getId();
         this.name = rolesEnum.getName();
         this.priority = rolesEnum.getPriority();
+        this.description = rolesEnum.getDescription();
     }
 
     public int getId() {
@@ -58,12 +61,21 @@ public class Role implements Serializable{
         this.priority = priority;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", priority=" + priority +
+                ", description=" + description +
                 '}';
     }
 

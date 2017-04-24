@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/common/header :: common-head"/>
+<meta title="description" content="Trang quản trị SmartLott"/>
+<!--<meta id="_csrf" title="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" title="_csrf_header" th:content="${_csrf.headerName}"/>-->
+<body>
+<div class="page-container">
+    <!--INCLUDE SIDEBAR-->
+    <div th:replace="admin/common/navbar :: common-sidebar"></div>
+
+    <div class="main-content">
+
+        <div th:replace="admin/common/header :: common-header"></div>
+
+        <hr/>
+
+        <ol class="breadcrumb bc-3">
+            <li>
+                <a th:href="@{/stl-admin}"><i class="entypo-home"></i>Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>Member management</strong>
+            </li>
+        </ol>
+
+        <h2>Member management</h2>
+        <!--Message area-->
+        <div class="row" id="messageArea"></div>
+        <div class="row">
+            <div class="form-group col-md-4 col-xs-12">
+
+            </div>
+            <form id="searchStaff" method="GET">
+                <div class="form-group col-md-4 col-xs-12 navbar-right">
+                    <input type="text" id="query" name="query" class="form-control" placeholder="Search user"
+                           th:value="${query}"/>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <table class="table responsive" id="tableContent">
+                <thead>
+                    <tr class="dataFields">
+                        <th><input type="checkbox" id="selectAll" attr="tableContent" name="selectAll" th:value="1"/></th>
+                        <th th:text="#{admin.user.username.text}" fields="username">Username</th>
+                        <th th:text="#{admin.user.email.text}" fields="email">Email</th>
+                        <th th:text="#{admin.user.last.name.text}" fields="lastName">Last name</th>
+                        <th th:text="#{admin.user.first.name.text}" fields="firstName">First name</th>
+                        <th th:text="#{admin.user.role.text}" fields="roles">Role</th>
+                        <th th:text="#{admin.user.phone.text}" fields="phoneNumber">Phone number</th>
+                        <th th:text="#{admin.user.enable.text}" fields="enabled">Enabled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="navigaion">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                    </ul>
+                </nav>
+            </div>
+            <a th:href="@{/stl-admin/member/add}" class="btn btn-primary">
+                <i class="entypo-plus"></i>
+                <span th:text="#{admin.member.button.add.text}">Add</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main">
+            &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+        </footer>
+    </div>
+
+</div>
+<div th:replace="admin/common/header :: common-before-scripts"></div>
+<script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function ($) {
+        var urlApiStaffAll = /*[[@{/api/staff/all?sort=id,desc&size=10&page=}]]*/;
+        var urlStaffSearch = /*[[@{/api/user/search/staff}]]*/;
+
+        pagination(urlApiStaffAll, appendData);
+
+        $('#searchStaff').submit(function (e) {
+            e.preventDefault();
+            doSearchMember(urlStaffSearch, $('#status').val(), $('#query').val(), appendData);
+        })
+    });
+
+    function appendData(data) {
+
+        var urlDetail = /*[[@{/stl-admin/user/view/}]]*/;
+        if(data.messages != null) {
+            showMessages(data.messages);
+            fieldData(data.data.content, urlDetail);
+        }else
+            fieldData(data, urlDetail);
+
+    }
+    //]]>
+</script>
+</body>
+</html>

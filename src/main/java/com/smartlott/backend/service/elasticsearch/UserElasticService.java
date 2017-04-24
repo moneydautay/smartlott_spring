@@ -36,4 +36,14 @@ public class UserElasticService {
 
         return userElasticRepository.search(queryBuilder, pageable);
     }
+
+    public Page<UserElastic> searchAll(String search, boolean isCustomer, Pageable pageable) {
+
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+
+        queryBuilder.must(QueryBuilders.matchQuery("_all", search))
+                .filter(QueryBuilders.matchQuery("customer", isCustomer));
+
+        return userElasticRepository.search(queryBuilder, pageable);
+    }
 }
