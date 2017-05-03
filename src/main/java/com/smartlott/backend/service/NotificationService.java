@@ -64,9 +64,11 @@ public class NotificationService {
     @Transactional
     public void turnOffNotification(User user, String apiUserRestUrl) {
             Notification notification = notificationRepository.findByUserIdAndNotificationTypeApiUrlAndProcessed(user.getId(), apiUserRestUrl, false);
-            notification.setProcessed(true);
-            notificationRepository.save(notification);
-            LOGGER.debug("Change status of notification {}", notification);
+            if(notification != null) {
+                notification.setProcessed(true);
+                notificationRepository.save(notification);
+                LOGGER.debug("Change status of notification {}", notification);
+            }
     }
 
     public Notification getOne(long notificationId) {

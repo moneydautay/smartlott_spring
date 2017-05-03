@@ -68,7 +68,7 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
     Page<User> findAll(Pageable pageable);
 
-    Page<User> findByUserRolesRoleName(String role, Pageable pageable);
+    Page<User> findByRoles_Name(String role, Pageable pageable);
 
     @Transactional
     @Modifying
@@ -79,20 +79,33 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
     @Transactional
     @Modifying
-    @Query("update User u set u.actived = true, u.activeBy = :byUser, u.activeDate = :activeDate where u.id = :userId")
-    int active(@Param("userId") long userId, @Param("byUser") User byUser,
-               @Param("activeDate") LocalDateTime activeDate);
+    @Query("update User u set u.actived = true, u.activeBy = :byUser, " +
+            "u.activeDate = :activeDate, u.modifiedBy = :modifiedBy where u.id = :userId")
+    int active(@Param("userId") long userId, @Param("byUser") String byUser,
+               @Param("activeDate") LocalDateTime activeDate,
+               @Param("modifiedBy") String modifiedBy);
 
     @Transactional
     @Modifying
-    @Query("update User u set u.enabled = :status, u.changeStatusBy = :byUser, u.changeStatusDate = :changeDate where u.id = :userId")
-    int changeStatus(@Param("status") boolean status, @Param("userId") long userId,
-                     @Param("byUser") User byUser, @Param("changeDate") LocalDateTime changeDate);
+    @Query("update User u set u.enabled = :status, u.modifiedBy = :modifiedBy where u.id = :userId")
+    int changeStatus(@Param("status") boolean status, @Param("userId") long userId, @Param("modifiedBy") String modifiedBy);
 
 
-    User findByIdAndUserRoles_RoleName(long userId, String role);
+    User findByIdAndRoles_Name(long userId, String role);
 
-    Page<User> findByUserRolesRoleNameIn(List<String> roleNames, Pageable pageable);
+    Page<User> findUserDistinctByRoles_NameIn(List<String> roleNames, Pageable pageable);
 
-    User findByIdAndUserRoles_RoleNameIn(long userId, List<String> roleNames);
+    User findByIdAndRoles_NameNot(long userId, String roleName);
+
+    Page<User> findUserDistinctByRoles_NameNotOrRolesIsNull(String customerRole, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.documentOne= :doc, u.modifiedBy = :modifiedBy where u.id = :userId")
+    void updateDocumentOne(@Param("userId") long id, @Param("doc") String document, @Param("modifiedBy") String modifiedBy);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.documentTwo= :doc, u.modifiedBy = :modifiedBy where u.id = :userId")
+    void updateDocumentTwo(@Param("userId") long id, @Param("doc") String document, @Param("modifiedBy") String modifiedBy);
 }

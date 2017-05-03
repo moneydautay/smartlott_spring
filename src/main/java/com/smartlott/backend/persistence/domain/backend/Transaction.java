@@ -65,6 +65,13 @@ public class Transaction implements Serializable{
     )
     private List<InvestmentPackage> investmentPackages = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, targetEntity = User.class)
+    @JoinTable(name = "transfer_cash",
+            joinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "to_user", referencedColumnName = "id")
+    )
+    private Set<User> toUsers = new HashSet<>();
+
     @Transient
     private String securityToken;
 
@@ -169,6 +176,14 @@ public class Transaction implements Serializable{
 
     public void setUserCashId(long userCashId) {
         this.userCashId = userCashId;
+    }
+
+    public Set<User> getToUsers() {
+        return toUsers;
+    }
+
+    public void setToUsers(Set<User> toUsers) {
+        this.toUsers = toUsers;
     }
 
     @Override

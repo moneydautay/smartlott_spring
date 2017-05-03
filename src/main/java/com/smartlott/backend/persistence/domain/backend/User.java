@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,10 @@ import java.io.Serializable;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by Mr Lam on 12/14/2016.
@@ -32,7 +37,6 @@ import java.util.*;
 )
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
-@SelectBeforeUpdate
 @EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable, UserDetails {
 
@@ -73,24 +77,23 @@ public class User implements Serializable, UserDetails {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "document_1")
+    @Column(name = "document_1", updatable = false)
     private String documentOne;
 
-    @Column(name = "document_2")
+    @Column(name = "document_2", updatable = false)
     private String documentTwo;
 
     private int sex;
 
     private boolean enabled = true;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(updatable = false)
-    private User changeStatusBy;
+    @LastModifiedBy
+    private String modifiedBy;
 
     @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
-    @Column(updatable = false)
-    private LocalDateTime changeStatusDate;
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 
     @Value(value = "0")
     @Column(updatable = false)
@@ -105,9 +108,11 @@ public class User implements Serializable, UserDetails {
     @Column(updatable = false)
     private boolean actived = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "active_by", updatable = false)
-    private User activeBy;
+    private String activeBy;
+
+    @CreatedBy
+    private String createdBy;
 
     @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
     @Convert(converter = LocalDateTimeAttributeConverter.class)
@@ -115,8 +120,12 @@ public class User implements Serializable, UserDetails {
     private LocalDateTime activeDate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<UserRole> userRoles = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -130,13 +139,8 @@ public class User implements Serializable, UserDetails {
     )
     private Set<SecurityToken> securityTokens = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Address> addresses = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "introduced_by", updatable = false)
-    private User introducedBy;
+    private String introducedBy;
 
     @Column(name = "introduced_key", updatable = false)
     private String introducedKey;
@@ -153,7 +157,7 @@ public class User implements Serializable, UserDetails {
     private UserInvestment userInvestment;
 
     @Transient
-    private String roles = "";
+    private String roleNames = "";
 
     public User() {
     }
@@ -242,29 +246,29 @@ public class User implements Serializable, UserDetails {
         this.documentTwo = documentTwo;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
 
-    public User getChangeStatusBy() {
-        return changeStatusBy;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setChangeStatusBy(User changeStatusBy) {
-        this.changeStatusBy = changeStatusBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public LocalDateTime getChangeStatusDate() {
-        return changeStatusDate;
-    }
-
-    public void setChangeStatusDate(LocalDateTime changeStatusDate) {
-        this.changeStatusDate = changeStatusDate;
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public int getSex() {
@@ -300,8 +304,12 @@ public class User implements Serializable, UserDetails {
         this.actived = actived;
     }
 
-    public User getActiveBy() {
+    public String getActiveBy() {
         return activeBy;
+    }
+
+    public void setActiveBy(String activeBy) {
+        this.activeBy = activeBy;
     }
 
     public LocalDateTime getActiveDate() {
@@ -312,16 +320,12 @@ public class User implements Serializable, UserDetails {
         this.activeDate = activeDate;
     }
 
-    public void setActiveBy(User activeBy) {
-        this.activeBy = activeBy;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public Set<Password> getPasswords() {
@@ -332,22 +336,13 @@ public class User implements Serializable, UserDetails {
         this.passwords = passwords;
     }
 
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
-    }
-
-    public User getIntroducedBy() {
+    public String getIntroducedBy() {
         return introducedBy;
     }
 
-    public void setIntroducedBy(User introductedBy) {
-        this.introducedBy = introductedBy;
+    public void setIntroducedBy(String introducedBy) {
+        this.introducedBy = introducedBy;
     }
-
 
     public String getIntroducedKey() {
         return introducedKey;
@@ -377,10 +372,26 @@ public class User implements Serializable, UserDetails {
         this.userInvestments.add(userInvestment);
     }
 
-    public String getRoles() {
-        roles = "";
-        userRoles.forEach(ur -> roles += ((roles.isEmpty()) ? "" : ", ") + ur.getRole().getDescription());
-        return roles;
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getRoleNames() {
+        roleNames = "";
+        roles.forEach(role -> {
+            if(!roleNames.equals(""))
+                roleNames += ", ";
+            roleNames += role.getDescription();
+        });
+        return roleNames;
+    }
+
+    public void setRoleNames(String roleNames) {
+        this.roleNames = roleNames;
     }
 
     public UserInvestment getUserInvestment() {
@@ -435,7 +446,7 @@ public class User implements Serializable, UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+        roles.forEach(ur -> authorities.add(new Authority(ur.getName())));
         return authorities;
     }
 
@@ -477,8 +488,8 @@ public class User implements Serializable, UserDetails {
                 ", createDate=" + createDate +
                 ", actived=" + actived +
                 ", activeBy=" + activeBy +
-                ", userRoles=" + userRoles +
-                ", roles=" + roles +
+                ", userRoles=" + roles +
+                ", roleNames=" + roleNames +
                 '}';
     }
 }

@@ -71,7 +71,7 @@ public class NetworkService {
         List<Network> networks = new ArrayList<>();
         if(user.getIntroducedBy() == null)
             return networks;
-        User localUser = userService.findOne(user.getIntroducedBy().getId());
+        User localUser = userService.findByUsername(user.getIntroducedBy());
 
         //get network level
         NetworkLevel networkLevel = new NetworkLevel(currentLevel);
@@ -103,7 +103,7 @@ public class NetworkService {
         List<Network> networks = new ArrayList<>();
         if(ancestor.getIntroducedBy() == null)
             return networks;
-        User localUser = userService.findOne(ancestor.getIntroducedBy().getId());
+        User localUser = userService.findByUsername(ancestor.getIntroducedBy());
 
         //get network level
         NetworkLevel networkLevel = networkLevelService.getOne(currentLevel);

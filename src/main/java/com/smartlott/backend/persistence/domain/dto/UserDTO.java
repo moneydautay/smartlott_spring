@@ -46,7 +46,6 @@ public class UserDTO {
 
     private User activeBy;
 
-    private Set<UserRole> userRoles = new HashSet<>();
 
     private Set<Address> addresses = new HashSet<>();
 

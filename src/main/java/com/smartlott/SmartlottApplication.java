@@ -125,11 +125,11 @@ public class SmartlottApplication implements CommandLineRunner{
 		User user = UserUtils.createCustUser("admin","admin@gmail.com");
 		user.setPassword("123456");
 
-		Set<UserRole> userRoles = new HashSet<>();
-		userRoles.add(new UserRole(addRole, user));
-		userRoles.add(new UserRole(custRole, user));
+		Set<Role> userRoles = new HashSet<>();
+		userRoles.add(custRole);
+		userRoles.add(addRole);
 
-		user.setUserRoles(userRoles);
+		user.setRoles(userRoles);
 		user.setActived(true);
 		user.setCash(12000);
 
@@ -171,6 +171,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		createLotDialHasIncome();
 
 		createCusts(user);
+
+		createCountry();
 
 	}
 
@@ -279,10 +281,12 @@ public class SmartlottApplication implements CommandLineRunner{
 		TransactionType type1= new TransactionType(TransactionTypeEnum.Withdraw);
 		TransactionType type2= new TransactionType(TransactionTypeEnum.BuyingLottery);
 		TransactionType type3= new TransactionType(TransactionTypeEnum.BuyInvestmentPackage);
+		TransactionType type4= new TransactionType(TransactionTypeEnum.TransferCash);
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
 		transactionTypeService.createNew(type3);
+		transactionTypeService.createNew(type4);
 	}
 
 	public void createBonusForUser(User user){
@@ -298,7 +302,7 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		Role custRole = new Role(RolesEnum.CUSTOMER);
 
-		Set<UserRole> userRoles = new HashSet<>();
+		Set<Role> userRoles = new HashSet<>();
 		for(int i = 1; i <= 8; i++) {
 
 			User accestor = null;
@@ -308,18 +312,18 @@ public class SmartlottApplication implements CommandLineRunner{
 			User localUser = UserUtils.createCustUser(name, name + "@smartlott.com");
 			localUser.setPassword("123456");
 			userRoles = new HashSet<>();
-			userRoles.add(new UserRole(custRole, localUser));
-			localUser.setUserRoles(userRoles);
-			localUser.setActived(true);
+			userRoles.add(custRole);
+			localUser.setRoles(userRoles);
+			localUser.setActived(false);
 			localUser.setCash(10000);
 
 			if(i == 1) {
 				accestor = user;
-				localUser.setIntroducedBy(user);
+				localUser.setIntroducedBy(user.getUsername());
 			}
 			else{
 				accestor = userService.findOne((i));
-				localUser.setIntroducedBy(accestor);
+				localUser.setIntroducedBy(accestor.getUsername());
 			}
 
 			LOGGER.info("Creating user with username {} and email {}", localUser.getUsername(), localUser.getEmail());

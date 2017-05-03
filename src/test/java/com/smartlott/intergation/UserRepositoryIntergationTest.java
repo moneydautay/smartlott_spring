@@ -3,7 +3,6 @@ package com.smartlott.intergation;
 import com.smartlott.backend.persistence.domain.backend.Address;
 import com.smartlott.backend.persistence.domain.backend.Password;
 import com.smartlott.backend.persistence.domain.backend.User;
-import com.smartlott.backend.persistence.domain.backend.UserRole;
 import com.smartlott.backend.persistence.repositories.*;
 import com.smartlott.backend.service.UserService;
 import com.smartlott.utils.UserUtils;
@@ -38,8 +37,6 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     @Autowired
     private PasswordRepository passwordRepository;
 
-    @Autowired
-    private UserRoleRepository userRoleRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -78,7 +75,6 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
         List<Password> passwords = passwordRepository.findByUserAndEnabled(user,true);
 
 
-        List<UserRole> userRoles = userRoleRepository.findAll();
 
         address.setUser(user);
 
@@ -90,7 +86,6 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
 
         Assert.assertNotNull(passwords);
 
-        Assert.assertNotNull(userRoles);
 
         //find address by userId
         List<Address> addresses = addressRepository.findByUserId(user.getId());
@@ -120,7 +115,7 @@ public class UserRepositoryIntergationTest extends  AbstractIntegrationTest{
     @Test
     public void getUserByRoleName() throws Exception{
         String ROLE_NAME = "ROLE_CUSTOMER";
-        Page<User> users = userRepository.findByUserRolesRoleName(ROLE_NAME, new PageRequest(0,10));
+        Page<User> users = userRepository.findByRoles_Name(ROLE_NAME, new PageRequest(0,10));
         System.out.println(users.getContent());
     }
 

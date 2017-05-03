@@ -46,6 +46,6 @@ public class UserManagementController {
     @GetMapping("/add")
     public String getUserAdd( Model model) {
         model.addAttribute("action", "add");
-        return USER_MANAGEMENT_VIEW_NAME + "/add";
+        return USER_MANAGEMENT_VIEW_NAME + "/detailGeneral";
     }
 }

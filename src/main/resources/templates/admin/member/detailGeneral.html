@@ -123,16 +123,16 @@
                         </div>
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
-                                <label for="changeStatusBy">Change Status By</label>
-                                <input type="text" id="changeStatusBy" name="changeStatusBy" fields="username" class="form-control"/>
+                                <label for="modifiedBy">Modified By</label>
+                                <input type="text" id="modifiedBy" name="modifiedBy" class="form-control"/>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
-                                <label for="changeStatusDate">Change Status Date</label>
-                                <input type="text" id="changeStatusDate" name="changeStatusDate" class="form-control"/>
+                                <label for="modifiedDate">Modified Date</label>
+                                <input type="text" id="modifiedDate" name="modifiedDate" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -177,8 +177,15 @@
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
 
-        if (memberData != null)
+        if (memberData != null) {
+            //load provinces to select city
+            getProvinces('province', 2);
+
             showDataToForm(memberData);
+
+            getAddress(memberData.id);
+        }
+
     });
 
 

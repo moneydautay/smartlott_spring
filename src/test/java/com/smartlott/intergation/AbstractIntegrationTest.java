@@ -61,15 +61,15 @@ public abstract class AbstractIntegrationTest {
 
         User user = UserUtils.createCustUser(username, email);
 
-        Set<UserRole> userRoles = new HashSet<>();
-        UserRole userRole = new UserRole(role, user);
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(new Role(RolesEnum.CUSTOMER));
 
         String encodedPassword = passwordEncoder.encode("0123456789");
         Password password = new Password(encodedPassword, LocalDateTime.now(Clock.systemUTC()), user);
         Set<Password> passwords = new HashSet<>();
         passwords.add(password);
 
-        user.getUserRoles().add(userRole);
+        user.setRoles(userRoles);
         user.setPassword(encodedPassword);
         user.setPasswords(passwords);
         user = userRepository.save(user);

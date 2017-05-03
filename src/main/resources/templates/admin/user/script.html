@@ -32,13 +32,13 @@
             <li th:class="${(tab == 'general' || tab ==null) ? 'active' : ''}">
                 <a th:href="@{/stl-admin/user/edit/{id}(id=${userId},tab=general)}"
                    th:text="#{admin.member.tab.general.text}">General</a></li>
-            <li th:class="${(tab == 'password') ? 'active' : ''}">
+            <li th:if="${userId != null}" th:class="${(tab == 'password') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/user/edit/{id}(id=${userId},tab=password)}"
                    th:text="#{admin.member.tab.password.text}">Password</a></li>
-            <li th:class="${(tab == 'doc') ? 'active' : ''}">
+           <!-- <li th:if="${userId != null}" th:class="${(tab == 'doc') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/user/edit/{id}(id=${userId},tab=doc)}"
-                   th:text="#{admin.member.tab.doc.text}">Document</a></li>
-            <li th:class="${(tab == 'role') ? 'active' : ''}">
+                   th:text="#{admin.member.tab.doc.text}">Document</a></li>-->
+            <li th:if="${userId != null}" th:class="${(tab == 'role') ? 'active' : ''}">
                 <a th:href="@{/stl-admin/user/edit/{id}(id=${userId},tab=role)}"
                    th:text="#{admin.user.tab.role.text}">Role </a></li>
         </ul>
@@ -51,20 +51,188 @@
         </div>
     </div>
 </div>
+<div th:fragment="member-save-general">
+    <script th:inline="javascript" type="application/javascript">
+        //<![CDATA[
+        jQuery(document).ready(function ($) {
+            var createUserConfirm = /*[[#{admin.user.create.confirm.text}]]*/;
+            var updateUserConfirm = /*[[#{admin.user.update.confirm.text}]]*/;
+            var updateRole = /*[[#{admin.user.update.role.confirm.text}]]*/;
+            //required text
+            var msgErrorUsername = /*[[#{admin.user.error.username.not.null.text}]]*/;
+            var msgErrorPassword = /*[[#{admin.user.error.password.not.null.text}]]*/;
+            var msgErrorPasswordLength = /*[[#{admin.user.error.password.length.text}]]*/;
+            var msgErrorConfirmPassword = /*[[#{admin.user.error.confirm.password.not.match.text}]]*/;
+            var msgErrorEmail = /*[[#{admin.user.error.email.not.null.text}]]*/;
+            var msgErrorPhone = /*[[#{admin.user.error.phone.not.null.text}]]*/;
+            var msgErrorFirstName = /*[[#{admin.user.error.first.name.not.null.text}]]*/;
+            var msgErrorLastName = /*[[#{admin.user.error.last.name.not.null.text}]]*/;
+            var msgErrorBirthday = /*[[#{admin.user.error.birthday.not.null.text}]]*/;
+            var msgErrorAddress = /*[[#{admin.user.error.address.not.null.text}]]*/;
+            var msgErrorCity = /*[[#{admin.user.error.city.not.null.text}]]*/;
+            var msgErrorProvince = /*[[#{admin.user.error.province.not.null.text}]]*/;
+            var tab = /*[[${tab}]]*/;
+            var action = /*[[${action}]]*/;
+
+            $('#frmAddUser').formValidation({
+                framework: 'bootstrap',
+                icon: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    username: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorUsername
+                            }
+                        }
+                    },
+                    password: {
+                      validators: {
+                          notEmpty: {
+                              message: msgErrorPassword
+                          },
+                          identical: {
+                              field: 'confirmPassword',
+                              message: msgErrorConfirmPassword
+                          },
+                          stringLength: {
+                              message: msgErrorPasswordLength,
+                              min: function (value, validator, $field) {
+                                  return 6 - (value.match(/\r/g) || []).length;
+                              }
+                          }
+                      }
+                    },
+                    email: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorEmail
+                            }
+                        }
+                    },
+                    phoneNumber: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorPhone
+                            }
+                        }
+                    },
+                    firstName: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorFirstName
+                            }
+                        }
+                    },
+                    lastName: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorLastName
+                            }
+                        }
+                    },
+                    birthday: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorBirthday
+                            }
+                        }
+                    },
+                    address: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorAddress
+                            }
+                        }
+                    },
+                    city: {
+                        validators: {
+                            notEmpty: {
+                                message: msgErrorCity
+                            }
+                        }
+                    },
+                    province: {
+                        validators: {
+                            greaterThan: {
+                                value: -0,
+                                message: msgErrorProvince
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.fv', function (e) {
+                e.preventDefault();
+                var confirmText = (id == null) ? createUserConfirm : updateUserConfirm;
+                confirmText = (tab == 'role') ? updateRole : confirmText;
+
+                if (!confirm(confirmText)) return;
+
+                var data = {};
+                $("#frmAddUser :input, #frmAddUser select").each(function () {
+                    if (!$('#' + this.id).attr('ingored') && this.type != "submit") {
+                        if (this.type == "radio")
+                            data[this.name] = $('input:radio[name="' + this.name + '"]:checked').val();
+                        else
+                            data[this.name] = this.value;
+                    }
+                })
+
+                var urlSaveStaff = /*[[@{/api/user/{id}(id=${userId})}]]*/;
+                var type =  'PUT';
+                if ( id == null) {
+                    urlSaveStaff = /*[[@{/api/staff}]]*/;
+                    type = 'POST';
+                }
+                saveOrupdateData(urlSaveStaff, type, data, saveSuccess, showErrors);
+            });
+
+            function saveSuccess(data) {
+                showMessages(data.messages);
+                //save address
+                var userId = data.content.id;
+                var data = {
+                    "id": $("#addressId").val(),
+                    "address": $("#address").val(),
+                    "city": $("#city").val(),
+                    "user": {"id": data.content.id},
+                    "province": {"id": $('#province').val()}
+                };
+                var urlSaveAddress = /*[[@{/api/address}]]*/
+                    urlSaveAddress += "/" + userId;
+                saveOrupdateData(urlSaveAddress, 'PUT', data);
+
+                if (action == 'add') {
+                    setTimeout(function () {
+                        var editUrl = /*[[@{/stl-admin/user/edit/}]]*/;
+                        editUrl += userId;
+                        window.location.href = editUrl;
+                    },1500);
+                }
+            }
+        });
+
+
+        //]]>
+    </script>
+
+</div>
+
 <div th:fragment="member-toolbar">
     <script th:inline="javascript" type="application/javascript">
         //<![CDATA[
         jQuery(document).ready(function ($) {
-            var urlActiveMember = /*[[@{/api/user/active/{userId}/{byUserId}(userId=${userId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
             var urlLockMember = /*[[@{/api/user/change-status/false/{userId}/{byUserId}(userId=${userId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
             var urlUnLockMember = /*[[@{/api/user/change-status/true/{userId}/{byUserId}(userId=${userId}, byUserId=${#authorization.getAuthentication().getPrincipal().id})}]]*/;
-            var activeConfirm = /*[[#{admin.member.active.confirm.text}]]*/;
             var lockConfirm = /*[[#{admin.member.lock.confirm.text}]]*/;
+            var tab = /*[[${tab}]]*/;
 
-            $(document).on('click', '#btnActiveMember', function () {
-                if (confirm(activeConfirm)) {
-                    getData(urlActiveMember, reloadPage, showErrors);
-                }
+            $(document).on('click', '#btnSave', function () {
+
+                $('#frmAddUser').submit();
             });
 
             $(document).on('click', '#btnLockMember', function () {
@@ -79,42 +247,40 @@
                 }
             });
 
-            if(userData != null)
-                toolBarMember(userData);
+            toolBarMember(userData);
 
             function reloadPage(data) {
                 window.location.reload();
             }
+
+            /**
+             * Build toolbar
+             * @param data
+             */
+            function toolBarMember(data) {
+                var saveUser = /*[[#{button.save.text}]]*/;
+                var enabledMemberText = /*[[#{admin.member.enabled.text}]]*/;
+                var disabledMemberText = /*[[#{admin.member.disabled.text}]]*/;
+                var strBtn = '';
+                strBtn += '<button type="button" id="btnSave" class="btn btn-success"> ' + saveUser + '</button> ';
+                if (data != null && logonId != id)
+                    if (data.enabled)
+                        strBtn += '<button type="button" id="btnLockMember" class="btn btn-danger" ' +
+                            '>' + enabledMemberText + '</button>';
+                    else
+                        strBtn += '<button type="button" id="btnUnLockMember" class="btn btn-success" ' +
+                            '>' + disabledMemberText + ' </button>';
+
+                $('#toolBar').append(strBtn);
+            }
         });
-
-        /**
-         * Build toolbar
-         * @param data
-         */
-        function toolBarMember(data) {
-            var activeMemberText = /*[[#{admin.member.button.active.text}]]*/;
-            var enabledMemberText = /*[[#{admin.member.enabled.text}]]*/;
-            var disabledMemberText = /*[[#{admin.member.disabled.text}]]*/;
-            var strBtn = '';
-            if (!data.actived)
-                strBtn += '<button type="button" id="btnActiveMember" class="btn btn-success"> ' + activeMemberText + '</button>';
-
-            if (data.enabled)
-                strBtn += '<button type="button" id="btnLockMember" class="btn btn-danger" ' +
-                    '>' + enabledMemberText + '</button>';
-            else
-                strBtn += '<button type="button" id="btnUnLockMember" class="btn btn-success" ' +
-                    '>' + disabledMemberText + ' </button>';
-
-            $('#toolBar').append(strBtn);
-        }
         //]]>
     </script>
 </div>
 <div th:fragment="member-load-data">
     <script th:inline="javascript" type="text/javascript">
         var userData = null;
-        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var logonId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
         var id = /*[[${userId}]]*/;
         jQuery(document).ready(function ($) {
 
@@ -132,7 +298,6 @@
             showErrors(data);
             $('.mainContent').html('');
         }
-
 
 
     </script>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="mycash-transfer-cash">
+    <form method="post" id="frmTransfer">
+        <div class="row">
+            <div class="form-group">
+                <div class="row">
+                    <label for="userCash" th:text="#{mycash.choose.userCash.text}"></label>
+                    <select name="userCash" id="userCash" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="row">
+                    <label for="amount" th:text="#{mycash.amount.text}"></label>
+                    <input type="text" id="amount" name="amount" class="form-control" value="0"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="row">
+                    <label th:text="#{user.transfer.fill.receiver.text}"></label>
+                    <input type="text" id="toUser" name="toUser" class="form-control"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary" th:text="#{mycash.button.transfer.text}"></button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="currentAmount" value="1234"/>
+    </form>
+    <!-- Boostrap core Javascript -->
+    <div th:replace="common/header :: common-before-scripts"/>
+    <script th:src="@{/js/formValidation.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/gluck-functions.js}"></script>
+    <script th:src="@{/js/gluck.js}"></script>
+
+    <script th:inline="javascript" type="application/javascript">
+        /*<![CDATA[*/
+        var userId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var url = /*[[@{/api/user-cash}]]*/;
+        var msgErrorAmount = /*[[#{user.transfer.error.empty.amount.text}]]*/;
+        var msgErrorAmountLessThanOne = /*[[#{user.transfer.error.amount.less.than.one.text}]]*/;
+        var msgErrorToUser = /*[[#{user.transfer.error.empty.receiver.text}]]*/;
+        var msgConfirmTransfer = /*[[#{user.transfer.confirm.text}]]*/;
+        url += '/' + userId;
+        //get user info
+        getData(url, showCash);
+
+        /* Signup form validation */
+        $('#frmTransfer').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                amount: {
+                    validators: {
+                        notEmpty: {
+                            message: msgErrorAmount
+                        },
+                        greaterThan: {
+                            value: 2,
+                            message: msgErrorAmountLessThanOne
+                        }
+                    }
+                },
+                toUser: {
+                    validators: {
+                        notEmpty: {
+                            message: msgErrorToUser
+                        },
+                    }
+                },
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            if (confirm(msgConfirmTransfer)) {
+                var username =
+                /*[[${#authorization.getAuthentication().getPrincipal().username}]]*/
+                var urlTransfer = /*[[@{/api/transaction/transfer}]]*/;
+                urlTransfer += "?fromUser=" + username;
+                urlTransfer += "&toUser=" + $('#toUser').val();
+                urlTransfer += "&amount=" + $('#frmTransfer #amount').val();
+                urlTransfer += "&cashId=" + $('#frmTransfer #userCash').val();
+
+                getData(urlTransfer, showTransferSuccess, showErrors);
+            }
+
+        });
+
+        function showTransferSuccess(data) {
+            showMessages(data.messages);
+            setTimeout(function () {
+                //clean form
+                $('#frmTransfer')[0].reset();
+                //get user info
+                getData(url, showCash);
+            }, 1000);
+        }
+        /**
+         * Show current cash of user
+         * @param data
+         */
+        function showCash(data) {
+
+            var myCashSelect = $('#frmTransfer #userCash');
+            var boxCash = $('.boxCash');
+            myCashSelect.html('');
+            $.each(data, function (index, myCash) {
+                if (myCash.cash.transfer) {
+
+                    var strMyCash = '';
+
+                    strMyCash += '<option value="' + myCash.id + '" attrValue="' + myCash.value + '">';
+                    strMyCash += myCash.cash.name + ': $' + myCash.value;
+                    strMyCash += '</option>';
+
+                    myCashSelect.append(strMyCash);
+                }
+
+                var strCash = '';
+                strCash += '<h6>+ ' + myCash.cash.name + ': ' + myCash.value + '</h6>';
+
+                boxCash.append(strCash);
+            });
+
+            currentAmount = $('option:selected', '#userCash').attr('attrValue');
+            $('.currentAmount').html(currentAmount);
+            $('#currentAmount').val(currentAmount);
+
+        }
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

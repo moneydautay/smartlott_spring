@@ -6,7 +6,8 @@ package com.smartlott.enums;
 public enum TransactionTypeEnum {
     Withdraw(1,"Withdraw","This is withdraw transaction", false),
     BuyingLottery(2,"Buying lottery", "This is buying lottery", true),
-    BuyInvestmentPackage(3,"Investment package","This is buying investment package", true);
+    BuyInvestmentPackage(3,"Investment package","This is buying investment package", true),
+    TransferCash(4, "Transfer cash", "This is transfer cash", true);
 
     private  int id;
     private String name;

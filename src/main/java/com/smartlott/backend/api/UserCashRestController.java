@@ -48,5 +48,4 @@ public class UserCashRestController {
         }
         return new ResponseEntity<Object>(userCashes, HttpStatus.OK);
     }
-
 }

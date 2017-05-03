@@ -25,14 +25,27 @@
             <!--Include tab-->
             <div th:replace="admin/user/script::detail-tab"></div>
 
-            <form role="form" id="frmAddPost" action="/api/post" method="post" class="form-groups-bordered">
+            <form role="form" id="frmAddUser" action="/api/user" method="post" class="form-groups-bordered">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="username">Tên đăng nhập</label>
-                                <input type="text" id="username" name="username" class="form-control"
-                                       readonly="readonly"/>
+                                <input type="text" id="username" name="username" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${action == 'add'}" class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="password" th:text="#{admin.user.password.text}">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="confirmPassword" th:text="#{admin.user.confirm.password.text}">Confirm password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -40,14 +53,13 @@
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="text" id="email" name="email" class="form-control" readonly="readonly"/>
+                                <input type="text" id="email" name="email" class="form-control" />
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6 has-right-icon">
                             <div class="form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
-                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
-                                       readonly="readonly"/>
+                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -70,8 +82,7 @@
                             <div class="form-group">
                                 <label for="sex">Giới tính</label>
                                 <div class="radio">
-                                    <label><input id="sex" type="radio" name="sex" th:value="1"
-                                                  checked="checked"/>Nam</label>
+                                    <label><input id="sex" type="radio" name="sex" th:value="1" checked="checked"/>Nam</label>
                                     <label><input id="sex" type="radio" th:value="0" name="sex"/> Nữ</label>
                                 </div>
                             </div>
@@ -113,53 +124,39 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="enabled" th:text="#{admin.user.created.date.text}">Create date</label>
+                                <input type="text" id="createDate" name="createDate" class="form-control" readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
                     <h3 class="page-header">Status</h3>
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label for="enabled">Enabled</label>
-                                <input type="text" id="enabled" name="enabled" class="form-control"/>
+                                <input type="text" id="enabled" name="enabled" class="form-control" readonly="readonly"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
-                                <label for="changeStatusBy">Change Status By</label>
-                                <input type="text" id="changeStatusBy" name="changeStatusBy" fields="username" class="form-control"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="changeStatusDate">Change Status Date</label>
-                                <input type="text" id="changeStatusDate" name="changeStatusDate" class="form-control"/>
+                                <label for="modifiedBy">Last update by</label>
+                                <input type="text" id="modifiedBy" name="modifiedBy" class="form-control" ingored="true" readonly="readonly"/>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
-                                <label for="city">Activated</label>
-                                <input type="text" id="actived" name="actived" class="form-control"/>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="activeBy">Activated by</label>
-                                <input type="text" id="activeBy" name="activeBy" fields="username" class="form-control"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="city">Activated date</label>
-                                <input type="text" id="activeDate" name="activeDate" class="form-control"/>
+                                <label for="modifiedDate">Last update date</label>
+                                <input type="text" id="modifiedDate" name="modifiedDate" class="form-control" ingored="true" readonly="readonly"/>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <input type="hidden" name="id" id="id"/>
             </form>
         </div>
         <div class="clearfix"></div>
@@ -174,13 +171,26 @@
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <div th:replace="admin/user/script::member-load-data"></div>
+<div th:replace="admin/user/script::member-save-general"></div>
+<script th:src="@{/sources/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
 <script th:inline="javascript" type="text/javascript">
     jQuery(document).ready(function ($) {
+        //load provinces to select city
+        getProvinces('province', 2);
 
-        if (userData != null) showDataToForm(userData);
+        if (userData != null) {
+            showDataToForm(userData);
+            getAddress(userData.id);
+        }
+
+        $('#birthdayFormat').datepicker({
+            format: 'dd/mm/yyyy',
+            startDate: '-50y',
+            endDate: '-18y',
+            startView: '-30y',
+            autoclose: true
+        })
     });
-
-
 </script>
 </body>
 </html>

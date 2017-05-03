@@ -48,7 +48,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group">
-                                <label for="numberAccount" th:text="#{mycash.choose.number.account.text}"></label>
+                                <label for="numberAccountArea" th:text="#{mycash.choose.number.account.text}"></label>
                                 <div class="row" id="numberAccountArea">
                                 </div>
                             </div>
@@ -86,6 +86,9 @@
                         </div>
                         <input type="hidden" id="currentAmount" value="1234"/>
                     </form>
+                </div>
+                <div class="">
+                    <div th:include="dashboard/script::mycash-transfer-cash"></div>
                 </div>
             </div>
 

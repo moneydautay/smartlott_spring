@@ -25,7 +25,7 @@
             <!--Include tab-->
             <div th:replace="admin/user/script::detail-tab"></div>
 
-            <form role="form" id="frmUserRole" action="/api/user/reset-password" method="post"
+            <form role="form" id="frmAddUser" action="/api/user/reset-password" method="post"
                   class="form-groups-bordered">
                 <div class="col-md-12">
                     <div class="row">
@@ -47,21 +47,25 @@
 
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
-<div th:replace="admin/user/script::member-load-data"></div>
+<div th:include="admin/user/script::member-load-data"></div>
 <script th:inline="javascript" type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function ($) {
         var urlRole = /*[[@{/api/role/all}]]*/;
         getData(urlRole, showRoles);
 
-        if (userData != null) {
-            var roles = userData.roles.split(", ");
+        $('#frmAddUser').submit(function (e) {
+            e.preventDefault();
+            var data = [];
+            $('#frmAddUser input[name="role"]:checked').each(function (i) {
 
-            $('#frmUserRole input[type="checkbox"]').each(function () {
-                console.log(roles);
-                console.log(this);
-            })
-        }
+                data[i] = {"id": this.value};
+            });
+            console.log(data);
+            var urlUpdateRole = /*[[@{/api/staff/update-roles/{id}(id=${userId})}]]*/;
+
+            saveOrupdateData(urlUpdateRole, "PUT", data, showMessages);
+        })
     });
 
     function showRoles(data) {
@@ -76,7 +80,7 @@
     function checkboxHtml(role) {
         var checked = "";
         if (userData != null) {
-            var roles = userData.roles.split(", ");
+            var roles = userData.roleNames.split(", ");
             $.each(roles, function (i, r) {
                 if(r == role.description)
                     checked = "checked";

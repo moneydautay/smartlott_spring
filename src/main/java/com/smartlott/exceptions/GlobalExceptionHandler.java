@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> occurExceptionHandler(OccurException e) {
         messageDTOS = new ArrayList<>();
         messageDTOS.add(e.getMessageDTO());
+        return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    @ExceptionHandler(NotEnoughUserCashAmountException.class)
+    public ResponseEntity<Object> notEnoughUserCashException(NotEnoughUserCashAmountException e) {
+        messageDTOS = Arrays.asList(e.getMessageDTO());
         return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,14 +90,15 @@ public class UserService {
     @Transactional
     public User createUser(User user) {
 
-        String encryptPassword = passwordEncoder.encode(user.getPassword());
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
-        Set<Password> passwords = new HashSet<>();
-        passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemDefaultZone()), user));
-        user.setPassword(encryptPassword);
+        if (user.getPassword() != null) {
+            String encryptPassword = passwordEncoder.encode(user.getPassword());
+            Set<Password> passwords = new HashSet<>();
+            passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemDefaultZone()), user));
+            user.setPassword(encryptPassword);
 
-        user.setPasswords(passwords);
-
+            user.setPasswords(passwords);
+        }
         //reset introducedKey to null
         user.setIntroducedKey(null);
         //save user
@@ -109,6 +111,31 @@ public class UserService {
         UserInvestment userInvestment = addInvestmentPackage(user, defaultInvestmentPackage, now);
 
         user.addUserInvestment(userInvestment);
+
+        UserElastic userElastic = new UserElastic(user);
+        LOGGER.info("Creating User elastic {} ", userElastic.toString());
+        userElasticRepository.save(userElastic);
+
+        return user;
+    }
+
+    @Transactional
+    public User createStaff(User user) {
+
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
+        if (user.getPassword() != null) {
+            String encryptPassword = passwordEncoder.encode(user.getPassword());
+            Set<Password> passwords = new HashSet<>();
+            passwords.add(new Password(encryptPassword, LocalDateTime.now(Clock.systemDefaultZone()), user));
+            user.setPassword(encryptPassword);
+
+            user.setPasswords(passwords);
+        }
+
+        //reset introducedKey to null
+        user.setIntroducedKey(null);
+        //save user
+        user = userRepository.save(user);
 
         UserElastic userElastic = new UserElastic(user);
         LOGGER.info("Creating User elastic {} ", userElastic.toString());
@@ -136,12 +163,11 @@ public class UserService {
     @Transactional
     public User updateUser(User user) {
 
-        user = userRepository.save(user);
-
         //update user elastic searchAll
         UserElastic userElastic = new UserElastic(user);
         userElasticRepository.save(userElastic);
 
+        user = userRepository.save(user);
         return user;
     }
 
@@ -187,11 +213,11 @@ public class UserService {
     }
 
     public Page<User> getByRole(String roleName, Pageable pageable) {
-        return userRepository.findByUserRolesRoleName(roleName, pageable);
+        return userRepository.findByRoles_Name(roleName, pageable);
     }
 
     public Page<User> getByRoles(List<String> roleNames, Pageable pageable) {
-        return userRepository.findByUserRolesRoleNameIn(roleNames, pageable);
+        return userRepository.findUserDistinctByRoles_NameIn(roleNames, pageable);
     }
 
     @Transactional
@@ -248,21 +274,32 @@ public class UserService {
     @Transactional
     public int active(long userId, User byUser) {
         LocalDateTime localDateTime = LocalDateTime.now(Clock.systemDefaultZone());
-        return userRepository.active(userId, byUser, localDateTime);
+        return userRepository.active(userId, byUser.getUsername(), localDateTime, byUser.getUsername());
     }
 
     @Transactional
-    public int changeStatus(boolean status, long userId, User byUser) {
-        LocalDateTime changeDate = LocalDateTime.now(Clock.systemDefaultZone());
-        return userRepository.changeStatus(status, userId, byUser, changeDate);
+    public int changeStatus(boolean status, long userId, String username) {
+        return userRepository.changeStatus(status, userId, username);
     }
 
     public User findOne(long userId, String role) {
 
-        return userRepository.findByIdAndUserRoles_RoleName(userId, role);
+        return userRepository.findByIdAndRoles_Name(userId, role);
     }
 
-    public User findOneByIdAndRoleNamesIn(long userId, List<String> roleNames) {
-        return userRepository.findByIdAndUserRoles_RoleNameIn(userId, roleNames);
+    public User findOneByIdAndRoleNamesIn(long userId, String roleName) {
+        return userRepository.findByIdAndRoles_NameNot(userId, roleName);
+    }
+
+    public Page<User> getRolesNot(String customerRole, Pageable pageable) {
+        return userRepository.findUserDistinctByRoles_NameNotOrRolesIsNull(customerRole, pageable);
+    }
+
+    public void updateDocument(long id, String document, int type) {
+        User logonUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(type == 1)
+            userRepository.updateDocumentOne(id, document, logonUser.getUsername());
+        else
+            userRepository.updateDocumentTwo(id, document, logonUser.getUsername());
     }
 }

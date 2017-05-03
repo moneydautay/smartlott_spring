@@ -40,7 +40,7 @@ public class UserElastic {
 
     private String userInvestment;
 
-    private String roles;
+    private String roleNames;
 
     private boolean customer = false;
 
@@ -61,10 +61,10 @@ public class UserElastic {
         this.enabled = user.isEnabled();
         this.createDate = user.getCreateDate().toString();
         this.actived = user.isActived();
-        this.activeBy = (user.getActiveBy() != null) ? user.getActiveBy().getUsername() : null;
-        this.introducedBy = (user.getIntroducedBy() != null) ? user.getIntroducedBy().getUsername() : null;
-        this.userInvestment = user.getUserInvestment().getInvestmentPackage().getName();
-        this.roles = user.getRoles();
+        this.activeBy = (user.getActiveBy() != null) ? user.getActiveBy() : null;
+        this.introducedBy = (user.getIntroducedBy() != null) ? user.getIntroducedBy() : null;
+        this.userInvestment = (user.getUserInvestment() != null) ?  user.getUserInvestment().getInvestmentPackage().getName() : null;
+        this.roleNames = user.getRoleNames();
         this.customer = (user.getRoles().equals(RolesEnum.CUSTOMER.getDescription())) ? true : false;
     }
 
@@ -172,8 +172,8 @@ public class UserElastic {
         this.userInvestment = userInvestment;
     }
 
-    public String getRoles() {
-        return roles;
+    public String getRoleNames() {
+        return roleNames;
     }
 
     public boolean isCustomer() {

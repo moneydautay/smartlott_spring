@@ -1,5 +1,6 @@
 package com.smartlott.backend.service;
 
+import com.smartlott.backend.persistence.domain.backend.Role;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.enums.RolesEnum;
 import org.junit.Assert;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by greenlucky on 3/31/17.
@@ -51,7 +54,7 @@ public class UserServiceTest {
     @Test
     public void changeStatus() throws Exception {
         User byUser = userService.findOne(1);
-        int userNum = userService.changeStatus(false,1, byUser);
+        int userNum = userService.changeStatus(false, 1, byUser.getUsername());
         Assert.assertEquals(1, userNum);
     }
 
@@ -67,8 +70,34 @@ public class UserServiceTest {
     @Test
     public void findOneByIdAndRoleNamesIn() throws Exception {
 
-        User user = userService.findOneByIdAndRoleNamesIn(1, USER_ROLES);
+        User user = userService.findOneByIdAndRoleNamesIn(10, "ROLE_CUSTOMER");
         System.out.println(user.toString());
+    }
+
+    @Test
+    public void findByEmail() throws Exception {
+        User user = userService.findOne(Long.valueOf(1));
+        System.out.println(user.toString());
+    }
+
+    @Test
+    public void updateRole() throws Exception {
+
+        User user = userService.findOne(Long.valueOf(1));
+        System.out.println(user.getRoles());
+        Role CUST = new Role(RolesEnum.CUSTOMER);
+        Role MAN = new Role(RolesEnum.MANAGER);
+        Role ADMIN = new Role(RolesEnum.ADMIN);
+
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(CUST);
+        userRoles.add(MAN);
+        userRoles.add(ADMIN);
+
+        user.setRoles(userRoles);
+        System.out.println(user.toString());
+        user = userService.updateUser(user);
+        System.out.println(user.getRoles());
     }
 
 }

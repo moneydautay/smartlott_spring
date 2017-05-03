@@ -11,7 +11,7 @@ public class Province {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "province_id")
+    @Column(name = "id")
     private int id;
 
     private String name;

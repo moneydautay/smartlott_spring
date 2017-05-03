@@ -4,11 +4,10 @@ package com.smartlott.backend.api;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
 import com.smartlott.enums.MessageType;
-import com.smartlott.enums.NotificationTypeEnum;
 import com.smartlott.enums.RolesEnum;
 import com.smartlott.exceptions.NotFoundException;
 import com.smartlott.exceptions.OccurException;
-import com.smartlott.exceptions.RoleNotFoundException;
+import com.smartlott.utils.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,6 @@ public class UserHandler {
     private UserService userService;
 
     @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
     private RoleService roleService;
 
     @Autowired
@@ -86,11 +82,8 @@ public class UserHandler {
      */
     @RequestMapping(value = API_USER_NUMERIC_JOINED_REST_URL + "/{roleId}", method = RequestMethod.GET)
     public Long getNumericJoinedMember(@PathVariable int roleId) {
-        Role role = roleService.getRole(roleId);
-        if (role == null) {
-            throw new RoleNotFoundException(roleId);
-        }
-        return (long) userRoleService.findByRole(role).size();
+
+        return Long.valueOf(0);
     }
 
     /**
@@ -129,16 +122,16 @@ public class UserHandler {
                 messages.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("NotValid.user.introduce.key", locale)));
                 duplicated = true;
             }
-            user.setIntroducedBy(introducedUser);
+            user.setIntroducedBy(introducedUser.getUsername());
         }
 
         if (duplicated) {
             return new ResponseEntity<Object>(messages, HttpStatus.EXPECTATION_FAILED);
         }
 
-        Set<UserRole> userRoles = new HashSet<>();
-        userRoles.add(new UserRole(new Role(RolesEnum.CUSTOMER), user));
-        user.setUserRoles(userRoles);
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(new Role(RolesEnum.CUSTOMER));
+        user.setRoles(userRoles);
         user = userService.createUser(user);
 
         //Auto login the registered user
@@ -167,19 +160,21 @@ public class UserHandler {
      */
     @RequestMapping(value = API_USER_REST_URL + "/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user, Locale locale) {
-
-        if (userService.findOne(user.getId()) == null) {
+        User localUser = userService.findOne(user.getId());
+        if (localUser == null) {
             LOGGER.error("User {} not found", user);
             return new ResponseEntity<Object>(i18NService.getMessage("Id.user.not.found", String.valueOf(user.getId()), locale), HttpStatus.BAD_REQUEST);
         }
 
+        user.setRoles(localUser.getRoles());
         user = userService.updateUser(user);
 
         if (!user.isActived())
             notificationService.turnOffNotification(user, API_USER_REST_URL);
         LOGGER.info("Update information of user {}", user);
-
-        return new ResponseEntity<Object>(user, HttpStatus.OK);
+        MessageDTO messageDTO = new MessageDTO(MessageType.SUCCESS, i18NService.getMessage("admin.user.success.update.text", user.getUsername(), locale));
+        Map<String, Object> response = ResponseUtil.Response(messageDTO, user);
+        return new ResponseEntity<Object>(response, HttpStatus.OK);
     }
 
 
@@ -296,11 +291,8 @@ public class UserHandler {
                         + "The user's profile will be created without the image profile");
             }
         }
-        //turnoff notification
-        if (!localUser.isActived() && localUser.getDocumentOne() != null && localUser.getDocumentTwo() != null)
-            notificationService.turnOffNotification(localUser, API_USER_UPLOADOC_REST_URL);
 
-        userService.updateUser(localUser);
+        userService.updateDocument(localUser.getId(), localUser.getDocumentOne(), docType);
         LOGGER.debug("Update user {}", localUser);
 
         return new ResponseEntity<Object>(localUser, HttpStatus.OK);
@@ -348,12 +340,12 @@ public class UserHandler {
     }
 
     @GetMapping(API_USER_REST_URL + "/change-status/{status}/{userId}/{byUserId}")
-    public ResponseEntity<Object> activeMember(@PathVariable boolean status, @PathVariable long userId,
-                                               @PathVariable long byUserId, Locale locale) {
+    public ResponseEntity<Object> changeStatusMember(@PathVariable boolean status, @PathVariable long userId, Locale locale) {
+
+        User logonUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<MessageDTO> messages = new ArrayList<>();
         User localUser = userService.findOne(userId);
-        User byUser = userService.findOne(byUserId);
 
         if (localUser == null) {
             LOGGER.error("Id {} was not found", userId);
@@ -362,14 +354,9 @@ public class UserHandler {
             throw new NotFoundException(messageDTO);
         }
 
-        if (byUser == null) {
-            LOGGER.error("Id {} was not found", byUserId);
-            MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
-                    i18NService.getMessage("Id.user.not.found", String.valueOf(byUserId), locale));
-            throw new NotFoundException(messageDTO);
-        }
+
         Object[] objs = new Object[] {String.valueOf(status), String.valueOf(userId)};
-        if (userService.changeStatus(status, userId, byUser) == 0) {
+        if (userService.changeStatus(status, userId, logonUser.getUsername()) == 0) {
             LOGGER.error("Change status member {} was failed", userId);
             MessageDTO messageDTO = new MessageDTO(MessageType.ERROR,
                     i18NService.getMessage("admin.member.error.change.status.text",
@@ -388,46 +375,4 @@ public class UserHandler {
 
         return new ResponseEntity<Object>(data, HttpStatus.OK);
     }
-
-
-    public void setNotification(User user) {
-
-        NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
-        NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
-        NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
-        NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);
-
-        //add notification after create new user;
-        Notification notif1 = new Notification();
-        notif1.setContent("Welcome to Smartlott");
-        notif1.setUser(user);
-        notif1.setNotificationType(type5);
-
-        notificationService.create(notif1);
-        LOGGER.info("Add notification {} for user {}", notif1, user);
-
-        Notification notif2 = new Notification();
-        notif2.setContent("Please update your information before buy lottery");
-        notif2.setUser(user);
-        notif2.setNotificationType(type1);
-
-        notificationService.create(notif2);
-        LOGGER.info("Add notification {} for user {}", notif2, user);
-
-        Notification notif3 = new Notification();
-        notif3.setContent("Please upload your bill of bank or bill or electricity or water to varify your address");
-        notif3.setUser(user);
-        notif3.setNotificationType(type3);
-
-        notificationService.create(notif3);
-        LOGGER.info("Add notification {} for user {}", notif3, user);
-
-        Notification notif4 = new Notification();
-        notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
-        notif4.setUser(user);
-        notif4.setNotificationType(type4);
-        notificationService.create(notif4);
-        LOGGER.info("Add notification {} for user {}", notif4, user);
-    }
-
 }

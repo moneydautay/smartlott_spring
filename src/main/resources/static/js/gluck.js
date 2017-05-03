@@ -121,24 +121,37 @@ function getAddress(userId, callBack = null) {
 
     var url = '/api/address/' + userId;
 
-    $.ajax({
-        type: 'GET',
-        contentType: 'application/json',
-        url: url,
-        dataType: 'json',
-        timeout: 10000,
-        success: function (data) {
-            if (callBack != null)
-                showAddress(data);
-        },
-        error: function (e) {
-            console.log(e);
-        },
-        done: function (e) {
-            console.log("DONE");
+    setTimeout(function () {
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json',
+            url: url,
+            dataType: 'json',
+            timeout: 10000,
+            success: function (data) {
+                if (callBack == null) showAddress(data);
+            },
+            error: function (e) {
+                console.log(e);
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        });
+    }, 500);
+
+    function showAddress(data) {
+        if(data[0] != null){
+            $('#addressId').val(data[0].id);
+            $('#address').val(data[0].address);
+            $('#city').val(data[0].city);
+            $('#state').val(data[0].state);
+            $('#province').val(data[0].province.id);
         }
-    });
+    }
 }
+
+
 
 /**
  * Retrieve data given by url
@@ -302,6 +315,7 @@ function updateUser() {
     data['lastName'] = $('#lastName').val();
     data['birthday'] = $('#birthday').val();
     data['sex'] = $('#sex:checked').val();
+    data['createDate'] = $('#createDate').val();
 
     //Province
     province['id'] = $('#province').val();

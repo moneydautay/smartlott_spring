@@ -48,7 +48,7 @@
                         <th th:text="#{admin.user.email.text}" fields="email">Email</th>
                         <th th:text="#{admin.user.last.name.text}" fields="lastName">Last name</th>
                         <th th:text="#{admin.user.first.name.text}" fields="firstName">First name</th>
-                        <th th:text="#{admin.user.role.text}" fields="roles">Role</th>
+                        <th th:text="#{admin.user.role.text}" fields="roleNames">Role</th>
                         <th th:text="#{admin.user.phone.text}" fields="phoneNumber">Phone number</th>
                         <th th:text="#{admin.user.enable.text}" fields="enabled">Enabled</th>
                     </tr>
@@ -62,7 +62,7 @@
                     </ul>
                 </nav>
             </div>
-            <a th:href="@{/stl-admin/member/add}" class="btn btn-primary">
+            <a th:href="@{/stl-admin/user/add}" class="btn btn-primary">
                 <i class="entypo-plus"></i>
                 <span th:text="#{admin.member.button.add.text}">Add</span>
             </a>
@@ -92,7 +92,7 @@
 
     function appendData(data) {
 
-        var urlDetail = /*[[@{/stl-admin/user/view/}]]*/;
+        var urlDetail = /*[[@{/stl-admin/user/edit/}]]*/;
         if(data.messages != null) {
             showMessages(data.messages);
             fieldData(data.data.content, urlDetail);

@@ -1,7 +1,5 @@
 package com.smartlott.backend.persistence.domain.backend;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -26,8 +24,7 @@ public class Address implements Serializable{
 
     private String state;
 
-    @JsonIgnore
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch =  FetchType.EAGER)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)

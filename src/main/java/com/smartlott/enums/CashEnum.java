@@ -7,7 +7,7 @@ public enum CashEnum {
 
     CASH(1, "Cash", true, true, true),
     INVESTMENT(2, "Cash investment", false, false, true),
-    TRADING(3, "Cash trading", false, false ,true);
+    TRADING(3, "Cash trading", false, false ,false);
 
     private int id;
 

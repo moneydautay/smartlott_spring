@@ -5,15 +5,18 @@ import com.smartlott.enums.RolesEnum;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Created by Mrs Hoang on 12/14/2016.
  */
 @Entity
 @Table(name = "role")
-public class Role implements Serializable{
+public class Role implements Serializable {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -26,6 +29,9 @@ public class Role implements Serializable{
 
     @Max(value = 10)
     private int priority;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    public Set<User> users;
 
     public Role() {
     }
@@ -67,6 +73,14 @@ public class Role implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
