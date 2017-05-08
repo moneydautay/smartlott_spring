@@ -22,4 +22,5 @@ public interface LotteryRepository extends CrudRepository<Lottery, Long>{
 
     List<Lottery> findByLotteryDetailLotteryDialing_IdAndEnabled(long id, boolean b);
 
+    Page<Lottery> findByLotteryDetail_TransactionOfUserIdAndLotteryDetail_LotteryDialingId(long userId, long lotteryDialingId, Pageable pageable);
 }

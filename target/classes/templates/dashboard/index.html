@@ -4,18 +4,18 @@
 <head th:replace="common/header :: common-head">
 
 </head>
-<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen" />
-<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen" />
+<link rel="stylesheet" th:href="@{/css/dashboard.css}" media="screen"/>
+<link rel="stylesheet" th:href="@{/sources/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" media="screen"/>
 
 <body>
 <!-- main container-->
 <div class="container">
 
     <!-- include fragment top-menu-->
-    <div th:replace="common/header :: common-top-menu" />
+    <div th:replace="common/header :: common-top-menu"/>
 
     <!-- INCLUDE FRAGMENT HEADER -->
-    <div th:replace="common/header :: common-header" />
+    <div th:replace="common/header :: common-header"/>
 
     <!-- Slider image-->
     <div class="container category">
@@ -40,14 +40,14 @@
     </div>
 
     <!--FEATURED NEWS-->
-    <div th:replace="common/include :: common-featured-news" />
+    <div th:replace="common/include :: common-featured-news"/>
 
     <!-- ACCEPTED PAYMENT -->
-    <div th:replace="common/include :: common-accepted-payment" />
+    <div th:replace="common/include :: common-accepted-payment"/>
 
 
     <!-- FOOTER -->
-    <div th:replace="common/footer :: common-footer" />
+    <div th:replace="common/footer :: common-footer"/>
 </div> <!-- end main container-->
 
 <!-- Boostrap core Javascript -->
@@ -56,6 +56,23 @@
 <script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-<div th:replace="dashboard/include :: script-nofitication"/>
+<script th:src="@{/js/gluck-functions.js}"></script>
+<script th:src="@{/js/gluck.js}"></script>
+<script th:inline="javascript" type="application/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function () {
+        var currentUserId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+
+        //get statistic bonus
+        var urlSatisticBonus = /*[[@{/api/bonus/statistic/}]]*/;
+        urlSatisticBonus += currentUserId;
+        getData(urlSatisticBonus, showStatisticBonus);
+    })
+
+    function showStatisticBonus(data) {
+        console.log(data);
+    }
+    //]]>
+</script>
 </body>
 </html>

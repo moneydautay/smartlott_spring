@@ -82,4 +82,8 @@ public class LotterySerivce {
     public Iterable<Lottery> createNewLotteries(List<Lottery> lotteries) {
         return lotteryRepository.save(lotteries);
     }
+
+    public Page<Lottery> getByUserIdAndLotteryDialingId(long userId, long lotteryDialingId, Pageable pageable) {
+        return lotteryRepository.findByLotteryDetail_TransactionOfUserIdAndLotteryDetail_LotteryDialingId(userId,lotteryDialingId, pageable);
+    }
 }

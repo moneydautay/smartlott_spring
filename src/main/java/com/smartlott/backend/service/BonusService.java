@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -116,5 +117,16 @@ public class BonusService {
 
         }
         return valueBonus;
+    }
+
+    public double getBonusInDay(long userId) {
+        LocalDate now = LocalDate.now(Clock.systemDefaultZone());
+        LocalDateTime fromDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
+        LocalDateTime toDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 23, 59, 59);
+        return bonusRepository.getSumBonusByUserId(userId, fromDate, toDate);
+    }
+
+    public double getTotalBonus(long userId) {
+        return bonusRepository.getTotalBonusByUserId(userId);
     }
 }

@@ -170,4 +170,16 @@ public class LotteryHandler {
         return new ResponseEntity<Object>(response, HttpStatus.OK);
     }
 
+
+    @GetMapping("/current-dialing/ofuser/{userId}")
+    public ResponseEntity<Object> getLotteriesCurrentDialing(@PathVariable long userId, Pageable pageable) {
+
+        LotteryDialing currentDialing = dialingService.getOpenedLotteryDialing(true);
+
+        Page<Lottery> lotteries = lotterySerivce.getByUserIdAndLotteryDialingId(userId, currentDialing.getId(), pageable);
+
+
+        return new ResponseEntity<Object>(lotteries, HttpStatus.OK);
+    }
+
 }
