@@ -67,9 +67,30 @@
         var urlSatisticBonus = /*[[@{/api/bonus/statistic/}]]*/;
         urlSatisticBonus += currentUserId;
         getData(urlSatisticBonus, showStatisticBonus);
+
+        //get lottery of current dialing
+        var urlLotteryOfCurrentDialing = /*[[@{/api/lottery/current-dialing/ofuser/}]]*/;
+        urlLotteryOfCurrentDialing += currentUserId;
+
+        getData(urlLotteryOfCurrentDialing, showLottery);
+
+        //get cash
+        var urlCash = /*[[@{/api/user-cash}]]*/;
+        urlCash += '/' + currentUserId;
+        //get user info
+        getData(urlCash, showCash);
+
     })
 
     function showStatisticBonus(data) {
+        console.log(data);
+    }
+
+    function showLottery(data) {
+        console.log(data);
+    }
+
+    function showCash(data) {
         console.log(data);
     }
     //]]>

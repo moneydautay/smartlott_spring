@@ -103,17 +103,3 @@ jQuery(document).ready(function ($) {
 
 });
 
-function showCountDownTimerLotteryDialing(data) {
-
-    $("#count-down-time")
-        .countdown(data.tempToDate, function(event) {
-            $(this).html(
-                event.strftime(''
-                    + '<li>%D</li>'
-                    + '<li>%H</li>'
-                    + '<li>%M</li>'
-                    + '<li>%S</li>'
-                )
-            );
-        });
-}

@@ -78,7 +78,6 @@ function arrHandle(name, value) {
         $("input[name='" + name + "'][value='" + val + "']").prop("checked",
             true);
     })
-
 }
 
 function objHandle(name, value) {
@@ -108,7 +107,6 @@ function objHandle(name, value) {
     }
     else
         id.val(val);
-
 }
 
 
