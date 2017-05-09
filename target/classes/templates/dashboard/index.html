@@ -56,6 +56,9 @@
 <script th:src="@{/js/jquery.numberformatter-1.2.4.jsmin.js}"></script>
 <script th:src="@{/js/formValidation.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/moment.min.js}"></script>
+<script th:src="@{/sources/moment-timezone.js}"></script>
+<script th:src="@{/sources/jquery.countdown-2.2.0/jquery.countdown.min.js}"></script>
 <script th:src="@{/js/gluck-functions.js}"></script>
 <script th:src="@{/js/gluck.js}"></script>
 <script th:inline="javascript" type="application/javascript">
@@ -80,6 +83,9 @@
         //get user info
         getData(urlCash, showCash);
 
+        //get countdown time opening dialing
+        var urlOpeningDialing = /*[[@{/api/lottery-dialing/opening}]]*/
+        getData(urlOpeningDialing, showCountDownTimerLotteryDialing);
     })
 
     function showStatisticBonus(data) {
