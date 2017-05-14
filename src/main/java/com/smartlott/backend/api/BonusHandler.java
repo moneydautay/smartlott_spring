@@ -56,14 +56,22 @@ public class BonusHandler {
         return new ResponseEntity<Object>(bonus, HttpStatus.OK);
     }
 
+    /**
+     * Gets bonus statistic of user given by userid.
+     *
+     *
+     * @param userId
+     * @param locale
+     * @return A map contains 2 data are bonusInTerm (bonus in this dialing lottery) and totalBonus
+     */
     @GetMapping("/statistic/{userId}")
     public ResponseEntity<Object> getStatistic(@PathVariable long userId, Locale locale) {
         Map<String, Object> response = new HashMap<>();
 
-        double bonusInDay = bonusService.getBonusInDay(userId);
+        double bonusInDay = bonusService.getBonusInTerm(userId);
         double totalBonus = bonusService.getTotalBonus(userId);
 
-        response.put("bonusInDay", bonusInDay);
+        response.put("bonusInTerm", bonusInDay);
         response.put("totalBonus", totalBonus);
 
         return new ResponseEntity<Object>(response, HttpStatus.OK);

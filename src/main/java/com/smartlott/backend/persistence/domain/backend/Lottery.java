@@ -16,9 +16,11 @@ import java.time.format.DateTimeFormatter;
  */
 @Entity
 @Table(name = "lottery")
-public class Lottery implements Serializable{
+public class Lottery implements Serializable {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -165,23 +167,23 @@ public class Lottery implements Serializable{
     }
 
     public String getSequense() {
-        sequense = coupleOne + "-" + coupleTwo + "-" + coupleThree+ "-" + coupleFour + "-" + coupleFive + "-" + coupleSix;
+        sequense = coupleOne + "-" + coupleTwo + "-" + coupleThree + "-" + coupleFour + "-" + coupleFive + "-" + coupleSix;
         return sequense;
     }
 
     public LocalDateTime getBuyDate() {
-        return lotteryDetail.getTransaction().getCreatedDate();
+        return (null != lotteryDetail) ? lotteryDetail.getTransaction().getCreatedDate() : null;
     }
 
     public String getBuyBy() {
-        return lotteryDetail.getTransaction().getOfUser().getUsername();
+        return  (null != lotteryDetail) ? lotteryDetail.getTransaction().getOfUser().getUsername() : null;
     }
 
     public String getLotteryDialing() {
 
         DateTimeFormatter df = DateTimeFormatter.ofPattern("kk:mm:ss dd/MM/yyyy");
 
-        return lotteryDetail.getLotteryDialing().getFromDate().format(df) + "-" + lotteryDetail.getLotteryDialing().getToDate().format(df);
+        return (null != lotteryDetail) ? lotteryDetail.getLotteryDialing().getFromDate().format(df) + "-" + lotteryDetail.getLotteryDialing().getToDate().format(df) : null;
     }
 
     @Override
@@ -200,19 +202,19 @@ public class Lottery implements Serializable{
     }
 
     public String printCoupleLottery(int numberComparedCouple) {
-        String strCouple= "[" ;
-        if(numberComparedCouple >=6)
-            strCouple+= coupleOne + "-";
-        if(numberComparedCouple >=5)
-            strCouple+=coupleTwo + "-";
-        if(numberComparedCouple >=4)
-            strCouple+=coupleThree + "-";
-        if(numberComparedCouple >=3)
-            strCouple+=coupleFour + "-";
-        if(numberComparedCouple >=2)
-            strCouple+=coupleFive + "-";
-        strCouple+=coupleSix;
-                        strCouple+="]";
+        String strCouple = "[";
+        if (numberComparedCouple >= 6)
+            strCouple += coupleOne + "-";
+        if (numberComparedCouple >= 5)
+            strCouple += coupleTwo + "-";
+        if (numberComparedCouple >= 4)
+            strCouple += coupleThree + "-";
+        if (numberComparedCouple >= 3)
+            strCouple += coupleFour + "-";
+        if (numberComparedCouple >= 2)
+            strCouple += coupleFive + "-";
+        strCouple += coupleSix;
+        strCouple += "]";
         return strCouple;
     }
 
@@ -243,13 +245,13 @@ public class Lottery implements Serializable{
         if (o == null || getClass() != o.getClass()) return false;
 
         Lottery lottery = (Lottery) o;
-        if(numberComparedCouple>=6)
+        if (numberComparedCouple >= 6)
             if (!coupleOne.equals(lottery.coupleOne)) return false;
-        if(numberComparedCouple>=5)
+        if (numberComparedCouple >= 5)
             if (!coupleTwo.equals(lottery.coupleTwo)) return false;
-        if(numberComparedCouple>=4)
+        if (numberComparedCouple >= 4)
             if (!coupleThree.equals(lottery.coupleThree)) return false;
-        if(numberComparedCouple>=3)
+        if (numberComparedCouple >= 3)
             if (!coupleFour.equals(lottery.coupleFour)) return false;
         if (!coupleFive.equals(lottery.coupleFive)) return false;
         return coupleSix.equals(lottery.coupleSix);

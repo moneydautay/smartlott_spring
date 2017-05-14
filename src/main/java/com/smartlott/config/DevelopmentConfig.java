@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @Profile("dev")
-@PropertySource("file:///${user.home}/.gluck/smartlott/application-dev.properties")
+@PropertySource("/config/application-dev.properties")
 public class DevelopmentConfig {
 
     @Bean

@@ -65,6 +65,7 @@
     //<![CDATA[
     jQuery(document).ready(function () {
         var currentUserId = /*[[${#authorization.getAuthentication().getPrincipal().id}]]*/;
+        var investmentPackage = /*[[${#authorization.getAuthentication().getPrincipal().userInvestment.investmentPackage.name}]]*/;
 
         //get statistic bonus
         var urlSatisticBonus = /*[[@{/api/bonus/statistic/}]]*/;
@@ -86,6 +87,8 @@
         //get countdown time opening dialing
         var urlOpeningDialing = /*[[@{/api/lottery-dialing/opening}]]*/
         getData(urlOpeningDialing, showCountDownTimerLotteryDialing);
+
+        console.log(investmentPackage);
     })
 
     function showStatisticBonus(data) {

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @Profile("prod")
-@PropertySource("file:///${user.home}/.gluck/smartlott/application-prod.properties")
+@PropertySource("/config/application-prod.properties")
 public class ProductionConfig {
     @Bean
     public EmailService emailService(){

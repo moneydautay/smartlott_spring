@@ -77,8 +77,9 @@
 </div>
 <div th:replace="admin/common/header :: common-before-scripts"></div>
 <script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
     jQuery(document).ready(function ($) {
-        var urlApiMemberAll = /*[[@{/api/member/all}]]*/;
+        var urlApiMemberAll = /*[[@{/api/member/all?sort=id,desc&size=5&page}]]*/;
         var urlMember = /*[[@{/stl-admin/member/all}]]*/;
         var urlMemberSearch = /*[[@{/api/user/search/member}]]*/;
 
@@ -177,7 +178,7 @@
          _str+='</td>';*/
 
     }
-
+    //]]>
 </script>
 </body>
 </html>

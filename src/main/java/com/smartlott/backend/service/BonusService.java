@@ -1,7 +1,10 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.*;
-import com.smartlott.backend.persistence.repositories.*;
+import com.smartlott.backend.persistence.repositories.BonusRepository;
+import com.smartlott.backend.persistence.repositories.NetworkLevelRepository;
+import com.smartlott.backend.persistence.repositories.NetworkRepository;
+import com.smartlott.backend.persistence.repositories.UserCashRepository;
 import com.smartlott.utils.FormatNumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,14 +35,15 @@ public class BonusService {
     @Autowired
     private NetworkRepository networkRepository;
 
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserCashRepository userCashRepository;
 
     @Autowired
     private NetworkLevelRepository levelRepository;
+
+    @Autowired
+    private LotteryDialingService dialingService;
 
     @Value("${default.user.id.get.cash}")
     private long defaultUserIdGetCash=0;
@@ -119,11 +122,17 @@ public class BonusService {
         return valueBonus;
     }
 
-    public double getBonusInDay(long userId) {
-        LocalDate now = LocalDate.now(Clock.systemDefaultZone());
-        LocalDateTime fromDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 23, 59, 59);
-        return bonusRepository.getSumBonusByUserId(userId, fromDate, toDate);
+    public double getBonusInTerm(long userId) {
+
+        //get current dialing lottery
+        LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
+
+        if(null != lotteryDialing) {
+            LocalDateTime fromDate = lotteryDialing.getFromDate();
+            LocalDateTime toDate = lotteryDialing.getToDate();
+            return bonusRepository.getSumBonusByUserId(userId, fromDate, toDate);
+        }
+        return 0.0;
     }
 
     public double getTotalBonus(long userId) {

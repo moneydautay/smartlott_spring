@@ -82,7 +82,7 @@
 <script th:inline="javascript" type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function ($) {
-        var urlApiAll = /*[[@{/api/lottery/all?sort=id,desc&size=20&page=}]]*/;
+        var urlApiAll = /*[[@{/api/lottery/all?sort=id,desc&size=10&page}]]*/;
 
         $('#filterPost').submit(function (e) {
             e.preventDefault();
@@ -108,11 +108,10 @@
 
 
     function appendData(data) {
-
         var urlDetail = /*[[@{/stl-admin/lottery/detail/}]]*/;
         if(data.messages != null)
             showMessages(data.messages);
-        fieldData(data.content, urlDetail);
+        fieldData(data, urlDetail);
     }
     //]]>
 </script>

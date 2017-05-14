@@ -18,7 +18,7 @@ public class ITBonusServiceTest {
 
     @Test
     public void getBonusInDay() throws Exception {
-        double bonusInDay = bonusService.getBonusInDay(1);
+        double bonusInDay = bonusService.getBonusInTerm(1);
         System.out.println(bonusInDay);
     }
 

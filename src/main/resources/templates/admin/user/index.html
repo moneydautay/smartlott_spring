@@ -79,7 +79,7 @@
 <script th:inline="javascript" type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function ($) {
-        var urlApiStaffAll = /*[[@{/api/staff/all?sort=id,desc&size=10&page=}]]*/;
+        var urlApiStaffAll = /*[[@{/api/staff/all?sort=id,desc&size=5&page=}]]*/;
         var urlStaffSearch = /*[[@{/api/user/search/staff}]]*/;
 
         pagination(urlApiStaffAll, appendData);

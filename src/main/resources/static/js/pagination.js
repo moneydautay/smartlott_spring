@@ -91,6 +91,7 @@ function selectPageNumber(url, callBack) {
     $('body').on('click', '.pagination .previous', function () {
         if (currentPage > 0) {
             currentPage--;
+            console.log(url);
             setActivePagiItem(url, callBack);
         }
     });
@@ -129,11 +130,30 @@ function showPagination(data) {
     pagination.append(strPrevious);
     totalPages = data.totalPages;
     /*<![CDATA[*/
-    for (var i = 0; i < totalPages; i++) {
+    var initialPage = 0;
+    var rangedPage = 5;
+    if(currentPage > 0) {
+        var firstStrNum = '<li id="el_' + 0 + '" class="el_item" page="' + 0 + '"><a href="#" >First</a></li>';
+        pagination.append(firstStrNum);
+    }
+
+    if( currentPage > 3) {
+        initialPage = currentPage - 2;
+        rangedPage = parseInt(currentPage) + 3;
+    }
+
+    if( currentPage >= (totalPages - 3)) {
+        initialPage = totalPages - 5;
+        rangedPage = totalPages;
+    }
+
+    for (var i = initialPage; i < rangedPage; i++) {
         var strNum = '';
         strNum += '<li id="el_' + i + '" class="el_item" page="' + i + '"><a href="#" >' + (i + 1) + '</a></li>';
         pagination.append(strNum);
     }
+    var endStrNum = '<li id="el_' + (totalPages - 1) + '" class="el_item" page="' + (totalPages - 1) + '"><a href="#" >End</a></li>';
+    pagination.append(endStrNum);
     /*]]>*/
     var strNext = '<li class="next">';
     strNext += ' <a href="#" aria-label="Next">';

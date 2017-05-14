@@ -36,7 +36,7 @@ public class LotteryElastic implements Serializable{
         DateTimeFormatter df = DateTimeFormatter.ofPattern("kk:mm:ss dd/MM/yyyy");
         this.id = lottery.getId();
         this.sequense = lottery.getSequense();
-        this.buyDate = lottery.getBuyDate().format(df);
+        this.buyDate = (null != lottery.getBuyDate()) ? lottery.getBuyDate().format(df) : null;
         this.buyBy = lottery.getBuyBy();
         this.lotteryDialing = lottery.getLotteryDialing();
         this.enabled = lottery.isEnabled();
