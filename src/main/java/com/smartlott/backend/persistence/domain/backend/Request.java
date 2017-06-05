@@ -1,6 +1,11 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,15 +16,21 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "request")
-public class Request implements Serializable{
+@EntityListeners(AuditingEntityListener.class)
+public class Request implements Serializable {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @CreatedDate
     private LocalDateTime requestDate;
 
     private String content;
@@ -28,16 +39,20 @@ public class Request implements Serializable{
     @JoinColumn(name = "request_of_user")
     private User requestOfUser;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "handle_by_user")
-    private User handleByUser;
+    @LastModifiedBy
+    private String handleBy;
 
     @Convert(converter = LocalDateTimeAttributeConverter.class)
+    @LastModifiedDate
     private LocalDateTime handleDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "request_type_id")
     private RequestType requestType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_status_id")
+    private RequestStatus requestStatus;
 
     public Request() {
     }
@@ -74,12 +89,12 @@ public class Request implements Serializable{
         this.requestOfUser = requestOfUser;
     }
 
-    public User getHandleByUser() {
-        return handleByUser;
+    public String getHandleBy() {
+        return handleBy;
     }
 
-    public void setHandleByUser(User handleByUser) {
-        this.handleByUser = handleByUser;
+    public void setHandleBy(String handleBy) {
+        this.handleBy = handleBy;
     }
 
     public LocalDateTime getHandleDate() {
@@ -98,6 +113,14 @@ public class Request implements Serializable{
         this.requestType = requestType;
     }
 
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
@@ -105,9 +128,10 @@ public class Request implements Serializable{
                 ", requestDate=" + requestDate +
                 ", content='" + content + '\'' +
                 ", requestOfUser=" + requestOfUser +
-                ", handleByUser=" + handleByUser +
+                ", handleBy=" + handleBy +
                 ", handleDate=" + handleDate +
                 ", requestType=" + requestType +
+                ", requestStatus=" + requestStatus +
                 '}';
     }
 
@@ -118,26 +142,11 @@ public class Request implements Serializable{
 
         Request request = (Request) o;
 
-        if (id != request.id) return false;
-        if (requestDate != null ? !requestDate.equals(request.requestDate) : request.requestDate != null) return false;
-        if (content != null ? !content.equals(request.content) : request.content != null) return false;
-        if (requestOfUser != null ? !requestOfUser.equals(request.requestOfUser) : request.requestOfUser != null)
-            return false;
-        if (handleByUser != null ? !handleByUser.equals(request.handleByUser) : request.handleByUser != null)
-            return false;
-        if (handleDate != null ? !handleDate.equals(request.handleDate) : request.handleDate != null) return false;
-        return requestType != null ? requestType.equals(request.requestType) : request.requestType == null;
+        return id == request.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (requestDate != null ? requestDate.hashCode() : 0);
-        result = 31 * result + (content != null ? content.hashCode() : 0);
-        result = 31 * result + (requestOfUser != null ? requestOfUser.hashCode() : 0);
-        result = 31 * result + (handleByUser != null ? handleByUser.hashCode() : 0);
-        result = 31 * result + (handleDate != null ? handleDate.hashCode() : 0);
-        result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

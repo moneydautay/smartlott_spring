@@ -40,8 +40,15 @@ public class MemberRestController {
     @Autowired
     private I18NService i18NService;
 
+
+    @GetMapping("/total")
+    public ResponseEntity<Object> getTotalMembers() {
+        long totalMembers = userService.getTotalByRole(ROLE_CUSTOMER);
+        return new ResponseEntity<Object>(totalMembers, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllMember(Pageable pageable, Locale locale) {
+    public ResponseEntity<Object> getAllMember(Pageable pageable) {
         Page<User> users = userService.getByRole(ROLE_CUSTOMER, PageRequestUtils.createPageRequest(pageable));
         return new ResponseEntity<Object>(users, HttpStatus.OK);
     }

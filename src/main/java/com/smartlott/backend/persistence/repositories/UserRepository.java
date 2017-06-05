@@ -68,6 +68,8 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
     Page<User> findAll(Pageable pageable);
 
+    List<User> findByRoles_Name(String role);
+
     Page<User> findByRoles_Name(String role, Pageable pageable);
 
     @Transactional
@@ -108,4 +110,5 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Modifying
     @Query("update User u set u.documentTwo= :doc, u.modifiedBy = :modifiedBy where u.id = :userId")
     void updateDocumentTwo(@Param("userId") long id, @Param("doc") String document, @Param("modifiedBy") String modifiedBy);
+
 }

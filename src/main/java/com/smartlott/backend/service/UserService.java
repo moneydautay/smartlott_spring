@@ -302,4 +302,8 @@ public class UserService {
         else
             userRepository.updateDocumentTwo(id, document, logonUser.getUsername());
     }
+
+    public long getTotalByRole(String roleCustomer) {
+        return userRepository.findByRoles_Name(roleCustomer).stream().count();
+    }
 }
