@@ -69,8 +69,8 @@ function showNumericJoinedMember(data) {
 
 }
 
-function getNumericJoinedMemember(roleId){
-    var url = "/api/user/numeric-joined-member/"+roleId;
+function getNumericJoinedMember(){
+    var url = "/api/member/total";
 
     $.ajax({
         type: 'GET',
@@ -98,8 +98,8 @@ jQuery(document).ready(function ($) {
     //load slider
     getSliderImages();
 
-    //load mueric joined memeber
-    getNumericJoinedMemember(1);
+    //load numeric joined member
+    getNumericJoinedMember();
 
 });
 

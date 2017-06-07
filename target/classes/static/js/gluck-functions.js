@@ -235,7 +235,7 @@ function assignDataFromToObj(id) {
  * @param data
  */
 function showCountDownTimerLotteryDialing(data) {
-
+    console.log(data.tempToDate);
     $("#count-down-time")
         .countdown(data.tempToDate, function(event) {
             $(this).html(

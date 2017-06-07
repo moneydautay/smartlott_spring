@@ -111,4 +111,6 @@ public interface UserRepository extends CrudRepository<User, Long>{
     @Query("update User u set u.documentTwo= :doc, u.modifiedBy = :modifiedBy where u.id = :userId")
     void updateDocumentTwo(@Param("userId") long id, @Param("doc") String document, @Param("modifiedBy") String modifiedBy);
 
+    List<User> findByRoles_NameAndCreateDateBetween(String roleName, LocalDateTime fromDate, LocalDateTime toDate);
+
 }

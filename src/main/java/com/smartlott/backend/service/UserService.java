@@ -297,7 +297,7 @@ public class UserService {
 
     public void updateDocument(long id, String document, int type) {
         User logonUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(type == 1)
+        if (type == 1)
             userRepository.updateDocumentOne(id, document, logonUser.getUsername());
         else
             userRepository.updateDocumentTwo(id, document, logonUser.getUsername());
@@ -305,5 +305,9 @@ public class UserService {
 
     public long getTotalByRole(String roleCustomer) {
         return userRepository.findByRoles_Name(roleCustomer).stream().count();
+    }
+
+    public long countNumberUserBetween(String roleName, LocalDateTime fromDate, LocalDateTime toDate) {
+        return userRepository.findByRoles_NameAndCreateDateBetween(roleName, fromDate, toDate).size();
     }
 }

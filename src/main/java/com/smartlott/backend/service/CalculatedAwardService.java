@@ -1,7 +1,7 @@
 package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.Lottery;
-import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComponent;
+import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComp;
 import com.smartlott.backend.persistence.domain.backend.Reward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +23,11 @@ public class CalculatedAwardService {
     @Autowired
     private RewardService rewardService;
 
-    public List<Lottery> calculateAward(List<Lottery> lotteries, List<LotteryDialingHasIncomeComponent> components) {
+    public List<Lottery> calculateAward(List<Lottery> lotteries, List<LotteryDialingHasIncomeComp> components) {
 
         List<Lottery> listResult = new ArrayList<>();
         double totalValue = 0;
-        for (LotteryDialingHasIncomeComponent component : components) {
+        for (LotteryDialingHasIncomeComp component : components) {
 
             LOGGER.info("Dialing com: {}: val {}", component.getIncomeComponent().getName(), component.getValue());
             totalValue += component.getValue();

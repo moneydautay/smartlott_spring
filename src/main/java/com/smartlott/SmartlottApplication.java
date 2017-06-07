@@ -80,7 +80,7 @@ public class SmartlottApplication implements CommandLineRunner{
 	private NetworkLevelService networkLevelService;
 
 	@Autowired
-	private LotteryDialingHasIncomeComponentService incomeComponentService;
+	private LotteryDialingHasIncomeCompService incomeComponentService;
 
 	@Autowired
 	private InvestmentPackageService packageService;
@@ -604,7 +604,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		List<IncomeComponent> lstInc = componentService.getAll();
 
 		for (IncomeComponent item : lstInc){
-			LotteryDialingHasIncomeComponent loC = new LotteryDialingHasIncomeComponent();
+			LotteryDialingHasIncomeComp loC = new LotteryDialingHasIncomeComp();
 			loC.setValue(0);
 			loC.setIncomeComponent(item);
 			loC.setLotteryDialing(lotteryDialing);

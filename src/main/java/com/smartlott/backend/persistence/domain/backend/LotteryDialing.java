@@ -1,13 +1,9 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,7 +80,7 @@ public class LotteryDialing implements Serializable{
     }
 
     public String getTempToDate() {
-        DateTimeFormatter ft = DateTimeFormatter.ofPattern("kk:mm:ss MM/dd/yyyy");
+        DateTimeFormatter ft = DateTimeFormatter.ofPattern("yyyy/MM/dd kk:mm:ss");
         if(toDate != null)
             tempToDate = toDate.format(ft);
         return tempToDate;

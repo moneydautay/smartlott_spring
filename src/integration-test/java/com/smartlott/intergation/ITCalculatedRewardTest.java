@@ -31,7 +31,7 @@ public class ITCalculatedRewardTest {
     private static List<Lottery> lotteries = new ArrayList<>();
 
     @Autowired
-    private LotteryDialingHasIncomeComponentService componentService;
+    private LotteryDialingHasIncomeCompService componentService;
 
     @Autowired
     private RewardService rewardService;
@@ -108,15 +108,15 @@ public class ITCalculatedRewardTest {
 
         //Assert.assertEquals("Number of lottery must be equals "+numberLottery, lotteries.size(),numberLottery);
 
-        List<LotteryDialingHasIncomeComponent> components = componentService.getAll();
+        List<LotteryDialingHasIncomeComp> components = componentService.getAll();
         List<Lottery> results = calculatedAwardService.calculateAward(lotteries, components);
         System.out.println(results.toString());
     }
 
-    private void calculateAward(List<Lottery> lotteries, List<LotteryDialingHasIncomeComponent> components) {
+    private void calculateAward(List<Lottery> lotteries, List<LotteryDialingHasIncomeComp> components) {
 
         double totalValue = 0;
-        for (LotteryDialingHasIncomeComponent component : components) {
+        for (LotteryDialingHasIncomeComp component : components) {
 
             System.out.println("Dialing com: " + component.getIncomeComponent().getName() + ": val " + component.getValue());
             totalValue += component.getValue();

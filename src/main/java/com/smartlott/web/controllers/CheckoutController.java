@@ -76,7 +76,7 @@ public class CheckoutController {
     private PerfectMoneyService perfectMoneyService;
 
     @Autowired
-    private LotteryDialingHasIncomeComponentService incomeComponentService;
+    private LotteryDialingHasIncomeCompService incomeComponentService;
 
     @Autowired
     private SecurityTokenSevice securityTokenSevice;

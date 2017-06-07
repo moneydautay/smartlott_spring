@@ -2,7 +2,7 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.Lottery;
 import com.smartlott.backend.persistence.domain.backend.LotteryDialing;
-import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComponent;
+import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComp;
 import com.smartlott.backend.persistence.domain.backend.Reward;
 import com.smartlott.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class LotteryDialingResultHandler {
     private LotteryDialingService lotteryDialingService;
 
     @Autowired
-    private LotteryDialingHasIncomeComponentService componentService;
+    private LotteryDialingHasIncomeCompService componentService;
 
     @Autowired
     private RewardService rewardService;
@@ -49,9 +49,9 @@ public class LotteryDialingResultHandler {
 
         LotteryDialing currentLotteryDialing = lotteryDialingService.getOpenedLotteryDialing(true);
 
-        List<LotteryDialingHasIncomeComponent> components = componentService.getByLotteryDialingId(currentLotteryDialing.getId());
+        List<LotteryDialingHasIncomeComp> components = componentService.getByLotteryDialingId(currentLotteryDialing.getId());
         LOGGER.info("Calculating reward...");
-        for (LotteryDialingHasIncomeComponent component : components){
+        for (LotteryDialingHasIncomeComp component : components){
 
             //Get reward give by income component
             Reward reward = rewardService.getRewardByIncomeComponentId(component.getIncomeComponent().getId());

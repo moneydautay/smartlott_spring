@@ -1,8 +1,10 @@
 package com.smartlott.backend.api;
 
+import com.smartlott.backend.persistence.domain.backend.LotteryDialing;
 import com.smartlott.backend.persistence.domain.backend.MessageDTO;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.service.I18NService;
+import com.smartlott.backend.service.LotteryDialingService;
 import com.smartlott.backend.service.UserService;
 import com.smartlott.enums.MessageType;
 import com.smartlott.exceptions.NotFoundException;
@@ -40,6 +42,9 @@ public class MemberRestController {
     @Autowired
     private I18NService i18NService;
 
+    @Autowired
+    private LotteryDialingService dialingService;
+
 
     @GetMapping("/total")
     public ResponseEntity<Object> getTotalMembers() {
@@ -72,5 +77,12 @@ public class MemberRestController {
         }
 
         return new ResponseEntity<Object>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/new-member-in-term")
+    public ResponseEntity<Object> getNewMemberInTerm() {
+        LotteryDialing dialing = dialingService.getOpenedLotteryDialing(true);
+        long nbNewMemberInTerm = userService.countNumberUserBetween(ROLE_CUSTOMER, dialing.getFromDate(), dialing.getToDate());
+        return new ResponseEntity<Object>(nbNewMemberInTerm, HttpStatus.OK);
     }
 }

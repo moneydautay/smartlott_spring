@@ -47,7 +47,7 @@ public class CheckoutRestController {
     private BonusService bonusService;
 
     @Autowired
-    private LotteryDialingHasIncomeComponentService incomeComponentService;
+    private LotteryDialingHasIncomeCompService incomeComponentService;
 
     @Autowired
     private SecurityTokenSevice securityTokenSevice;
