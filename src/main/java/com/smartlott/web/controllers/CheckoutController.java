@@ -57,7 +57,7 @@ public class CheckoutController {
     private TransactionService transactionService;
 
     @Autowired
-    private LotterySerivce lotterySerivce;
+    private LotteryService lotteryService;
 
     @Autowired
     private I18NService i18NService;
@@ -148,7 +148,7 @@ public class CheckoutController {
             //enable all lottery
             lotteries.forEach(lottery -> lottery.setEnabled(true));
 
-            lotterySerivce.update(lotteries);
+            lotteryService.update(lotteries);
             LOGGER.info("Updated lottery {} ", lotteries);
         }
 

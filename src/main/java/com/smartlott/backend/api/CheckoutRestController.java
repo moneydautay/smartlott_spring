@@ -35,7 +35,7 @@ public class CheckoutRestController {
     private TransactionService transactionService;
 
     @Autowired
-    private LotterySerivce lotterySerivce;
+    private LotteryService lotteryService;
 
     @Autowired
     private I18NService i18NService;
@@ -197,7 +197,7 @@ public class CheckoutRestController {
             List<Lottery> lotteries = lotteryDetail.getLotteries();
             LOGGER.info("Updating lottery {} ", lotteries);
             lotteries.forEach(lottery -> lottery.setEnabled(true));
-            lotterySerivce.update(lotteries);
+            lotteryService.update(lotteries);
             LOGGER.info("Updated lottery {} ", lotteries);
         }
     }

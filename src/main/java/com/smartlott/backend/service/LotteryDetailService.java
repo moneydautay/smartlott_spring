@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Stream;
+
 /**
  * Created by greenlucky on 1/8/17.
  */
@@ -45,5 +47,10 @@ public class LotteryDetailService {
 
     public Page<LotteryDetail> getLotteryDetailByUserId(long userId, Pageable pageable){
         return lotteryDetailRepository.findByTransactionOfUserId(userId, pageable);
+    }
+
+
+    public long getTotalLotteryInTerm(long termId) {
+        return lotteryDetailRepository.findByLotteryDialingId(termId).stream().mapToLong(ld -> ld.getLotteries().size()).sum();
     }
 }

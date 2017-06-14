@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class LotterySerivce {
+public class LotteryService {
 
     @Autowired
     private LotteryRepository lotteryRepository;
@@ -85,5 +85,9 @@ public class LotterySerivce {
 
     public Page<Lottery> getByUserIdAndLotteryDialingId(long userId, long lotteryDialingId, Pageable pageable) {
         return lotteryRepository.findByLotteryDetail_TransactionOfUserIdAndLotteryDetail_LotteryDialingId(userId,lotteryDialingId, pageable);
+    }
+
+    public long getTotalLottery() {
+        return lotteryRepository.count();
     }
 }

@@ -45,7 +45,7 @@ public class LotteryHandler {
     private LotteryDialingService dialingService;
 
     @Autowired
-    private LotterySerivce lotterySerivce;
+    private LotteryService lotteryService;
 
     @Autowired
     private UserService userService;
@@ -101,8 +101,6 @@ public class LotteryHandler {
                 localLottery.add(lottery);
             }
 
-            System.out.println(localLottery);
-
 
             User user = userService.findOne(lotteries.getUserId());
 
@@ -129,7 +127,7 @@ public class LotteryHandler {
 
             for (Lottery lottery : localLottery) {
                 lottery.setLotteryDetail(lotteryDetail);
-                lottery = lotterySerivce.createNewLottery(lottery);
+                lottery = lotteryService.createNewLottery(lottery);
                 LOGGER.info("Created new lotteries {}", lottery);
             }
         }
@@ -176,10 +174,22 @@ public class LotteryHandler {
 
         LotteryDialing currentDialing = dialingService.getOpenedLotteryDialing(true);
 
-        Page<Lottery> lotteries = lotterySerivce.getByUserIdAndLotteryDialingId(userId, currentDialing.getId(), pageable);
+        Page<Lottery> lotteries = lotteryService.getByUserIdAndLotteryDialingId(userId, currentDialing.getId(), pageable);
 
 
         return new ResponseEntity<Object>(lotteries, HttpStatus.OK);
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Object> getTotalLottery() {
+        long totalLottery = lotteryService.getTotalLottery();
+        return new ResponseEntity<Object>(totalLottery, HttpStatus.OK);
+    }
+
+    @GetMapping("total-in-term")
+    public ResponseEntity<Object> getTotalLotteryInTerm() {
+        long termId = dialingService.getOpenedLotteryDialing(true).getId();
+        long totalLottery = lotteryDetailService.getTotalLotteryInTerm(termId);
+        return new ResponseEntity<Object>(totalLottery, HttpStatus.OK);
+    }
 }

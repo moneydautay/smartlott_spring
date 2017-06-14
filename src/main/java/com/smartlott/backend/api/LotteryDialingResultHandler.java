@@ -42,7 +42,7 @@ public class LotteryDialingResultHandler {
     private RewardService rewardService;
 
     @Autowired
-    private LotterySerivce lotterySerivce;
+    private LotteryService lotteryService;
 
     @GetMapping("/calc-reward")
     public ResponseEntity<Object> calculatedReward(){
@@ -73,7 +73,7 @@ public class LotteryDialingResultHandler {
                 List<Lottery> listResult = new ArrayList<>();
 
                 //get all lottery in lottery dialing and enabled is true
-                List<Lottery> lotteries = lotterySerivce.getByLotteryDialingId(currentLotteryDialing.getId());
+                List<Lottery> lotteries = lotteryService.getByLotteryDialingId(currentLotteryDialing.getId());
 
                 LOGGER.info("Number of lottery: {}", lotteries.size());
 

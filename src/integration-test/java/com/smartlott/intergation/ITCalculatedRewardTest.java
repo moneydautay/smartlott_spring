@@ -26,7 +26,7 @@ public class ITCalculatedRewardTest {
     private LotteryDialingService dialingService;
 
     @Autowired
-    private LotterySerivce lotterySerivce;
+    private LotteryService lotteryService;
 
     private static List<Lottery> lotteries = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class ITCalculatedRewardTest {
             lottery.setLotteryType(lotteryType);
 
             try {
-                lottery = lotterySerivce.createNewLottery(lottery);
+                lottery = lotteryService.createNewLottery(lottery);
                 lotteries.add(lottery);
                 totalPrice += price;
             } catch (Exception e) {
@@ -228,7 +228,7 @@ public class ITCalculatedRewardTest {
             lottery.setCoupleSix(getRandom());
             lottery.setLotteryType(lotteryType);
 
-            lottery = lotterySerivce.createNewLottery(lottery);
+            lottery = lotteryService.createNewLottery(lottery);
             lotteries.add(lottery);
         }
 

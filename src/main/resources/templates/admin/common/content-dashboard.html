@@ -100,6 +100,8 @@
             var urlOpeningLotteryDialing = /*[[@{/api/lottery-dialing/opening}]]*/;
             var urlLD = /*[[@{/api/lottery-dialing/opening}]]*/;
             var urlIncomeInTerm = /*[[@{/api/dialing-income-comp/income-in-term}]]*/;
+            var urlTotalLottery = /*[[@{/api/lottery/total}]]*/;
+            var urlTotalLotteryInTerm = /*[[@{/api/lottery/total-in-term}]]*/;
 
             getData(urlPendingRequest, showPendingRequest);
             getData(urlTotalMember, showTotalMember);
@@ -107,6 +109,8 @@
             getData(urlOpeningLotteryDialing, showOpeningLotteryDialing);
             getData(urlLD, showCountDownTimerLotteryDialing);
             getData(urlIncomeInTerm, showIncomeInTerm);
+            getData(urlTotalLottery, showTotalLottery);
+            getData(urlTotalLotteryInTerm, showTotalLotteryInTerm);
         });
 
         function showPendingRequest(data) {
@@ -131,6 +135,16 @@
         function showIncomeInTerm(data) {
             console.log(data);
             fieldData(data, null);
+
+        }
+
+        function showTotalLottery(data) {
+            console.log(data);
+
+        }
+
+        function showTotalLotteryInTerm(data) {
+            console.log(data);
 
         }
         //]]>
