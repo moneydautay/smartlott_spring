@@ -3,6 +3,7 @@ package com.smartlott.intergation;
 import com.smartlott.backend.persistence.domain.backend.Bonus;
 import com.smartlott.backend.persistence.domain.backend.User;
 import com.smartlott.backend.service.BonusService;
+import com.smartlott.enums.BonusType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,7 +42,7 @@ public class ITBonousTest extends ITAbstractIntegrationTest {
         System.out.println("Before upate cash: "+admin.getCash());
         User user1 = userRepository.findOne(Long.valueOf(2));
         Assert.assertNotNull(user1);
-        bonusService.saveBonusOfUser(user1, 1);
+        bonusService.saveBonusOfUser(user1, 1, BonusType.Lottery);
 
         List<Bonus> bonouss = bonusService.getAllByUserId(Long.valueOf(1));
 

@@ -5,6 +5,7 @@ import com.smartlott.backend.persistence.repositories.BonusRepository;
 import com.smartlott.backend.persistence.repositories.NetworkLevelRepository;
 import com.smartlott.backend.persistence.repositories.NetworkRepository;
 import com.smartlott.backend.persistence.repositories.UserCashRepository;
+import com.smartlott.enums.BonusType;
 import com.smartlott.utils.FormatNumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class BonusService {
 
-    /** The application logger */
+    /**
+     * The application logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(BonusService.class);
 
     @Autowired
@@ -46,24 +49,26 @@ public class BonusService {
     private LotteryDialingService dialingService;
 
     @Value("${default.user.id.get.cash}")
-    private long defaultUserIdGetCash=0;
+    private long defaultUserIdGetCash = 0;
 
     /**
      * Create new bonus
+     *
      * @param bonus
      * @return a bonus or null if occurs error
      */
     @Transactional
-    public Bonus createNew(Bonus bonus){
+    public Bonus createNew(Bonus bonus) {
         bonus = bonusRepository.save(bonus);
         return bonus;
     }
 
     /**
      * Retrieve all bonus
+     *
      * @return A list of bonus or null if empty
      */
-    public Page<Bonus> getAll(Pageable pageable){
+    public Page<Bonus> getAll(Pageable pageable) {
         return bonusRepository.findAll(pageable);
     }
 
@@ -76,34 +81,34 @@ public class BonusService {
     }
 
     @Transactional
-    public double saveBonusOfUser(User user, double amount){
+    public double saveBonusOfUser(User user, double amount, BonusType bonusType) {
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
-        double valueBonus  = 0;
+        double valueBonus = 0;
 
         //get all network level is enabled
-        List<NetworkLevel> networkLevels = levelRepository.findByEnabled(true);
+        List<NetworkLevel> networkLevels = levelRepository.findByEnabledAndBonusType(true, bonusType);
 
         for (NetworkLevel networkLevel : networkLevels) {
 
             //get List ancestor of user
-            Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), networkLevel.getId());
+            Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), networkLevel.getLevel());
 
-            valueBonus = (amount*networkLevel.getIncomeComponent().getValue())/100;
+            valueBonus = (amount * networkLevel.getIncomeComponent().getValue()) / 100;
 
             User ancestor = null;
             UserCash userCash = null;
-            if(network != null
+            if (network != null
                     && network.getAncestor().getUserInvestment().getInvestmentPackage().getLevelNetwork()
                     >= network.getNetworkLevel().getLevel()) {
 
                 ancestor = network.getAncestor();
                 userCash = userCashRepository.findByUserIdAndCash_Received(ancestor.getId(), true);
-            }else {
+            } else {
                 userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
                 ancestor = userCash.getUser();
             }
 
-            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, networkLevel.getLevel());
+            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, networkLevel.getLevel(), bonusType);
 
             bonus = createNew(bonus);
 
@@ -127,7 +132,7 @@ public class BonusService {
         //get current dialing lottery
         LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
 
-        if(null != lotteryDialing) {
+        if (null != lotteryDialing) {
             LocalDateTime fromDate = lotteryDialing.getFromDate();
             LocalDateTime toDate = lotteryDialing.getToDate();
             return bonusRepository.getSumBonusByUserId(userId, fromDate, toDate);

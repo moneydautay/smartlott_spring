@@ -137,10 +137,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		user = userService.createUser(user);
 		LOGGER.info("User {} has been created", user);
 
-		/*InvestmentPackage agentPackage = new InvestmentPackage(InvestmentPackageEnum.AGENT);
-		userService.addInvestmentPackage(user.getId(), agentPackage, LocalDateTime.now(Clock.systemDefaultZone()));*/
-
-		//`createNotificationForNewUser(user);
 
 		//createSecurityTokenForUsername slider
 		createFeaturedSlider();
@@ -179,9 +175,7 @@ public class SmartlottApplication implements CommandLineRunner{
 	public void createFeaturedSlider(){
 
 		FeaturedSlider featuredSlider = SliderUtils.createFeaturedSlider("Homepage");
-		LOGGER.debug("Creating Featured Slider {} ...", featuredSlider);
 		featuredSliderService.save(featuredSlider);
-		LOGGER.info("Created Featured Slider {} ", featuredSlider);
 
 		FeaturedSliderImage featuredSliderImage1 = SliderUtils.createFeaturedSliderImage("Another example headline.","Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.");
 		featuredSliderImage1.setFeaturedSlider(featuredSlider);
@@ -190,11 +184,9 @@ public class SmartlottApplication implements CommandLineRunner{
 		FeaturedSliderImage featuredSliderImage3 = SliderUtils.createFeaturedSliderImage("Example headline.","Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.");
 		featuredSliderImage3.setFeaturedSlider(featuredSlider);
 
-		LOGGER.debug("Creating Featured Slider Images..");
 		sliderImageService.save(featuredSliderImage1);
 		sliderImageService.save(featuredSliderImage2);
 		sliderImageService.save(featuredSliderImage3);
-		LOGGER.info("Created Featured Slider Images");
 	}
 
 
@@ -203,20 +195,16 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Create country
 		Country country1 = CountryUtils.createCountry("United State","");
 		countryService.createCountry(country1);
-		LOGGER.info("Create a new country {}", country1);
 
 		Country country2 = CountryUtils.createCountry("Vietnam","84");
 		countryService.createCountry(country2);
-		LOGGER.info("Create a new country {}", country2);
 
 		//Create province
 		Province province1 = ProvinceUtils.createProvice("Hồ Chí Minh", country2);
 		provinceService.createProvince(province1);
-		LOGGER.info("Create a new province {}", province1);
 
 		Province province2 = ProvinceUtils.createProvice("Hà Nội", country2);
 		provinceService.createProvince(province2);
-		LOGGER.info("Create a new province {}", province2);
 	}
 
 	public void CreateNumberAccountType(){
@@ -228,54 +216,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		numberAccountTypeService.create(cash);
 	}
 
-	public void createNotificationForNewUser(User user){
-		//add notification type
-		//create notification type;
-
-		NotificationType type1 = new NotificationType(NotificationTypeEnum.General);
-		NotificationType type2 = new NotificationType(NotificationTypeEnum.Pssword);
-		NotificationType type3 = new NotificationType(NotificationTypeEnum.AddressValidate);
-		NotificationType type4 = new NotificationType(NotificationTypeEnum.NumberAccount);
-		NotificationType type5 = new NotificationType(NotificationTypeEnum.Orther);
-
-		List<NotificationType> notificationTypes = new ArrayList<>();
-		notificationTypes.add(type1);
-		notificationTypes.add(type2);
-		notificationTypes.add(type3);
-		notificationTypes.add(type4);
-		notificationTypes.add(type5);
-
-		//adds notificationTypes
-		notificationTypeService.creates(notificationTypes);
-
-		/*//add notification after create new user;
-		Notification notif1= new Notification();
-		notif1.setContent("Welcome to Smartlott");
-		notif1.setUser(user);
-		notif1.setNotificationType(type5);
-
-		notificationService.create(notif1);
-
-		Notification notif2= new Notification();
-		notif2.setContent("Please update your information before buy lottery");
-		notif2.setUser(user);
-		notif2.setNotificationType(type1);
-
-		notificationService.create(notif2);
-
-		Notification notif3= new Notification();
-		notif3.setContent("Please upload your bill of bank or bill or electricity or water to varify your address");
-		notif3.setUser(user);
-		notif3.setNotificationType(type3);
-
-		notificationService.create(notif3);
-
-		Notification notif4= new Notification();
-		notif4.setContent("Please add your number account of bank to withdraw you reward of lottery");
-		notif4.setUser(user);
-		notif4.setNotificationType(type4);
-		notificationService.create(notif4);*/
-	}
 
 	public void createTransactionType(){
 		TransactionType type1= new TransactionType(TransactionTypeEnum.Withdraw);
@@ -287,13 +227,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		transactionTypeService.createNew(type2);
 		transactionTypeService.createNew(type3);
 		transactionTypeService.createNew(type4);
-	}
-
-	public void createBonusForUser(User user){
-		for(int i = 0; i < 25 ; i++){
-			Bonus bonus = new Bonus(0.1, user, user, LocalDateTime.now(Clock.systemUTC()).plusMinutes(i), 1);
-			bonusService.createNew(bonus);
-		}
 	}
 
 	public void createCusts(User user){
@@ -565,34 +498,78 @@ public class SmartlottApplication implements CommandLineRunner{
 		componentService.create(invest);
 
 		//create level of network
-		NetworkLevel level1 = new NetworkLevel(1, 1, "", incomeComponent1);
-		NetworkLevel level2 = new NetworkLevel(2, 2, "", incomeComponent2);
-		NetworkLevel level3 = new NetworkLevel(3, 3, "", incomeComponent3);
-		NetworkLevel level4 = new NetworkLevel(4, 4, "", incomeComponent4);
-		NetworkLevel level5 = new NetworkLevel(5, 5, "", incomeComponent5);
-		NetworkLevel level6 = new NetworkLevel(6, 6, "", incomeComponent6);
-		NetworkLevel level7 = new NetworkLevel(7, 7, "", incomeComponent7);
+		NetworkLevel level1 = new NetworkLevel(1, 1, "", incomeComponent1, BonusType.Lottery);
+		NetworkLevel level2 = new NetworkLevel(2, 2, "", incomeComponent2, BonusType.Lottery);
+		NetworkLevel level3 = new NetworkLevel(3, 3, "", incomeComponent3, BonusType.Lottery);
+		NetworkLevel level4 = new NetworkLevel(4, 4, "", incomeComponent4, BonusType.Lottery);
+		NetworkLevel level5 = new NetworkLevel(5, 5, "", incomeComponent5, BonusType.Lottery);
+		NetworkLevel level6 = new NetworkLevel(6, 6, "", incomeComponent6, BonusType.Lottery);
+		NetworkLevel level7 = new NetworkLevel(7, 7, "", incomeComponent7, BonusType.Lottery);
 
-		level1 = networkLevelService.create(level1);
-		LOGGER.info("Created network level: {}", level1);
+		networkLevelService.create(level1);
+		networkLevelService.create(level2);
+		networkLevelService.create(level3);
+		networkLevelService.create(level4);
+		networkLevelService.create(level5);
+		networkLevelService.create(level6);
+		networkLevelService.create(level7);
 
-		level2 = networkLevelService.create(level2);
-		LOGGER.info("Created network level: {}", level2);
+		//bonus package
+		IncomeComponent package1 = new IncomeComponent();
+		package1.setName("Hoa hồng mua gói F1");
+		package1.setValue(20);
+		package1.setEnabled(true);
+		package1.setDescription("Hoa hồng mua gói F1");
+		package1 = componentService.create(package1);
 
-		level3 = networkLevelService.create(level3);
-		LOGGER.info("Created network level: {}", level3);
+		IncomeComponent package2 = new IncomeComponent();
+		package2.setName("Hoa hồng mua gói F2");
+		package2.setValue(2);
+		package2.setEnabled(true);
+		package2.setDescription("Hoa hồng mua gói F2");
+		package2 = componentService.create(package2);
 
-		level4 = networkLevelService.create(level4);
-		LOGGER.info("Created network level: {}", level4);
+		IncomeComponent package3 = new IncomeComponent();
+		package3.setName("Hoa hồng mua gói F3");
+		package3.setValue(2);
+		package3.setEnabled(true);
+		package3.setDescription("Hoa hồng mua gói F2");
+		package3 = componentService.create(package3);
 
-		level5 = networkLevelService.create(level5);
-		LOGGER.info("Created network level: {}", level5);
+		IncomeComponent package4 = new IncomeComponent();
+		package4.setName("Hoa hồng mua gói F4");
+		package4.setValue(2);
+		package4.setEnabled(true);
+		package4.setDescription("Hoa hồng mua gói F4");
+		package4 = componentService.create(package4);
 
-		level6 = networkLevelService.create(level6);
-		LOGGER.info("Created network level: {}", level6);
+		IncomeComponent package5 = new IncomeComponent();
+		package5.setName("Hoa hồng mua gói F5");
+		package5.setValue(2);
+		package5.setEnabled(true);
+		package5.setDescription("Hoa hồng mua gói F5");
+		package5 = componentService.create(package5);
 
-		level7 = networkLevelService.create(level7);
-		LOGGER.info("Created network level: {}", level7);
+		IncomeComponent package6 = new IncomeComponent();
+		package6.setName("Hoa hồng mua gói F6");
+		package6.setValue(2);
+		package6.setEnabled(true);
+		package6.setDescription("Hoa hồng mua gói F6");
+		package6 = componentService.create(package6);
+
+		level1 = new NetworkLevel(8, 1, "", package1, BonusType.Package);
+		level2 = new NetworkLevel(9, 2, "", package2, BonusType.Package);
+		level3 = new NetworkLevel(10, 3, "", package3, BonusType.Package);
+		level4 = new NetworkLevel(11, 4, "", package4, BonusType.Package);
+		level5 = new NetworkLevel(12, 5, "", package5, BonusType.Package);
+		level6 = new NetworkLevel(13, 6, "", package6, BonusType.Package);
+
+		networkLevelService.create(level1);
+		networkLevelService.create(level2);
+		networkLevelService.create(level3);
+		networkLevelService.create(level4);
+		networkLevelService.create(level5);
+		networkLevelService.create(level6);
 
 	}
 

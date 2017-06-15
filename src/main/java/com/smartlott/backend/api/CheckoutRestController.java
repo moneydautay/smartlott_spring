@@ -2,6 +2,7 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
+import com.smartlott.enums.BonusType;
 import com.smartlott.enums.MessageType;
 import com.smartlott.enums.TransactionStatusEnum;
 import com.smartlott.enums.TransactionTypeEnum;
@@ -28,7 +29,9 @@ public class CheckoutRestController {
 
     public static final String CHECKOUT_URL = "/api/checkout";
 
-    /** The application logger */
+    /**
+     * The application logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckoutRestController.class);
 
     @Autowired
@@ -65,13 +68,12 @@ public class CheckoutRestController {
     private List<MessageDTO> messageDTOS;
 
     /**
-     *
      * @param transaction
      * @param locale
      * @return
      */
     @RequestMapping(value = "/cash", method = RequestMethod.POST)
-    public ResponseEntity<Object> checkoutByCash(@RequestBody Transaction transaction, Locale locale){
+    public ResponseEntity<Object> checkoutByCash(@RequestBody Transaction transaction, Locale locale) {
 
         //initial messageDTOS array
         messageDTOS = new ArrayList<>();
@@ -81,7 +83,7 @@ public class CheckoutRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);*/
 
         Transaction localTransaction = transactionService.getOne(transaction.getId());
-        if(invalidTransaction(transaction.getId(), localTransaction, messageDTOS ,locale)){
+        if (invalidTransaction(transaction.getId(), localTransaction, messageDTOS, locale)) {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
@@ -89,9 +91,10 @@ public class CheckoutRestController {
         User user = localTransaction.getOfUser();
 
         UserCash userCash = userCashService.getUserCashByUserCashId(transaction.getUserCashId());
+        LOGGER.info("User cash before payment {} ", userCash);
 
         //checking current user cash enough to pay for transaction
-        if(userCash.getValue() < localTransaction.getAmount()){
+        if (userCash.getValue() < localTransaction.getAmount()) {
             messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("order.error.cash.enough", locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
@@ -99,9 +102,8 @@ public class CheckoutRestController {
 
         userCash = userCashService.update(transaction.getUserCashId(), -localTransaction.getAmount());
 
-        System.out.println("Updating transaction");
-
         LOGGER.info("Updating transaction {} ", localTransaction);
+        LOGGER.info("User cash after payment {} ", userCash);
 
         //status success
         TransactionStatus status = new TransactionStatus(TransactionStatusEnum.SUCCESS);
@@ -120,27 +122,31 @@ public class CheckoutRestController {
 
 
         TransactionType type = null;
-        if(localTransaction != null)
+
+        if (localTransaction != null)
+
             type = localTransaction.getTransactionType();
 
-        if(type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage))){
+        if (type != null && type.equals(new TransactionType(TransactionTypeEnum.BuyInvestmentPackage))) {
+
             investmentPackageHandler(localTransaction, messageDTOS, locale);
 
-        }else {
+        } else {
+
             //handle lottery
             lotteryHandler(localTransaction, messageDTOS, locale);
+
         }
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
 
     /**
-     *
      * @param transaction
      * @param messageDTOS
      * @param locale
      */
-    private void investmentPackageHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale){
+    private void investmentPackageHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale) {
 
         InvestmentPackage investmentPackage = transaction.getInvestmentPackages().get(0);
 
@@ -153,47 +159,54 @@ public class CheckoutRestController {
         LOGGER.info("Added investment package {}", userInvestment);
         //add message success
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
-                i18NService.getMessage("order.investment.package.success", String.valueOf(transaction.getId()),locale)));
+                i18NService.getMessage("order.investment.package.success", String.valueOf(transaction.getId()), locale)));
 
         Set<UserInvestment> userInvestments = ofUser.getUserInvestments();
         userInvestments.add(userInvestment);
+
 
         //add cash to respective investment package
         investmentPackage.getInvestmentPackageCashes().forEach(
                 item -> userCashService.update(item.getCash().getId(),
                         calculateRate(item.getRatevalue(), item.getInvestmentPackage().getPrice())));
 
-        //relogin user to see investment package just bought
+
+        //TODO save bonus for ancestor of user
+        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Package);
+
+
+        //re login user to see investment package just bought
         Authentication auth = new UsernamePasswordAuthenticationToken(ofUser, null, ofUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         LOGGER.info("Re login {} to load new investment package", ofUser);
     }
 
-    private void lotteryHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale){
+    private void lotteryHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale) {
         //update status of lotteries to active
         activeLotteries(transaction.getLotteryDetails());
 
         //add message success
         messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
-                i18NService.getMessage("order.lottery.success", String.valueOf(transaction.getId()),locale)));
+                i18NService.getMessage("order.lottery.success", String.valueOf(transaction.getId()), locale)));
 
         //Get current opened lottery dialing
         LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
         //update lottery dialing has income component
-        incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),transaction.getAmount());
+        incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(), transaction.getAmount());
 
         //save bonus for ancestor of user
-        double bonusValue = bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount());
+       bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Lottery);
     }
 
     /**
      * Actives all lotteries in transaction detail
+     *
      * @param lotteryDetails
      */
     private void activeLotteries(Set<LotteryDetail> lotteryDetails) {
         //update lottery
-        for (LotteryDetail lotteryDetail: lotteryDetails) {
+        for (LotteryDetail lotteryDetail : lotteryDetails) {
             List<Lottery> lotteries = lotteryDetail.getLotteries();
             LOGGER.info("Updating lottery {} ", lotteries);
             lotteries.forEach(lottery -> lottery.setEnabled(true));
@@ -203,19 +216,21 @@ public class CheckoutRestController {
     }
 
     private boolean invalidTransaction(Long transactionId, Transaction transaction, List<MessageDTO> messageDTOS, Locale locale) {
-        if(transaction == null){
+        if (transaction == null) {
             LOGGER.error("Transaction ID {} was not existed", transactionId);
-            messageDTOS.add(new MessageDTO(MessageType.ERROR,i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId),locale)));
+            messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId), locale)));
             return true;
         }
 
         //checking successful transaction
-        if(transaction.getTransactionStatus().getId() > 1){
-            LOGGER.error("Transaction ID {} was handle {}", transaction.getId(),transaction.getTransactionStatus());
-            if(transaction.getTransactionStatus().getId()==2)
-                messageDTOS.add(new MessageDTO(MessageType.SUCCESS,i18NService.getMessage("order.success", String.valueOf(transaction.getId()),locale)));
-            if(transaction.getTransactionStatus().getId()==3)
-                messageDTOS.add(new MessageDTO(MessageType.WARNING,i18NService.getMessage("order.cancel", String.valueOf(transaction.getId()),locale)));
+        if (transaction.getTransactionStatus().getId() > 1) {
+            LOGGER.error("Transaction ID {} was handle {}", transaction.getId(), transaction.getTransactionStatus());
+            if (transaction.getTransactionStatus().getId() == 2)
+                messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
+                        i18NService.getMessage("order.success", String.valueOf(transaction.getId()), locale)));
+            if (transaction.getTransactionStatus().getId() == 3)
+                messageDTOS.add(new MessageDTO(MessageType.WARNING,
+                        i18NService.getMessage("order.cancel", String.valueOf(transaction.getId()), locale)));
             return true;
         }
         return false;
@@ -223,21 +238,22 @@ public class CheckoutRestController {
 
 
     @RequestMapping(value = "/investment-package/{transactionId}", method = RequestMethod.GET)
-    public ResponseEntity<Object> checkoutInvestmentPackage(@PathVariable int transactionId, Locale locale){
+    public ResponseEntity<Object> checkoutInvestmentPackage(@PathVariable int transactionId, Locale locale) {
 
         Transaction transaction = transactionService.getOne(transactionId);
 
-        if(transaction == null){
+        if (transaction == null) {
             LOGGER.error("Transaction ID {} was not existed", transactionId);
-            messageDTOS.add(new MessageDTO(MessageType.ERROR,i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId),locale)));
+            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("transaction.error.id.not.found", String.valueOf(transactionId), locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<Object>(transaction, HttpStatus.OK);
     }
 
-    private double calculateRate(double rate, double amount){
-        return (rate * amount)/100;
+    private double calculateRate(double rate, double amount) {
+        return (rate * amount) / 100;
     }
 
 }

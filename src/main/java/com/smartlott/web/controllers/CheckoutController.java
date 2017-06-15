@@ -3,10 +3,7 @@ package com.smartlott.web.controllers;
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.domain.source.PerfectMoney;
 import com.smartlott.backend.service.*;
-import com.smartlott.enums.MessageType;
-import com.smartlott.enums.NumberAccountTypeEnum;
-import com.smartlott.enums.TransactionStatusEnum;
-import com.smartlott.enums.TransactionTypeEnum;
+import com.smartlott.enums.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,8 +159,8 @@ public class CheckoutController {
         //update lottery dialing has income component
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(),transaction.getAmount());
 
-        //save bonus for ancestor of user
-        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount());
+        //@Todo save bonus for ancestor of user
+        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Lottery);
 
         //insert batch of perfect money to database
         NumberAccountType numberAccountType = new NumberAccountType(NumberAccountTypeEnum.PerfectMoney);
@@ -273,9 +270,8 @@ public class CheckoutController {
             return CHECKOUT_BY_INVESTMENT_PACKAGE_ERROR_VIEW_NAME;
         }
 
-        System.out.println("Updating transaction");
-
         LOGGER.info("Updating transaction {} ", transaction);
+
         //status success
         TransactionStatus status = new TransactionStatus(TransactionStatusEnum.SUCCESS);
         transaction.setTransactionStatus(status);
@@ -309,6 +305,9 @@ public class CheckoutController {
 
         LocalDateTime from = currentLottDialing.getToDate();
         User ofUser = transaction.getOfUser();
+
+        //@Todo save bonus for ancestor of user
+        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Package);
 
         UserInvestment userInvestment = userService.addInvestmentPackage(ofUser, investmentPackage.getId(), from);
 

@@ -3,6 +3,7 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import com.smartlott.enums.BonusType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,15 +33,18 @@ public class Bonus {
 
     private double bonus;
 
+    private BonusType bonusType;
+
     public Bonus() {
     }
 
-    public Bonus(double bonus, User ofUser, User fromUser, LocalDateTime receivedDate, int level) {
+    public Bonus(double bonus, User ofUser, User fromUser, LocalDateTime receivedDate, int level, BonusType bonusType) {
         this.bonus = bonus;
         this.ofUser = ofUser;
         this.fromUser = fromUser;
         this.receivedDate = receivedDate;
         this.level = level;
+        this.bonusType = bonusType;
     }
 
     public long getId() {
@@ -91,6 +95,14 @@ public class Bonus {
         this.bonus = bonus;
     }
 
+    public BonusType getBonusType() {
+        return bonusType;
+    }
+
+    public void setBonusType(BonusType bonusType) {
+        this.bonusType = bonusType;
+    }
+
     @Override
     public String toString() {
         return "Bonus{" +
@@ -100,6 +112,7 @@ public class Bonus {
                 ", receivedDate=" + receivedDate +
                 ", level=" + level +
                 ", bonus=" + bonus +
+                ", bonusType=" + bonusType +
                 '}';
     }
 

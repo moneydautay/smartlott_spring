@@ -1,5 +1,7 @@
 package com.smartlott.backend.persistence.domain.backend;
 
+import com.smartlott.enums.BonusType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -25,6 +27,8 @@ public class NetworkLevel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     private IncomeComponent incomeComponent;
 
+    private BonusType bonusType;
+
     public NetworkLevel() {
     }
 
@@ -32,11 +36,12 @@ public class NetworkLevel implements Serializable{
         this.id = id;
     }
 
-    public NetworkLevel(int id, int level, String description, IncomeComponent incomeComponent) {
+    public NetworkLevel(int id, int level, String description, IncomeComponent incomeComponent, BonusType bonusType) {
         this.id = id;
         this.level = level;
         this.description = description;
         this.incomeComponent = incomeComponent;
+        this.bonusType = bonusType;
     }
 
     public int getId() {
@@ -79,6 +84,14 @@ public class NetworkLevel implements Serializable{
         this.enabled = enabled;
     }
 
+    public BonusType getBonusType() {
+        return bonusType;
+    }
+
+    public void setBonusType(BonusType bonusType) {
+        this.bonusType = bonusType;
+    }
+
     @Override
     public String toString() {
         return "NetworkLevel{"
@@ -87,6 +100,7 @@ public class NetworkLevel implements Serializable{
                 + ", description='" + description + '\''
                 + ", enabled=" + enabled
                 + ", incomeComponent=" + incomeComponent
+                + ", bonusType=" + bonusType
                 + '}';
     }
 
