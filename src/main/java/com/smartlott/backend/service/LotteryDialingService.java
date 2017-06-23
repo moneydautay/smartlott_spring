@@ -33,17 +33,6 @@ public class LotteryDialingService {
     }
 
     /**
-     * Update lottery dialing
-     * @param lotteryDialing
-     * @return A lottery dialing after update
-     */
-    @Transactional
-    public LotteryDialing update(LotteryDialing lotteryDialing){
-        return dialingRepository.save(lotteryDialing);
-    }
-
-
-    /**
      * Retrive all lottery dialing with pagination
      * @param pageable
      * @return A list of lottery dialing with pageable control page or null if not exist
@@ -53,6 +42,7 @@ public class LotteryDialingService {
         Page<LotteryDialing> lotteryDialings = dialingRepository.findAll(request);
         return lotteryDialings;
     }
+
 
     /**
      * Retrieve a lottery dialing given by id
@@ -70,5 +60,15 @@ public class LotteryDialingService {
      */
     public LotteryDialing getOpenedLotteryDialing(boolean opened) {
         return  dialingRepository.findByOpened(opened);
+    }
+
+    /**
+     * Update lottery dialing
+     * @param lotteryDialing
+     * @return A lottery dialing after update
+     */
+    @Transactional
+    public LotteryDialing update(LotteryDialing lotteryDialing){
+        return dialingRepository.save(lotteryDialing);
     }
 }

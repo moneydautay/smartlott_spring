@@ -113,4 +113,5 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
     List<User> findByRoles_NameAndCreateDateBetween(String roleName, LocalDateTime fromDate, LocalDateTime toDate);
 
+    List<User> findByInvestmentPackageId(long investmentPackageId);
 }

@@ -167,7 +167,7 @@ public class InvestmentPackageRestController {
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.NOT_FOUND);
         }
 
-        InvestmentPackage requiredPackage = user.getRequriedInvestmentPackage(investmentPackage.getParent());
+        InvestmentPackage requiredPackage = user.getRequiredInvestmentPackage(investmentPackage.getParent());
 
         //checking user existed required package
         if (investmentPackage.getParent() != 0 && requiredPackage == null){

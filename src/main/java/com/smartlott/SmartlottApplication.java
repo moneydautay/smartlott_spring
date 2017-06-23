@@ -103,8 +103,24 @@ public class SmartlottApplication implements CommandLineRunner{
 		//Create number account type
 		CreateNumberAccountType();
 
-		//add default package
-		addInvestmentPackage();
+		//creat transaction type
+		createTransactionType();
+
+		//create transaction status
+		createTransactionStatus();
+
+		//open new lottery dialing
+		createLotteryDialing();
+
+		//create new lottery type;
+		createLotteryType();
+
+		//create new Income component and reward
+
+		createIncomeComponentAndRewardUtils();
+
+		//create new Lottery dialing has income component
+		createLotDialHasIncome();
 
 		NumberAccountType bigCoin = numberAccountTypeService.getOne(1);
 		NumberAccountType pm = numberAccountTypeService.getOne(2);
@@ -147,24 +163,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		numberAccountService.create(numberAccount1);
 		numberAccountService.create(numberAccount2);
 
-		//creat transaction type
-		createTransactionType();
 
-		//create transaction status
-		createTransactionStatus();
-
-		//open new lottery dialing
-		createLotteryDialing();
-
-		//create new lottery type;
-		createLotteryType();
-
-		//create new Income component and reward
-
-		createIncomeComponentAndRewardUtils(user);
-
-		//create new Lottery dialing has income component
-		createLotDialHasIncome();
 
 		createCusts(user);
 
@@ -299,7 +298,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		transactionStatusService.create(status3);
 	}
 
-	public void createIncomeComponentAndRewardUtils(User user){
+	public void createIncomeComponentAndRewardUtils(){
 
 		//create reward
 		Reward jackpots = new Reward();
@@ -346,6 +345,9 @@ public class SmartlottApplication implements CommandLineRunner{
 		fiveReward.setCoupleNumber(1);
 		rewardService.create(fiveReward);
 
+		//list income comp for investment package
+		List<IncomeComponent> investPacks = new ArrayList<>();
+
 		IncomeComponent incomeComponent1 = new IncomeComponent();
 		incomeComponent1.setName("Hoa hồng bán hàng F1");
 		incomeComponent1.setValue(20);
@@ -359,6 +361,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent2.setEnabled(true);
 		incomeComponent2.setDescription("Hoa hồng bán hàng F2");
 		incomeComponent2 = componentService.create(incomeComponent2);
+
 
 		IncomeComponent incomeComponent3 = new IncomeComponent();
 		incomeComponent3.setName("Hoa hồng bán hàng F3");
@@ -394,7 +397,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		incomeComponent7.setEnabled(true);
 		incomeComponent7.setDescription("Hoa hồng bán hàng F7");
 		incomeComponent7 = componentService.create(incomeComponent7);
-
 
 		IncomeComponent ja = new IncomeComponent();
 		ja.setName("Giải đặc biệt");
@@ -458,6 +460,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		agent.setEnabled(true);
 		agent.setDescription("The bonus agent investment package");
 		agent = componentService.create(agent);
+		investPacks.add(agent);
 
 		//Bonus investment
 		IncomeComponent invest = new IncomeComponent();
@@ -465,37 +468,43 @@ public class SmartlottApplication implements CommandLineRunner{
 		invest.setValue(0.01);
 		invest.setEnabled(true);
 		invest.setDescription("The bonus invest investment package");
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
+		invest = new IncomeComponent();
 		//Bonus investment
-		invest.setId(0);
 		invest.setName("Pro Invest");
 		invest.setValue(0.1);
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
+		invest = new IncomeComponent();
 		//Bonus investment
-		invest.setId(0);
 		invest.setName("Sliver Invest");
 		invest.setValue(0.24);
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
+		invest = new IncomeComponent();
 		//Bonus investment
-		invest.setId(0);
 		invest.setName("Gold Invest");
 		invest.setValue(0.50);
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
+		invest = new IncomeComponent();
 		//Bonus investment
-		invest.setId(0);
 		invest.setName("Platinum Invest");
 		invest.setValue(0.75);
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
+		invest = new IncomeComponent();
 		//Bonus investment
-		invest.setId(0);
 		invest.setName("Diamond Invest");
 		invest.setValue(1.4);
-		componentService.create(invest);
+		invest = componentService.create(invest);
+		investPacks.add(invest);
 
 		//create level of network
 		NetworkLevel level1 = new NetworkLevel(1, 1, "", incomeComponent1, BonusType.Lottery);
@@ -571,6 +580,8 @@ public class SmartlottApplication implements CommandLineRunner{
 		networkLevelService.create(level5);
 		networkLevelService.create(level6);
 
+		addInvestmentPackage(investPacks);
+
 	}
 
 	public void createLotDialHasIncome(){
@@ -590,7 +601,7 @@ public class SmartlottApplication implements CommandLineRunner{
 	}
 
 
-	public void addInvestmentPackage() {
+	public void addInvestmentPackage(List<IncomeComponent> list) {
 
 		Cash cash1 = new Cash(CashEnum.CASH);
 		Cash cash2 = new Cash(CashEnum.INVESTMENT);
@@ -610,6 +621,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		InvestmentPackage investmentPackage6 = new InvestmentPackage(InvestmentPackageEnum.GOLDINVEST);
 		InvestmentPackage investmentPackage7 = new InvestmentPackage(InvestmentPackageEnum.PLATIUMINVEST);
 		InvestmentPackage investmentPackage8 = new InvestmentPackage(InvestmentPackageEnum.DIAMONDINVEST);
+
+		investmentPackage2.setIncomeComponent(list.get(0));
+		investmentPackage3.setIncomeComponent(list.get(1));
+		investmentPackage4.setIncomeComponent(list.get(2));
+		investmentPackage5.setIncomeComponent(list.get(3));
+		investmentPackage6.setIncomeComponent(list.get(4));
+		investmentPackage7.setIncomeComponent(list.get(5));
+		investmentPackage8.setIncomeComponent(list.get(6));
 
 		packageService.create(investmentPackage1);
 		packageService.create(investmentPackage2);

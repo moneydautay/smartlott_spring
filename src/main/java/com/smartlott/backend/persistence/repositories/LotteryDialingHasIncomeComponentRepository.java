@@ -1,5 +1,6 @@
 package com.smartlott.backend.persistence.repositories;
 
+import com.smartlott.backend.persistence.domain.backend.IncomeComponent;
 import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,7 @@ public interface LotteryDialingHasIncomeComponentRepository extends CrudReposito
 
     Page<LotteryDialingHasIncomeComp> findByLotteryDialingId(long lotteryDialingId, Pageable pageRequest);
 
-    List<LotteryDialingHasIncomeComp> findByIncomeComponentId(Long incomeComponentId);
-
     Page<LotteryDialingHasIncomeComp> findByIncomeComponentId(Long incomeComponentId, Pageable pageable);
+
+    List<LotteryDialingHasIncomeComp> findByLotteryDialingIdAndIncomeComponentIn(long dialingId, List<IncomeComponent> incomeComponentIds);
 }

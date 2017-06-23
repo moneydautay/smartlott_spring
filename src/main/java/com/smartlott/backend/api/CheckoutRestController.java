@@ -196,7 +196,7 @@ public class CheckoutRestController {
         incomeComponentService.saveIncomeForLotteryDialing(lotteryDialing.getId(), transaction.getAmount());
 
         //save bonus for ancestor of user
-       bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Lottery);
+        bonusService.saveBonusOfUser(transaction.getOfUser(), transaction.getAmount(), BonusType.Lottery);
     }
 
     /**

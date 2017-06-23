@@ -1,5 +1,6 @@
 package com.smartlott.backend.service;
 
+import com.smartlott.backend.persistence.domain.backend.IncomeComponent;
 import com.smartlott.backend.persistence.domain.backend.LotteryDialingHasIncomeComp;
 import com.smartlott.backend.persistence.repositories.LotteryDialingHasIncomeComponentRepository;
 import com.smartlott.utils.MathUtils;
@@ -64,8 +65,8 @@ public class LotteryDialingHasIncomeCompService {
         return dialingIncomCompRepository.findByIncomeComponentId(incomeComponentId, pageable);
     }
 
-    public List<LotteryDialingHasIncomeComp> getByIncomeComponentId(long incomeComponentId){
-        return dialingIncomCompRepository.findByIncomeComponentId(incomeComponentId);
+    public List<LotteryDialingHasIncomeComp> getByIncomeComponentId(List<IncomeComponent> incomeComponents, long dialingId){
+        return dialingIncomCompRepository.findByLotteryDialingIdAndIncomeComponentIn(dialingId, incomeComponents);
     }
 
     private PageRequest pageRequest(Pageable pageable){

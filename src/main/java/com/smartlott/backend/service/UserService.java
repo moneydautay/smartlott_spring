@@ -310,4 +310,8 @@ public class UserService {
     public long countNumberUserBetween(String roleName, LocalDateTime fromDate, LocalDateTime toDate) {
         return userRepository.findByRoles_NameAndCreateDateBetween(roleName, fromDate, toDate).size();
     }
+
+    public List<User> getUserByInvestmentPackage(long investmentPackageId) {
+        return userRepository.findByInvestmentPackageId(investmentPackageId);
+    }
 }

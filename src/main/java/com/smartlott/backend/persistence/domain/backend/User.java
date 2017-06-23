@@ -411,7 +411,7 @@ public class User implements Serializable, UserDetails {
         return investmentPackage;
     }
 
-    public InvestmentPackage getRequriedInvestmentPackage(int packageId) {
+    public InvestmentPackage getRequiredInvestmentPackage(int packageId) {
         Iterator<UserInvestment> userInvestmentIterator = userInvestments.iterator();
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         while (userInvestmentIterator.hasNext()) {

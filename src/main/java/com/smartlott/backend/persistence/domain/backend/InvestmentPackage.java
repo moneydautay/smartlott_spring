@@ -16,7 +16,9 @@ import java.util.List;
 @Table(name = "investment_package")
 public class InvestmentPackage implements Serializable {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,6 +48,10 @@ public class InvestmentPackage implements Serializable {
     private List<InvestmentPackageCash> investmentPackageCashes;
 
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private IncomeComponent incomeComponent;
+
+
     public InvestmentPackage() {
     }
 
@@ -53,7 +59,7 @@ public class InvestmentPackage implements Serializable {
         this.id = packageEnum.getId();
         this.name = packageEnum.getName();
         this.description = packageEnum.getDescription();
-       this.price = packageEnum.getPrice();
+        this.price = packageEnum.getPrice();
         this.levelNetwork = packageEnum.getLevelNetwork();
         this.limitTime = packageEnum.isLimit();
         this.durationTime = packageEnum.getDurationTime();
@@ -92,7 +98,7 @@ public class InvestmentPackage implements Serializable {
         this.enabled = enabled;
     }
 
-   public double getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -140,6 +146,14 @@ public class InvestmentPackage implements Serializable {
         this.parent = parent;
     }
 
+    public IncomeComponent getIncomeComponent() {
+        return incomeComponent;
+    }
+
+    public void setIncomeComponent(IncomeComponent incomeComponent) {
+        this.incomeComponent = incomeComponent;
+    }
+
     @Override
     public String toString() {
         return "InvestmentPackage{"
@@ -151,6 +165,7 @@ public class InvestmentPackage implements Serializable {
                 + ", levelNetwork=" + levelNetwork
                 + ", limitTime=" + limitTime
                 + ", durationTime=" + durationTime
+                + ", incomeComp=" + incomeComponent.getName()
                 + '}';
     }
 
