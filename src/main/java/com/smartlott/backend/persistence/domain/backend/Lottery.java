@@ -55,9 +55,6 @@ public class Lottery implements Serializable {
     @Transient
     private String buyBy;
 
-    @Transient
-    private String lotteryDialing;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_type_id")
     private LotteryType lotteryType;
@@ -66,6 +63,9 @@ public class Lottery implements Serializable {
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     private LotteryDetail lotteryDetail;
+
+    @ManyToOne
+    private LotteryDialing lotteryDialing;
 
 
     private boolean enabled = false;
@@ -164,6 +164,10 @@ public class Lottery implements Serializable {
 
     public void setLotteryDetail(LotteryDetail lotteryDetail) {
         this.lotteryDetail = lotteryDetail;
+    }
+
+    public void setLotteryDialing(LotteryDialing lotteryDialing) {
+        this.lotteryDialing = lotteryDialing;
     }
 
     public String getSequense() {

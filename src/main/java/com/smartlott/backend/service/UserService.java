@@ -311,7 +311,4 @@ public class UserService {
         return userRepository.findByRoles_NameAndCreateDateBetween(roleName, fromDate, toDate).size();
     }
 
-    public List<User> getUserByInvestmentPackage(long investmentPackageId) {
-        return userRepository.findByInvestmentPackageId(investmentPackageId);
-    }
 }

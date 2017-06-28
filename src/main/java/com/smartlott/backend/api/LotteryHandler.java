@@ -86,8 +86,9 @@ public class LotteryHandler {
         if (lotteryDialing == null) {
             LOGGER.error("Lottery Dialing was closed");
             messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("lottery.dialing.error.closed.text", locale)));
-            return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
+
 
         long userId = lotteries.getUserId();
         List<Lottery> localLottery = new ArrayList<>();

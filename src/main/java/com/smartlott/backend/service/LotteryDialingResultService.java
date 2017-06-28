@@ -47,6 +47,7 @@ public class LotteryDialingResultService {
 
     public LotteryDialingResult createLottery(LotteryDialing lotteryDialing,
                                               Lottery lottery, Reward reward){
+
         User user = lottery.getLotteryDetail().getTransaction().getOfUser();
         LotteryDialingResult lotteryDialingResult = new LotteryDialingResult();
         lotteryDialingResult.setReward(reward);

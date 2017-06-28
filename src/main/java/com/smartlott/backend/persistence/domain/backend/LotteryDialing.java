@@ -47,6 +47,10 @@ public class LotteryDialing implements Serializable{
         this.toDate = toDate;
     }
 
+    public LotteryDialing(long termId) {
+        this.id = termId;
+    }
+
     public long getId() {
         return id;
     }

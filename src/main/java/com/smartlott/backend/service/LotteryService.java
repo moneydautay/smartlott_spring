@@ -90,4 +90,8 @@ public class LotteryService {
     public long getTotalLottery() {
         return lotteryRepository.count();
     }
+
+    public List<Lottery> getAllByTermId(long termId) {
+        return lotteryRepository.findByLotteryDialingId(termId);
+    }
 }

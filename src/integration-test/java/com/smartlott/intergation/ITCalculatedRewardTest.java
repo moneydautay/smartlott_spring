@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by Mrs Hoang on 17/01/2017.
@@ -37,7 +36,7 @@ public class ITCalculatedRewardTest {
     private RewardService rewardService;
 
     @Autowired
-    private CalculatedAwardService calculatedAwardService;
+    private AwardService calculatedAwardService;
 
     @Before
     public void before() throws Exception {
@@ -80,7 +79,7 @@ public class ITCalculatedRewardTest {
 
         long start = System.nanoTime();
         double totalPrice = 0;
-        for (int i = 0; i < numberLottery/2; i++) {
+        for (int i = 0; i < numberLottery / 2; i++) {
 
             Lottery lottery = new Lottery();
             lottery.setCoupleOne(getRandom());
@@ -102,7 +101,7 @@ public class ITCalculatedRewardTest {
         componentService.saveIncomeForLotteryDialing(lotteryDialing.getId(), totalPrice);
 
 
-       long elapsedTime = System.nanoTime() - start;
+        long elapsedTime = System.nanoTime() - start;
         System.out.println("Time to add lotteries: " + elapsedTime);
 
 
@@ -117,7 +116,7 @@ public class ITCalculatedRewardTest {
 
         double totalValue = 0;
         for (LotteryDialingHasIncomeComp component : components) {
-
+            List<Lottery> listResult = new ArrayList<>();
             System.out.println("Dialing com: " + component.getIncomeComponent().getName() + ": val " + component.getValue());
             totalValue += component.getValue();
             //Assert.assertEquals(expectValue,component.getValue(),numberLottery);
@@ -129,9 +128,8 @@ public class ITCalculatedRewardTest {
 
             if (reward != null) {
                 System.out.println("[========================================================]");
-                System.out.println("[========================================================]");
                 System.out.println("[Value of jackpot]: " + component.getValue());
-                System.out.println("[Defalut value of jackpot]: " + reward.getValue());
+                System.out.println("[Default value of jackpot]: " + reward.getValue());
                 int numberReward = (int) (component.getValue() / reward.getValue());
                 if (component.getIncomeComponent().getReward().isJackpots())
                     if (numberReward > 0)
@@ -146,11 +144,11 @@ public class ITCalculatedRewardTest {
                     System.out.println("Reward name: " + reward.getName() + ": " + reward.getDefaultNumericReward());
 
                 System.out.println("[========================================================]");
-                System.out.println("[========================================================]");
-                List<Lottery> listResult = new ArrayList<>();
+
                 if (component.getIncomeComponent().getReward().isJackpots()) {
                     listResult = findJackpots(lotteries, numberReward);
                     lotteries.removeAll(listResult);
+                    System.out.println("Number award jackpots: " + listResult.size());
                 } else {
                     listResult = findLotteryAwards(lotteries, reward.getCoupleNumber(), numberReward);
                     lotteries.removeAll(listResult);
@@ -231,8 +229,6 @@ public class ITCalculatedRewardTest {
             lottery = lotteryService.createNewLottery(lottery);
             lotteries.add(lottery);
         }
-
-
 
 
         System.out.println(lotteries);

@@ -24,9 +24,11 @@ import java.util.List;
 @RequestMapping(LotteryDialingResultHandler.API_LOTTERY_DIALING_RESULT_URL)
 public class LotteryDialingResultHandler {
 
-    /** The application logger */
+    /**
+     * The application logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(LotteryDialingResultHandler.class);
-    
+
     public static final String API_LOTTERY_DIALING_RESULT_URL = "/api/lottery-dialing-result";
 
     @Autowired
@@ -45,23 +47,23 @@ public class LotteryDialingResultHandler {
     private LotteryService lotteryService;
 
     @GetMapping("/calc-reward")
-    public ResponseEntity<Object> calculatedReward(){
+    public ResponseEntity<Object> calculatedReward() {
 
         LotteryDialing currentLotteryDialing = lotteryDialingService.getOpenedLotteryDialing(true);
 
         List<LotteryDialingHasIncomeComp> components = componentService.getByLotteryDialingId(currentLotteryDialing.getId());
         LOGGER.info("Calculating reward...");
-        for (LotteryDialingHasIncomeComp component : components){
+        for (LotteryDialingHasIncomeComp component : components) {
 
             //Get reward give by income component
             Reward reward = rewardService.getRewardByIncomeComponentId(component.getIncomeComponent().getId());
 
-            if(reward != null) {
+            if (reward != null) {
 
                 int numberReward = (int) (component.getValue() / reward.getValue());
 
                 //checking if jackpot
-                if(component.getIncomeComponent().getReward().isJackpots())
+                if (component.getIncomeComponent().getReward().isJackpots())
                     if (numberReward > 0) numberReward = 1;
 
                 //if numeric reward < 0 then get default reward
@@ -70,24 +72,25 @@ public class LotteryDialingResultHandler {
 
                 LOGGER.info("Reward {} default value {} current value {} number of reward {}",
                         reward.getName(), reward.getValue(), component.getValue(), numberReward);
-                List<Lottery> listResult = new ArrayList<>();
+
+                List<Lottery> listResult;
 
                 //get all lottery in lottery dialing and enabled is true
                 List<Lottery> lotteries = lotteryService.getByLotteryDialingId(currentLotteryDialing.getId());
 
                 LOGGER.info("Number of lottery: {}", lotteries.size());
 
-                if(component.getIncomeComponent().getReward().isJackpots()) {
+                if (component.getIncomeComponent().getReward().isJackpots())
                     listResult = findJackpots(lotteries, numberReward);
-                    lotteries.removeAll(listResult);
-                }
-                else {
+                else
                     listResult = findLotteryAwards(lotteries, reward.getCoupleNumber(), numberReward);
-                    lotteries.removeAll(listResult);
-                }
-                 LOGGER.info("Number award found: {}", listResult.size());
+
+                // remove lottery was be handle
+                lotteries.removeAll(listResult);
+
+                LOGGER.info("Number award found: {}", listResult.size());
                 //checking all list result will be deleted from lotteries
-                if(lotteries.containsAll(listResult))
+                if (lotteries.containsAll(listResult))
                     LOGGER.warn("List result still exists in lotteries");
 
                 //save to lottery dialing result
@@ -99,18 +102,18 @@ public class LotteryDialingResultHandler {
         }
         LOGGER.info("Calculate reward");
 
-        return new ResponseEntity<Object>(null, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    public List<Lottery> findJackpots(List<Lottery> lotteries, int numberReward){
-        if(numberReward == 0)
+    public List<Lottery> findJackpots(List<Lottery> lotteries, int numberReward) {
+        if (numberReward == 0)
             return new ArrayList<>();
-        return findLotteryAwards(lotteries,6);
+        return findLotteryAwards(lotteries, 6);
     }
 
-    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple){
+    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple) {
 
-        int index = (int)(Math.random()*lotteries.size());
+        int index = (int) (Math.random() * lotteries.size());
 
         Lottery reward = lotteries.get(index);
 
@@ -123,16 +126,16 @@ public class LotteryDialingResultHandler {
 
         //found list of lottery mark with
         for (Lottery lottery : lotteries)
-            if(reward.compareTwoLotteries(lottery, numberComparedCouple))
+            if (reward.compareTwoLotteries(lottery, numberComparedCouple))
                 results.add(lottery);
         return results;
     }
 
-    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple, int numberReward){
+    public List<Lottery> findLotteryAwards(List<Lottery> lotteries, int numberComparedCouple, int numberReward) {
         List<Lottery> lstResults = new ArrayList<>();
 
         //condition stop recursive
-        if(lotteries.size() <= 0 || numberReward <=0)
+        if (lotteries.size() <= 0 || numberReward <= 0)
             return lstResults;
 
         lstResults = findLotteryAwards(lotteries, numberComparedCouple);
@@ -140,11 +143,11 @@ public class LotteryDialingResultHandler {
         // find number awards equal aspect number reward
         // if number award greater than aspect number reward
         // will remove all lstResults and find again number awards
-        if(lstResults.size() == numberReward)
+        if (lstResults.size() == numberReward)
             return lstResults;
-        else if(lstResults.size() > numberReward) {
+        else if (lstResults.size() > numberReward) {
             lstResults = findLotteryAwards(lotteries, numberComparedCouple, numberReward);
-        }else {
+        } else {
             numberReward = numberReward - lstResults.size();
             lstResults.addAll(findLotteryAwards(lotteries, numberComparedCouple, numberReward));
         }

@@ -95,6 +95,11 @@ public class LotteryDialingHasIncomeCompService {
 
     }
 
+    @Transactional
+    public void saveIncomeForIncomeCompAndDivideIncome(long lotteryDialingId, long incomeComponentId, double value) {
+        dialingIncomCompRepository.updateIncomeForIncomeCompAndDivideIncome(lotteryDialingId, incomeComponentId, value);
+    }
+
     public List<LotteryDialingHasIncomeComp> getAll() {
         return dialingIncomCompRepository.findAll();
     }

@@ -21,6 +21,8 @@ public class LotteryDialingHasIncomeComp {
 
     private double value;
 
+    private double divideIncome;
+
     public LotteryDialingHasIncomeComp() {
     }
 
@@ -56,13 +58,22 @@ public class LotteryDialingHasIncomeComp {
         this.value = value;
     }
 
+    public double getDivideIncome() {
+        return divideIncome;
+    }
+
+    public void setDivideIncome(double divideIncome) {
+        this.divideIncome = divideIncome;
+    }
+
     @Override
     public String toString() {
         return "LotteryDialingHasIncomeComponent{" +
                 "id=" + id +
-                ", lotteryDialing=" + lotteryDialing +
-                ", incomeComponent=" + incomeComponent +
+                ", lotteryDialing=" + lotteryDialing.getId() +
+                ", incomeComponent=" + incomeComponent.getName() +
                 ", value=" + value +
+                ", divideIncome=" + divideIncome +
                 '}';
     }
 

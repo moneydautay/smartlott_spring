@@ -27,8 +27,6 @@ public class LotteryDetail {
     @Column(name = "ip_address")
     private String ipAddress;
 
-    @ManyToOne
-    private LotteryDialing lotteryDialing;
 
     public LotteryDetail() {
     }
@@ -65,13 +63,6 @@ public class LotteryDetail {
         this.ipAddress = ipAddress;
     }
 
-    public LotteryDialing getLotteryDialing() {
-        return lotteryDialing;
-    }
-
-    public void setLotteryDialing(LotteryDialing lotteryDialing) {
-        this.lotteryDialing = lotteryDialing;
-    }
 
     @Override
     public String toString() {

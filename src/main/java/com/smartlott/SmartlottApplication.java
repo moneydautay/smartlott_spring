@@ -91,6 +91,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private InvestmentPackageCashService investmentPackageCashService;
 
+	@Autowired
+	private IncomeProcessService incomeProcessService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -114,6 +117,9 @@ public class SmartlottApplication implements CommandLineRunner{
 
 		//create new lottery type;
 		createLotteryType();
+
+		//create income process
+		addIncomeProces();
 
 		//create new Income component and reward
 
@@ -221,11 +227,13 @@ public class SmartlottApplication implements CommandLineRunner{
 		TransactionType type2= new TransactionType(TransactionTypeEnum.BuyingLottery);
 		TransactionType type3= new TransactionType(TransactionTypeEnum.BuyInvestmentPackage);
 		TransactionType type4= new TransactionType(TransactionTypeEnum.TransferCash);
+		TransactionType type5= new TransactionType(TransactionTypeEnum.IncomeInvestment);
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
 		transactionTypeService.createNew(type3);
 		transactionTypeService.createNew(type4);
+		transactionTypeService.createNew(type5);
 	}
 
 	public void createCusts(User user){
@@ -643,6 +651,14 @@ public class SmartlottApplication implements CommandLineRunner{
 			investmentPackageCashService.create(new InvestmentPackageCash(item, cash2, 90));
 			investmentPackageCashService.create(new InvestmentPackageCash(item, cash3, 10));
 		}
+	}
+
+	private void addIncomeProces() {
+		IncomeProcess jackPot = new IncomeProcess(IncomeProcessEnum.LIST_JACKPOT);
+		IncomeProcess incomePackage = new IncomeProcess(IncomeProcessEnum.INCOME_PACKAGE);
+
+		incomeProcessService.create(jackPot);
+		incomeProcessService.create(incomePackage);
 	}
 
 }

@@ -153,6 +153,9 @@ public class CheckoutRestController {
         LocalDateTime from = LocalDateTime.now(Clock.systemDefaultZone());
         User ofUser = transaction.getOfUser();
 
+        //disables all current valid investment package
+        disabledCurrentValidInvestmentPackage(ofUser.getId());
+
         //add investment package to user
         UserInvestment userInvestment = userService.addInvestmentPackage(ofUser, investmentPackage.getId(), from);
 
@@ -180,6 +183,18 @@ public class CheckoutRestController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         LOGGER.info("Re login {} to load new investment package", ofUser);
+    }
+
+
+    /**
+     * Disables all limited valid investment packages.
+     *
+     * @param userId
+     */
+    private void disabledCurrentValidInvestmentPackage(long userId) {
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
+        int id = investmentService.disabledInvestmentPackage(userId, now, false);
+        LOGGER.info("InvestmentService {} of user {} has been disabled", id, userId);
     }
 
     private void lotteryHandler(Transaction transaction, List<MessageDTO> messageDTOS, Locale locale) {
