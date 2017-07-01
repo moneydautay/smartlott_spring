@@ -108,7 +108,7 @@ public class ITCalculatedRewardTest {
         //Assert.assertEquals("Number of lottery must be equals "+numberLottery, lotteries.size(),numberLottery);
 
         List<LotteryDialingHasIncomeComp> components = componentService.getAll();
-        List<Lottery> results = calculatedAwardService.calculateAward(lotteries, components);
+        Map<Integer, List<Lottery>> results = calculatedAwardService.calculateAward(lotteries, components);
         System.out.println(results.toString());
     }
 

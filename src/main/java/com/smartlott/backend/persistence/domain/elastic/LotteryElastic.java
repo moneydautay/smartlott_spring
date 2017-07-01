@@ -37,7 +37,7 @@ public class LotteryElastic implements Serializable{
         this.id = lottery.getId();
         this.sequense = lottery.getSequense();
         this.buyDate = (null != lottery.getBuyDate()) ? lottery.getBuyDate().format(df) : null;
-        this.buyBy = lottery.getBuyBy();
+        this.buyBy = lottery.getBuyBy().getUsername();
         this.lotteryDialing = lottery.getLotteryDialing();
         this.enabled = lottery.isEnabled();
     }

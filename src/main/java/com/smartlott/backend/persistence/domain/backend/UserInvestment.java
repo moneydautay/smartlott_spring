@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "user_investment")
-public class UserInvestment {
+public class UserInvestment implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

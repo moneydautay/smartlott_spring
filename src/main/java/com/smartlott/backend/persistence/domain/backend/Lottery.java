@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -52,8 +54,8 @@ public class Lottery implements Serializable {
     @Transient
     private LocalDateTime buyDate;
 
-    @Transient
-    private String buyBy;
+    @ManyToOne
+    private User buyBy;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lottery_type_id")
@@ -179,15 +181,20 @@ public class Lottery implements Serializable {
         return (null != lotteryDetail) ? lotteryDetail.getTransaction().getCreatedDate() : null;
     }
 
-    public String getBuyBy() {
-        return  (null != lotteryDetail) ? lotteryDetail.getTransaction().getOfUser().getUsername() : null;
+
+    public void setBuyBy(User buyBy) {
+        this.buyBy = buyBy;
+    }
+
+    public User getBuyBy() {
+        return  buyBy;
     }
 
     public String getLotteryDialing() {
 
         DateTimeFormatter df = DateTimeFormatter.ofPattern("kk:mm:ss dd/MM/yyyy");
 
-        return (null != lotteryDetail) ? lotteryDetail.getLotteryDialing().getFromDate().format(df) + "-" + lotteryDetail.getLotteryDialing().getToDate().format(df) : null;
+        return (null != lotteryDialing) ? lotteryDialing.getFromDate().format(df) + "-" + lotteryDialing.getToDate().format(df) : null;
     }
 
     @Override
@@ -202,6 +209,7 @@ public class Lottery implements Serializable {
                 ", coupleSix='" + coupleSix + '\'' +
                 ", lotteryType=" + lotteryType +
                 ", enabled=" + enabled +
+                ", buyBy=" + buyBy.getUsername() +
                 '}';
     }
 

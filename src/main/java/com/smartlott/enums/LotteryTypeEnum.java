@@ -4,8 +4,8 @@ package com.smartlott.enums;
  * Created by Mrs Hoang on 17/01/2017.
  */
 public enum  LotteryTypeEnum {
-    TYPE1(1, "Type One","This is type one lottery type",0.01),
-    TYPE2(2, "Type Tow","This is type two lottery type",0.01);
+    TYPE1(1, "Type One","This is type one lottery type",50),
+    TYPE2(2, "Type Tow","This is type two lottery type",50);
 
     private int id;
     private String name;

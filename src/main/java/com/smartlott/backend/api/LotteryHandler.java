@@ -89,7 +89,6 @@ public class LotteryHandler {
             return new ResponseEntity<>(messageDTOS, HttpStatus.EXPECTATION_FAILED);
         }
 
-
         long userId = lotteries.getUserId();
         List<Lottery> localLottery = new ArrayList<>();
         Transaction transaction = null;
@@ -108,7 +107,7 @@ public class LotteryHandler {
             TransactionType transactionType = transactionTypeService.getOne(2);
             TransactionStatus status = new TransactionStatus(TransactionStatusEnum.PENDING);
 
-
+            // creating new transaction
             transaction = new Transaction();
             transaction.setAmount(totalPrice);
             transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
@@ -126,8 +125,11 @@ public class LotteryHandler {
             LOGGER.info("Created Lottery detail {}", lotteryDetail);
 
 
+            // Saving lotteries
             for (Lottery lottery : localLottery) {
                 lottery.setLotteryDetail(lotteryDetail);
+                lottery.setLotteryDialing(lotteryDialing);
+                lottery.setBuyBy(user);
                 lottery = lotteryService.createNewLottery(lottery);
                 LOGGER.info("Created new lotteries {}", lottery);
             }
@@ -190,7 +192,7 @@ public class LotteryHandler {
     @GetMapping("total-in-term")
     public ResponseEntity<Object> getTotalLotteryInTerm() {
         long termId = dialingService.getOpenedLotteryDialing(true).getId();
-        long totalLottery = lotteryDetailService.getTotalLotteryInTerm(termId);
+        long totalLottery = lotteryService.getTotalLotteryInTerm(termId);
         return new ResponseEntity<Object>(totalLottery, HttpStatus.OK);
     }
 }

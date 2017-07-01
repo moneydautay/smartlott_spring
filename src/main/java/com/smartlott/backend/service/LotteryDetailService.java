@@ -39,7 +39,6 @@ public class LotteryDetailService {
         LotteryDetail lotteryDetail = new LotteryDetail();
         lotteryDetail.setTransaction(transaction);
         lotteryDetail.setIpAddress(ipAddress);
-        lotteryDetail.setLotteryDialing(lotteryDialing);
         lotteryDetailRepository.save(lotteryDetail);
 
         return lotteryDetail;
@@ -49,8 +48,4 @@ public class LotteryDetailService {
         return lotteryDetailRepository.findByTransactionOfUserId(userId, pageable);
     }
 
-
-    public long getTotalLotteryInTerm(long termId) {
-        return lotteryDetailRepository.findByLotteryDialingId(termId).stream().mapToLong(ld -> ld.getLotteries().size()).sum();
-    }
 }

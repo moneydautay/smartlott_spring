@@ -75,7 +75,7 @@ public class LotteryService {
     }
 
     public List<Lottery> getByLotteryDialingId(long id) {
-        return lotteryRepository.findByLotteryDetailLotteryDialing_IdAndEnabled(id, true);
+        return lotteryRepository.findByLotteryDialing_IdAndEnabled(id, true);
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public class LotteryService {
     }
 
     public Page<Lottery> getByUserIdAndLotteryDialingId(long userId, long lotteryDialingId, Pageable pageable) {
-        return lotteryRepository.findByLotteryDetail_TransactionOfUserIdAndLotteryDetail_LotteryDialingId(userId,lotteryDialingId, pageable);
+        return lotteryRepository.findByLotteryDetail_TransactionOfUserIdAndLotteryDialingId(userId,lotteryDialingId, pageable);
     }
 
     public long getTotalLottery() {
@@ -93,5 +93,9 @@ public class LotteryService {
 
     public List<Lottery> getAllByTermId(long termId) {
         return lotteryRepository.findByLotteryDialingId(termId);
+    }
+
+    public long getTotalLotteryInTerm(long termId) {
+        return lotteryRepository.totalLotteryInTerm(termId);
     }
 }

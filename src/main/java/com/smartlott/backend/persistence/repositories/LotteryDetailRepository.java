@@ -20,5 +20,4 @@ public interface LotteryDetailRepository extends CrudRepository<LotteryDetail, L
 
     Page<LotteryDetail> findByTransactionOfUserId(long transactionOfUserId, Pageable pageable);
 
-    List<LotteryDetail> findByLotteryDialingId(long termId);
 }

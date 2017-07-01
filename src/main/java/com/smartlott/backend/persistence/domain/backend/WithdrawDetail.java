@@ -1,13 +1,14 @@
 package com.smartlott.backend.persistence.domain.backend;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by greenlucky on 1/1/17.
  */
 @Entity
 @Table(name = "withdraw_detail")
-public class WithdrawDetail {
+public class WithdrawDetail implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

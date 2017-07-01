@@ -169,8 +169,6 @@ public class SmartlottApplication implements CommandLineRunner{
 		numberAccountService.create(numberAccount1);
 		numberAccountService.create(numberAccount2);
 
-
-
 		createCusts(user);
 
 		createCountry();

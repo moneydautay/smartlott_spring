@@ -36,6 +36,7 @@ public class LotteryDialingResult implements Serializable{
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createDate;
 
+    @ManyToOne
     private Lottery lottery;
 
     public LotteryDialingResult() {

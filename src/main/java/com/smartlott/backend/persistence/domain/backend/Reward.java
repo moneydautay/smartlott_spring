@@ -49,6 +49,10 @@ public class Reward implements Serializable{
         this.name = name;
     }
 
+    public Reward(Integer k) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

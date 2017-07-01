@@ -3,13 +3,14 @@ package com.smartlott.backend.persistence.domain.backend;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by greenlucky on 2/3/17.
  */
 @Entity
 @Table(name = "user_cash")
-public class UserCash {
+public class UserCash implements Serializable{
 
     /** The Serial Version UID for Serializable classes */
     private static final long serialVersionUID = 1L;
