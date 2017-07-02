@@ -2,20 +2,24 @@ package com.smartlott.backend.api;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.service.*;
-import com.smartlott.enums.MessageType;
+import com.smartlott.enums.*;
 import com.smartlott.exceptions.NotFoundException;
 import com.smartlott.exceptions.OccurException;
+import com.smartlott.utils.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,9 +56,26 @@ public class AwardHandler {
     @Autowired
     private RewardService rewardService;
 
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private IncomeComponentService incomeComponentService;
+
+    @Autowired
+    private LottDialingIncProcessService incomeProcessService;
+
+    @Autowired
+    private BonusService bonusService;
+
+    @Autowired
+    private UserCashService userCashService;
+
     private Award resultAward = new Award();
 
     private List<MessageDTO> messageDTOS = new ArrayList<>();
+
+    private long totalAwards = 0;
 
     @GetMapping("/finding-lottery-award")
     public ResponseEntity<Object> findLotteryAwards(@RequestParam("termId") long termId, Locale locale) {
@@ -89,7 +110,7 @@ public class AwardHandler {
             resultAward.setListAwards(awardService.calculateAward(lstLotteryInTerm, lstIncomeComps));
             LOGGER.info("Calculated {} dialing results", resultAward.getListAwards().size());
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             MessageDTO msg = new MessageDTO(MessageType.ERROR,
                     i18NService.getMessage("s", String.valueOf(termId), locale));
@@ -103,23 +124,30 @@ public class AwardHandler {
     @GetMapping("/save-award")
     public ResponseEntity<Object> saveAwards(@RequestParam("termId") long termId, Locale locale) {
         try {
+            if(resultAward.getListAwards().size() == 0) {
+                MessageDTO msg = new MessageDTO(MessageType.ERROR,
+                        i18NService.getMessage("admin.award.error.list.result.award.empty", String.valueOf(termId), locale));
+                throw new OccurException(msg);
+            }
+
             LotteryDialing lotteryDialing = new LotteryDialing(termId);
             resultAward.getListAwards().forEach((k, v) -> {
                 Reward reward = rewardService.getOne(k);
                 v.forEach(lottery -> {
-                    LotteryDialingResult result =  resultService.create(lotteryDialing, lottery.getBuyBy(), lottery, reward);
+                    LotteryDialingResult result = resultService.create(lotteryDialing, lottery.getBuyBy(), lottery, reward);
                     LOGGER.info("Created lottery dialing result[result id: {}, reward: {}, of user: {}, lottery id: {}, created date: {}]",
                             result.getId(), result.getReward().getId(), result.getOfUser().getUsername(),
                             result.getLottery().getId(), result.getCreateDate());
+                    totalAwards++;
                 });
             });
 
-            LOGGER.info("Created {} dialing results", resultAward.getListAwards().size());
-            messageDTOS.add(new MessageDTO(MessageType.ERROR,
+            LOGGER.info("Created {} dialing results", totalAwards);
+            messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
                     i18NService.getMessage("admin.reward.success.saving.lottery.reward",
-                            new Object[]{termId, resultAward.getListAwards().size()}, locale)));
+                            new Object[]{termId, totalAwards}, locale)));
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             MessageDTO msg = new MessageDTO(MessageType.ERROR,
                     i18NService.getMessage("admin.reward.error.saving.lottery.reward", String.valueOf(termId), locale));
@@ -129,4 +157,87 @@ public class AwardHandler {
         return new ResponseEntity<>(messageDTOS, HttpStatus.OK);
     }
 
+    @Transactional
+    @GetMapping("/divide-award")
+    public ResponseEntity<Object> divideAward(@RequestParam("termId") long termId, Locale locale) {
+        try {
+
+            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            IncomeComponent rewardAward = incomeComponentService.getOne(28);
+
+            final List<LotteryDialingResult> lstAwards = resultService.getAwardByTermId(termId);
+            double totalAmount = 0;
+            if (lstAwards.size() == 0) {
+                throw new NotFoundException(new MessageDTO(MessageType.ERROR,
+                        i18NService.getMessage("admin.lottery.dialing.result.error.not.found", String.valueOf(termId), locale)));
+            }
+
+            for (LotteryDialingResult ldr : lstAwards) {
+
+                totalAmount += ldr.getReward().getValue();
+
+                final double bonus = MathUtils.round((ldr.getReward().getValue() * rewardAward.getValue() / 100), 4);
+                final double realAmount = ldr.getReward().getValue() - bonus;
+                Transaction transaction = new Transaction.Builder()
+                        .setAmount(realAmount)
+                        .setOfUser(ldr.getOfUser())
+                        .setTransactionType(new TransactionType(TransactionTypeEnum.DivideAward))
+                        .create();
+
+                if (transaction.getTransactionType().isAutoHandle()) {
+                    transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
+                    transaction.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+                    transaction.setHandleBy(currentUser);
+                }
+
+                transactionService.createNew(transaction);
+
+                //transfer money to cash account
+                UserCash userCash = userCashService.getByUserIdAndCash_Received(ldr.getOfUser().getId(), true);
+                LOGGER.info("Transfering award to received account of userId {}", ldr.getOfUser().getId());
+                LOGGER.info("Usercash before transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
+                userCash.plusValue(realAmount);
+                //update cash
+                userCash = userCashService.update(userCash);
+                LOGGER.info("Transfered cash to [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), realAmount);
+                LOGGER.info("Usercash after transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
+
+
+                LOGGER.info("Divide award [dialing: {} for member: {} , reward: {}, with {}]",
+                        ldr.getLotteryDialing().getId(),
+                        ldr.getOfUser().getUsername(),
+                        ldr.getReward().getId(),
+                        ldr.getReward().getValue());
+
+                //divide bonus to ancestor level 1
+                bonusService.saveBonusAwardOfUser(ldr.getOfUser(), bonus, BonusType.Award);
+
+                //update handled of LotteryDialingResult to true
+                ldr.setHandled(true);
+                ldr.setHandledDate(LocalDateTime.now(Clock.systemDefaultZone()));
+                resultService.update(ldr);
+            }
+
+            //set status handle this income process this term is handle
+            LottDialingIncProcess incProcess = new LottDialingIncProcess();
+            incProcess.setIncomeProcess(new IncomeProcess(IncomeProcessEnum.DIVIDE_AWARD));
+            incProcess.setLotteryDialing(new LotteryDialing(termId));
+            incProcess.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+            incomeProcessService.create(incProcess);
+            LOGGER.info("Create lottery dialing income process: {} ", incProcess.getId());
+
+            messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
+                    i18NService.getMessage("admin.reward.success.divide.lottery.reward",
+                            new Object[]{lstAwards.size(), totalAmount}, locale)));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            MessageDTO msg = new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.reward.error.divide.lottery.reward", String.valueOf(termId), locale));
+            throw new OccurException(msg);
+        }
+        return new ResponseEntity<>(messageDTOS, HttpStatus.OK);
+    }
 }

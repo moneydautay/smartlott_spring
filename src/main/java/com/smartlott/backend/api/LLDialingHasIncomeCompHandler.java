@@ -147,13 +147,12 @@ public class LLDialingHasIncomeCompHandler {
             Map<Long, Double> lstIncome = new HashMap<>();
             lstIncomeMembers.forEach((u, v) -> {
 
-                Transaction transaction = new Transaction();
-
-                transaction.setAmount(v);
-                transaction.setOfUser(u);
-                transaction.setHandleBy(u);
-                transaction.setTransactionType(new TransactionType(TransactionTypeEnum.IncomeInvestment));
-
+                Transaction transaction = new Transaction.Builder()
+                        .setAmount(v)
+                        .setOfUser(u)
+                        .setHandleBy(u)
+                        .setTransactionType(new TransactionType(TransactionTypeEnum.IncomeInvestment))
+                        .create();
                 if (transaction.getTransactionType().isAutoHandle()) {
                     transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
                     transaction.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
@@ -172,7 +171,6 @@ public class LLDialingHasIncomeCompHandler {
 
                 incomeProcessService.create(incProcess);
                 LOGGER.info("Create lottery dialing income process: {} ", incProcess.getId());
-
 
                 sumDividedIncomeInvestment(lstIncome, u.getUserInvestment().getId(), v);
             });

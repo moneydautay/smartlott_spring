@@ -2,10 +2,12 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import com.smartlott.enums.TransactionStatusEnum;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,9 +19,11 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "transaction")
-public class Transaction implements Serializable{
+public class Transaction implements Serializable {
 
-    /** The Serial Version UID for Serializable classes */
+    /**
+     * The Serial Version UID for Serializable classes
+     */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -193,7 +197,7 @@ public class Transaction implements Serializable{
                 ", createdDate=" + createdDate +
                 ", amount=" + amount +
                 ", ofUser=" + ofUser.getEmail() +
-                ", handleBy=" + ((handleBy != null)? handleBy.getEmail() : null) +
+                ", handleBy=" + ((handleBy != null) ? handleBy.getEmail() : null) +
                 ", handleDate=" + handleDate +
                 ", transactionType=" + transactionType.getName() +
                 ", lotteryDetails=" + lotteryDetails +
@@ -214,5 +218,89 @@ public class Transaction implements Serializable{
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+    public static class Builder {
+        private LocalDateTime createdDate;
+        private double amount;
+        private User ofUser;
+        private User handleBy;
+        private LocalDateTime handleDate;
+        private TransactionType transactionType;
+        private Set<LotteryDetail> lotteryDetails;
+        private TransactionStatus transactionStatus;
+        private List<InvestmentPackage> investmentPackages;
+        private Set<User> toUsers;
+
+        public Builder setCreatedDate(LocalDateTime createdDate) {
+            this.createdDate = createdDate;
+            return this;
+        }
+
+        public Builder setAmount(double amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder setOfUser(User ofUser) {
+            this.ofUser = ofUser;
+            return this;
+        }
+
+        public Builder setHandleBy(User handleBy) {
+            this.handleBy = handleBy;
+            return this;
+        }
+
+        public Builder setHandleDate(LocalDateTime handleDate) {
+            this.handleDate = handleDate;
+            return this;
+        }
+
+        public Builder setTransactionType(TransactionType transactionType) {
+            this.transactionType = transactionType;
+            return this;
+        }
+
+        public Builder setLotteryDetails(Set<LotteryDetail> lotteryDetails) {
+            this.lotteryDetails = lotteryDetails;
+            return this;
+        }
+
+        public Builder setTransactionStatus(TransactionStatus transactionStatus) {
+            this.transactionStatus = transactionStatus;
+            return this;
+        }
+
+        public Builder setInvestmentPackages(List<InvestmentPackage> investmentPackages) {
+            this.investmentPackages = investmentPackages;
+            return this;
+        }
+
+        public Builder setToUsers(Set<User> toUsers) {
+            this.toUsers = toUsers;
+            return this;
+        }
+
+        public Transaction create() {
+            Transaction transaction = new Transaction();
+            transaction.setCreatedDate(this.createdDate);
+            transaction.setAmount(this.amount);
+            transaction.setOfUser(this.ofUser);
+            transaction.setTransactionType(this.transactionType);
+            transaction.setTransactionStatus(this.transactionStatus);
+            if (this.handleBy != null) {
+                transaction.setHandleBy(handleBy);
+                transaction.setHandleDate(handleDate);
+            }
+            if (this.lotteryDetails != null)
+                transaction.setLotteryDetails(this.lotteryDetails);
+            if (this.investmentPackages != null)
+                transaction.setInvestmentPackages(investmentPackages);
+            if (this.toUsers != null)
+                transaction.setToUsers(toUsers);
+
+            return transaction;
+        }
     }
 }

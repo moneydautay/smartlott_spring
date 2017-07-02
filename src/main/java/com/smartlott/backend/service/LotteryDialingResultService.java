@@ -2,6 +2,7 @@ package com.smartlott.backend.service;
 
 import com.smartlott.backend.persistence.domain.backend.*;
 import com.smartlott.backend.persistence.repositories.LotteryDialingResultRepository;
+import com.smartlott.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class LotteryDialingResultService {
 
     @Autowired
     private LotteryDialingResultRepository dialingResultRepository;
+
+    @Autowired
+    private I18NService i18NService;
 
     @Transactional
     public LotteryDialingResult create(LotteryDialing lotteryDialing, User user,
@@ -61,5 +65,14 @@ public class LotteryDialingResultService {
         lotteryDialingResult.setOfUser(user);
 
         return lotteryDialingResult;
+    }
+
+    public List<LotteryDialingResult> getAwardByTermId(long termId) {
+        return dialingResultRepository.findByLotteryDialingId(termId);
+    }
+
+    @Transactional
+    public LotteryDialingResult update(LotteryDialingResult result) {
+        return dialingResultRepository.save(result);
     }
 }

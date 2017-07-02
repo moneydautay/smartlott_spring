@@ -7,7 +7,8 @@ public enum  IncomeProcessEnum {
 
 
     LIST_JACKPOT(1, "List jackpot"),
-    INCOME_PACKAGE(2, "Income package");
+    INCOME_PACKAGE(2, "Income package"),
+    DIVIDE_AWARD(3, "Divide award");
 
 
     private int id;

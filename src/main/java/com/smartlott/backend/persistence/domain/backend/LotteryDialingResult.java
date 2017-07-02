@@ -2,6 +2,7 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smartlott.backend.persistence.converters.LocalDateTimeAttributeConverter;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,6 +39,13 @@ public class LotteryDialingResult implements Serializable{
 
     @ManyToOne
     private Lottery lottery;
+
+    @Value(value = "false")
+    private boolean handled;
+
+    @JsonFormat(pattern = "kk:mm:ss dd/MM/yyyy")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime handledDate;
 
     public LotteryDialingResult() {
     }
@@ -90,6 +98,22 @@ public class LotteryDialingResult implements Serializable{
         this.lottery = lottery;
     }
 
+    public boolean isHandled() {
+        return handled;
+    }
+
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
+
+    public LocalDateTime getHandledDate() {
+        return handledDate;
+    }
+
+    public void setHandledDate(LocalDateTime handledDate) {
+        this.handledDate = handledDate;
+    }
+
     @Override
     public String toString() {
         return "LotteryDialingResult{" +
@@ -98,6 +122,7 @@ public class LotteryDialingResult implements Serializable{
                 ", ofUser=" + ofUser +
                 ", reward=" + reward +
                 ", createDate=" + createDate +
+                ", handled=" + handled +
                 '}';
     }
 

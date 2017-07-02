@@ -226,12 +226,14 @@ public class SmartlottApplication implements CommandLineRunner{
 		TransactionType type3= new TransactionType(TransactionTypeEnum.BuyInvestmentPackage);
 		TransactionType type4= new TransactionType(TransactionTypeEnum.TransferCash);
 		TransactionType type5= new TransactionType(TransactionTypeEnum.IncomeInvestment);
+		TransactionType type6= new TransactionType(TransactionTypeEnum.DivideAward);
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
 		transactionTypeService.createNew(type3);
 		transactionTypeService.createNew(type4);
 		transactionTypeService.createNew(type5);
+		transactionTypeService.createNew(type6);
 	}
 
 	public void createCusts(User user){
@@ -572,6 +574,13 @@ public class SmartlottApplication implements CommandLineRunner{
 		package6.setDescription("Hoa hồng mua gói F6");
 		package6 = componentService.create(package6);
 
+		IncomeComponent rewardAward = new IncomeComponent();
+		rewardAward.setName("Hoa hồng trúng thưởng");
+		rewardAward.setValue(2);
+		rewardAward.setEnabled(true);
+		rewardAward.setDescription("Hoa hồng trúng thưởng");
+		componentService.create(rewardAward);
+
 		level1 = new NetworkLevel(8, 1, "", package1, BonusType.Package);
 		level2 = new NetworkLevel(9, 2, "", package2, BonusType.Package);
 		level3 = new NetworkLevel(10, 3, "", package3, BonusType.Package);
@@ -654,9 +663,11 @@ public class SmartlottApplication implements CommandLineRunner{
 	private void addIncomeProces() {
 		IncomeProcess jackPot = new IncomeProcess(IncomeProcessEnum.LIST_JACKPOT);
 		IncomeProcess incomePackage = new IncomeProcess(IncomeProcessEnum.INCOME_PACKAGE);
+		IncomeProcess divdeAward = new IncomeProcess(IncomeProcessEnum.DIVIDE_AWARD);
 
 		incomeProcessService.create(jackPot);
 		incomeProcessService.create(incomePackage);
+		incomeProcessService.create(divdeAward);
 	}
 
 }

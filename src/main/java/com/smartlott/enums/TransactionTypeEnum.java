@@ -8,7 +8,8 @@ public enum TransactionTypeEnum {
     BuyingLottery(2,"Buying lottery", "This is buying lottery", true),
     BuyInvestmentPackage(3,"Investment package","This is buying investment package", true),
     TransferCash(4, "Transfer cash", "This is transfer cash", true),
-    IncomeInvestment(5, "Income Process", "This is payment income investment package for members", true);
+    IncomeInvestment(5, "Income Process", "This is payment income investment package for members", true),
+    DivideAward(6, "Divide award", "This is divide award for members", true);
 
     private  int id;
     private String name;

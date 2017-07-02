@@ -114,6 +114,10 @@ public class UserCashService {
         return userCashRepository.findOne(userCashId);
     }
 
+    public UserCash getByUserIdAndCash_Received(long userCashId, boolean received) {
+        return userCashRepository.findByUserIdAndCash_Received(userCashId, received);
+    }
+
     @Transactional
     public UserCash update(long userCashId, double v) {
 

@@ -51,6 +51,9 @@ public class BonusService {
     @Value("${default.user.id.get.cash}")
     private long defaultUserIdGetCash = 0;
 
+    @Value("${divide.network.level.award}")
+    private int divideNetworkLevelAward;
+
     /**
      * Create new bonus
      *
@@ -82,49 +85,64 @@ public class BonusService {
 
     @Transactional
     public double saveBonusOfUser(User user, double amount, BonusType bonusType) {
-        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         double valueBonus = 0;
+        try {
+            //get all network level is enabled
+            List<NetworkLevel> networkLevels = levelRepository.findByEnabledAndBonusType(true, bonusType);
 
-        //get all network level is enabled
-        List<NetworkLevel> networkLevels = levelRepository.findByEnabledAndBonusType(true, bonusType);
+            for (NetworkLevel networkLevel : networkLevels) {
 
-        for (NetworkLevel networkLevel : networkLevels) {
+                //get List ancestor of user
+                Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), networkLevel.getLevel());
 
-            //get List ancestor of user
-            Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), networkLevel.getLevel());
+                valueBonus = (amount * networkLevel.getIncomeComponent().getValue()) / 100;
 
-            valueBonus = (amount * networkLevel.getIncomeComponent().getValue()) / 100;
-
-            User ancestor = null;
-            UserCash userCash = null;
-            if (network != null
-                    && network.getAncestor().getUserInvestment().getInvestmentPackage().getLevelNetwork()
-                    >= network.getNetworkLevel().getLevel()) {
-
-                ancestor = network.getAncestor();
-                userCash = userCashRepository.findByUserIdAndCash_Received(ancestor.getId(), true);
-            } else {
-                userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
-                ancestor = userCash.getUser();
+                doBonusForUserAncestor(network, user, valueBonus, networkLevel.getLevel(), bonusType);
             }
-
-            Bonus bonus = new Bonus(valueBonus, ancestor, user, now, networkLevel.getLevel(), bonusType);
-
-            bonus = createNew(bonus);
-
-            LOGGER.info("Created bonus {}", bonus);
-
-            //update cash or ancestor
-            double cash = userCash.getValue();
-            cash = cash + valueBonus;
-            userCash.setValue(FormatNumberUtils.formatNumber(cash));
-            LOGGER.info("Updating User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
-            userCash = userCashRepository.save(userCash);
-            LOGGER.info("Updated User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
-
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return valueBonus;
+    }
+
+    public void doBonusForUserAncestor(Network network, User fromUser, double valueBonus, int level, BonusType bonusType) {
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
+        UserCash userCash = null;
+        if (network != null
+                && network.getAncestor().getUserInvestment().getInvestmentPackage().getLevelNetwork()
+                >= network.getNetworkLevel().getLevel()) {
+            userCash = userCashRepository.findByUserIdAndCash_Received(network.getAncestor().getId(), true);
+        } else {
+            userCash = userCashRepository.findByUserIdAndCash_Received(defaultUserIdGetCash, true);
+        }
+
+        Bonus bonus = new Bonus(valueBonus, userCash.getUser(), fromUser, now, level, bonusType);
+
+        bonus = createNew(bonus);
+
+        LOGGER.info("Created bonus {}", bonus);
+
+        //update cash or ancestor
+        double cash = userCash.getValue();
+        cash = cash + valueBonus;
+        userCash.setValue(FormatNumberUtils.formatNumber(cash));
+
+        LOGGER.info("Updating User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
+        userCash = userCashRepository.save(userCash);
+        LOGGER.info("Updated User cash {} value {}", userCash.getUser().getEmail(), userCash.getValue());
+
+    }
+
+    @Transactional
+    public void saveBonusAwardOfUser(User user, double amount, BonusType bonusType) {
+        try {
+            //get List ancestor of user
+            Network network = networkRepository.findByOfUserIdAndNetworkLevelId(user.getId(), divideNetworkLevelAward);
+            doBonusForUserAncestor(network, user, amount, divideNetworkLevelAward, bonusType);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public double getBonusInTerm(long userId) {
