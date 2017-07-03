@@ -185,11 +185,12 @@
         var contentTable = $('#contentTable');
         contentTable.html('');
         $.each(data.content, function (index, trans) {
+            var symbol = trans.transactionType.symbol;
             var strRow = '';
             strRow += '<tr>';
             strRow += '<td>'+ trans.id +'</td>';
             strRow += '<td>'+ trans.createdDate +'</td>';
-            strRow += '<td>'+ trans.amount +'</td>';
+            strRow += '<td>'+ symbol + ' ' + trans.amount +'</td>';
             strRow += '<td>'+ trans.transactionType.name +'</td>';
             strRow += '<td>'+ trans.transactionStatus.name +'</td>';
             strRow += '</tr>';

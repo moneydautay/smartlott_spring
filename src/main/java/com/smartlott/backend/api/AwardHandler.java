@@ -71,6 +71,9 @@ public class AwardHandler {
     @Autowired
     private UserCashService userCashService;
 
+    @Autowired
+    private DivideAwardService divideAwardService;
+
     private Award resultAward = new Award();
 
     private List<MessageDTO> messageDTOS = new ArrayList<>();
@@ -113,7 +116,7 @@ public class AwardHandler {
         } catch (Exception ex) {
             ex.printStackTrace();
             MessageDTO msg = new MessageDTO(MessageType.ERROR,
-                    i18NService.getMessage("s", String.valueOf(termId), locale));
+                    i18NService.getMessage("admin.reward.error.calculate.lottery.reward", String.valueOf(termId), locale));
             throw new OccurException(msg);
         }
 
@@ -123,8 +126,15 @@ public class AwardHandler {
     @Transactional
     @GetMapping("/save-award")
     public ResponseEntity<Object> saveAwards(@RequestParam("termId") long termId, Locale locale) {
+
+        LottDialingIncProcess incomeProcess = incomeProcessService.getByLotteryDialingId(termId, IncomeProcessEnum.SAVE_AWARD.getId());
+        if( incomeProcess != null)
+            throw new OccurException(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.award.error.has.been.handed", String.valueOf(termId), locale)));
+
         try {
-            if(resultAward.getListAwards().size() == 0) {
+
+            if (resultAward.getListAwards().size() == 0) {
                 MessageDTO msg = new MessageDTO(MessageType.ERROR,
                         i18NService.getMessage("admin.award.error.list.result.award.empty", String.valueOf(termId), locale));
                 throw new OccurException(msg);
@@ -141,6 +151,14 @@ public class AwardHandler {
                     totalAwards++;
                 });
             });
+
+            LottDialingIncProcess incProcess = new LottDialingIncProcess();
+            incProcess.setIncomeProcess(new IncomeProcess(IncomeProcessEnum.SAVE_AWARD));
+            incProcess.setLotteryDialing(new LotteryDialing(termId));
+            incProcess.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+
+            incomeProcessService.create(incProcess);
+            LOGGER.info("Create lottery dialing income process: {} ", incProcess.getId());
 
             LOGGER.info("Created {} dialing results", totalAwards);
             messageDTOS.add(new MessageDTO(MessageType.SUCCESS,
@@ -160,11 +178,19 @@ public class AwardHandler {
     @Transactional
     @GetMapping("/divide-award")
     public ResponseEntity<Object> divideAward(@RequestParam("termId") long termId, Locale locale) {
+        LottDialingIncProcess incomeProcess = incomeProcessService.getByLotteryDialingId(termId, IncomeProcessEnum.DIVIDE_AWARD.getId());
+
+        if( incomeProcess != null)
+            throw new OccurException(new MessageDTO(MessageType.ERROR,
+                    i18NService.getMessage("admin.award.error.has.been.handed", String.valueOf(termId), locale)));
+
         try {
 
             User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             IncomeComponent rewardAward = incomeComponentService.getOne(28);
+
+            List<DivideAward> divideAwards = divideAwardService.getAll();
 
             final List<LotteryDialingResult> lstAwards = resultService.getAwardByTermId(termId);
             double totalAmount = 0;
@@ -179,30 +205,39 @@ public class AwardHandler {
 
                 final double bonus = MathUtils.round((ldr.getReward().getValue() * rewardAward.getValue() / 100), 4);
                 final double realAmount = ldr.getReward().getValue() - bonus;
-                Transaction transaction = new Transaction.Builder()
-                        .setAmount(realAmount)
-                        .setOfUser(ldr.getOfUser())
-                        .setTransactionType(new TransactionType(TransactionTypeEnum.DivideAward))
-                        .create();
 
-                if (transaction.getTransactionType().isAutoHandle()) {
-                    transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
-                    transaction.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
-                    transaction.setHandleBy(currentUser);
-                }
+                divideAwards.forEach(da -> {
 
-                transactionService.createNew(transaction);
+                    //transfer money to cash account
+                    UserCash userCash = userCashService.getByUserIdAndCash_Id(ldr.getOfUser().getId(), da.getCash().getId(), true);
 
-                //transfer money to cash account
-                UserCash userCash = userCashService.getByUserIdAndCash_Received(ldr.getOfUser().getId(), true);
-                LOGGER.info("Transfering award to received account of userId {}", ldr.getOfUser().getId());
-                LOGGER.info("Usercash before transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
-                userCash.plusValue(realAmount);
-                //update cash
-                userCash = userCashService.update(userCash);
-                LOGGER.info("Transfered cash to [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), realAmount);
-                LOGGER.info("Usercash after transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
+                    LOGGER.info("UsercashId of userId {} is null", da.getCash().getId(), ldr.getOfUser().getId());
 
+                    double localAmount = MathUtils.round((realAmount * da.getValue() / 100), 4);
+                    if( userCash != null) {
+                        Transaction transaction = new Transaction.Builder()
+                                .setAmount(localAmount)
+                                .setOfUser(ldr.getOfUser())
+                                .setTransactionType(new TransactionType(TransactionTypeEnum.DivideAward))
+                                .create();
+
+                        if (transaction.getTransactionType().isAutoHandle()) {
+                            transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
+                            transaction.setHandleDate(LocalDateTime.now(Clock.systemDefaultZone()));
+                            transaction.setHandleBy(currentUser);
+                        }
+
+                        transactionService.createNew(transaction);
+
+                        LOGGER.info("Transfering award to received account of userId {}", ldr.getOfUser().getId());
+                        LOGGER.info("Usercash before transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
+                        userCash.plusValue(localAmount);
+                        //update cash
+                        userCash = userCashService.update(userCash);
+                        LOGGER.info("Transfered cash to [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), localAmount);
+                        LOGGER.info("Usercash after transfer [ userCashId: {} of userId {} with amount {} ]", userCash.getId(), ldr.getOfUser().getId(), userCash.getValue());
+                    }
+                });
 
                 LOGGER.info("Divide award [dialing: {} for member: {} , reward: {}, with {}]",
                         ldr.getLotteryDialing().getId(),

@@ -166,7 +166,7 @@ public class LotteryHandler {
         Page<LotteryElastic> lotteryElastics = lotteryElasticService.search(query, pageable);
         MessageDTO messageDTO = new MessageDTO(MessageType.SUCCESS,
                 i18NService.getMessage("admin.lottery.search.result.found.text",
-                        new Object[] {String.valueOf(lotteryElastics.getTotalElements()), query}, locale));
+                        new Object[]{String.valueOf(lotteryElastics.getTotalElements()), query}, locale));
         Map<String, Object> response = ResponseUtil.Response(messageDTO, lotteryElastics);
         return new ResponseEntity<Object>(response, HttpStatus.OK);
     }
@@ -177,8 +177,9 @@ public class LotteryHandler {
 
         LotteryDialing currentDialing = dialingService.getOpenedLotteryDialing(true);
 
-        Page<Lottery> lotteries = lotteryService.getByUserIdAndLotteryDialingId(userId, currentDialing.getId(), pageable);
-
+        Page<Lottery> lotteries = null;
+        if (currentDialing != null)
+            lotteries = lotteryService.getByUserIdAndLotteryDialingId(userId, currentDialing.getId(), pageable);
 
         return new ResponseEntity<Object>(lotteries, HttpStatus.OK);
     }
@@ -191,8 +192,14 @@ public class LotteryHandler {
 
     @GetMapping("total-in-term")
     public ResponseEntity<Object> getTotalLotteryInTerm() {
-        long termId = dialingService.getOpenedLotteryDialing(true).getId();
-        long totalLottery = lotteryService.getTotalLotteryInTerm(termId);
+        LotteryDialing lotteryDialing = dialingService.getOpenedLotteryDialing(true);
+
+        if (lotteryDialing == null)
+            lotteryDialing = dialingService.getLastLotteryDialing();
+
+        long totalLottery = 0;
+        if (lotteryDialing != null)
+            totalLottery = lotteryService.getTotalLotteryInTerm(lotteryDialing.getId());
         return new ResponseEntity<Object>(totalLottery, HttpStatus.OK);
     }
 }

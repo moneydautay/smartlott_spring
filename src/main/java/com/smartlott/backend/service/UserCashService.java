@@ -134,4 +134,8 @@ public class UserCashService {
 
         return userCash;
     }
+
+    public UserCash getByUserIdAndCash_Id(long id, int cashId, boolean enabled) {
+        return userCashRepository.findByUserIdAndCashIdAndEnabled(id, cashId, enabled);
+    }
 }

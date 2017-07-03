@@ -2,6 +2,7 @@ package com.smartlott.backend.persistence.domain.backend;
 
 import com.smartlott.enums.TransactionTypeEnum;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,6 +29,9 @@ public class TransactionType implements Serializable{
 
     private boolean autoHandle = false;
 
+    @Value(value = "-")
+    private String symbol;
+
     public TransactionType() {
     }
 
@@ -41,6 +45,7 @@ public class TransactionType implements Serializable{
         this.name = typeEnum.getName();
         this.description = typeEnum.getDescription();
         this.autoHandle = typeEnum.isAutoHandle();
+        this.symbol = typeEnum.getSymbol();
     }
 
 

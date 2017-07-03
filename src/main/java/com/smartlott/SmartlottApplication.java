@@ -94,6 +94,9 @@ public class SmartlottApplication implements CommandLineRunner{
 	@Autowired
 	private IncomeProcessService incomeProcessService;
 
+	@Autowired
+	private DivideAwardService divideAwardService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartlottApplication.class, args);
@@ -119,7 +122,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		createLotteryType();
 
 		//create income process
-		addIncomeProces();
+		addIncomeProcess();
 
 		//create new Income component and reward
 
@@ -224,9 +227,10 @@ public class SmartlottApplication implements CommandLineRunner{
 		TransactionType type1= new TransactionType(TransactionTypeEnum.Withdraw);
 		TransactionType type2= new TransactionType(TransactionTypeEnum.BuyingLottery);
 		TransactionType type3= new TransactionType(TransactionTypeEnum.BuyInvestmentPackage);
-		TransactionType type4= new TransactionType(TransactionTypeEnum.TransferCash);
-		TransactionType type5= new TransactionType(TransactionTypeEnum.IncomeInvestment);
-		TransactionType type6= new TransactionType(TransactionTypeEnum.DivideAward);
+		TransactionType type4= new TransactionType(TransactionTypeEnum.SendCash);
+		TransactionType type5= new TransactionType(TransactionTypeEnum.ReceiveCash);
+		TransactionType type6= new TransactionType(TransactionTypeEnum.IncomeInvestment);
+		TransactionType type7= new TransactionType(TransactionTypeEnum.DivideAward);
 
 		transactionTypeService.createNew(type1);
 		transactionTypeService.createNew(type2);
@@ -234,6 +238,7 @@ public class SmartlottApplication implements CommandLineRunner{
 		transactionTypeService.createNew(type4);
 		transactionTypeService.createNew(type5);
 		transactionTypeService.createNew(type6);
+		transactionTypeService.createNew(type7);
 	}
 
 	public void createCusts(User user){
@@ -658,16 +663,27 @@ public class SmartlottApplication implements CommandLineRunner{
 			investmentPackageCashService.create(new InvestmentPackageCash(item, cash2, 90));
 			investmentPackageCashService.create(new InvestmentPackageCash(item, cash3, 10));
 		}
+
+		//add Divide award
+		DivideAward divideAward1 = new DivideAward("Cash account",  90, cash1);
+		DivideAward divideAward2 = new DivideAward("Cash trading", 10, cash3);
+
+		divideAwardService.create(divideAward1);
+		divideAwardService.create(divideAward2);
+
 	}
 
-	private void addIncomeProces() {
+	private void addIncomeProcess() {
 		IncomeProcess jackPot = new IncomeProcess(IncomeProcessEnum.LIST_JACKPOT);
 		IncomeProcess incomePackage = new IncomeProcess(IncomeProcessEnum.INCOME_PACKAGE);
-		IncomeProcess divdeAward = new IncomeProcess(IncomeProcessEnum.DIVIDE_AWARD);
+		IncomeProcess saveAward = new IncomeProcess(IncomeProcessEnum.SAVE_AWARD);
+		IncomeProcess divideAward = new IncomeProcess(IncomeProcessEnum.DIVIDE_AWARD);
 
 		incomeProcessService.create(jackPot);
 		incomeProcessService.create(incomePackage);
-		incomeProcessService.create(divdeAward);
+		incomeProcessService.create(saveAward);
+		incomeProcessService.create(divideAward);
 	}
+
 
 }

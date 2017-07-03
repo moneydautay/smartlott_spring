@@ -406,7 +406,7 @@ public class TransactionHandler {
         transaction.setCreatedDate(LocalDateTime.now(Clock.systemDefaultZone()));
         transaction.setOfUser(localFromUser);
         transaction.setTransactionStatus(new TransactionStatus(TransactionStatusEnum.SUCCESS));
-        transaction.setTransactionType(new TransactionType(TransactionTypeEnum.TransferCash));
+        transaction.setTransactionType(new TransactionType(TransactionTypeEnum.SendCash));
 
         //set receiver user
         transaction.setToUsers(new HashSet<User>(Arrays.asList(localToUser)));

@@ -67,10 +67,13 @@ public class LLDialingHasIncomeCompHandler {
 
     @GetMapping("/income-in-term")
     public ResponseEntity<Object> getIncomeInTerm() {
-
+        List<LotteryDialingHasIncomeComp> incomeComps = null;
         LotteryDialing lotteryDialing = lotteryDialingService.getOpenedLotteryDialing(true);
+        if (lotteryDialing == null)
+            lotteryDialing = lotteryDialingService.getLastLotteryDialing();
 
-        List<LotteryDialingHasIncomeComp> incomeComps = dialingIncomeCompService.getByLotteryDialingId(lotteryDialing.getId());
+        if (lotteryDialing != null)
+            incomeComps = dialingIncomeCompService.getByLotteryDialingId(lotteryDialing.getId());
 
         return new ResponseEntity<>(incomeComps, HttpStatus.OK);
     }

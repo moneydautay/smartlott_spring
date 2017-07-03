@@ -160,7 +160,7 @@ public class LotteryDialingHandler {
         List<MessageDTO> messageDTOS = new ArrayList<>();
         //Make sure don't have any lottery dialing is opening
         LotteryDialing localLotteryDialing = dialingService.getOpenedLotteryDialing(true);
-        if(localLotteryDialing == null){
+        if(localLotteryDialing != null){
             LOGGER.error("Have a lottery dialing {} is opening can't create new lottery dialing", localLotteryDialing);
             messageDTOS.add(new MessageDTO(MessageType.ERROR, i18NService.getMessage("admin.lottery.dialing.close.text", String.valueOf(localLotteryDialing.getId()), locale)));
             return new ResponseEntity<Object>(messageDTOS, HttpStatus.EXPECTATION_FAILED);

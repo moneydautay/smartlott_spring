@@ -10,8 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * Created by Mrs Hoang on 05/01/2017.
  */
@@ -70,5 +68,9 @@ public class LotteryDialingService {
     @Transactional
     public LotteryDialing update(LotteryDialing lotteryDialing){
         return dialingRepository.save(lotteryDialing);
+    }
+
+    public LotteryDialing getLastLotteryDialing() {
+        return dialingRepository.findByLastDialingLottery();
     }
 }

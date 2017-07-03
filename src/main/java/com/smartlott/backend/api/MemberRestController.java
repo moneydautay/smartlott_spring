@@ -82,7 +82,12 @@ public class MemberRestController {
     @GetMapping("/new-member-in-term")
     public ResponseEntity<Object> getNewMemberInTerm() {
         LotteryDialing dialing = dialingService.getOpenedLotteryDialing(true);
-        long nbNewMemberInTerm = userService.countNumberUserBetween(ROLE_CUSTOMER, dialing.getFromDate(), dialing.getToDate());
+        if (dialing == null)
+            dialing = dialingService.getLastLotteryDialing();
+
+        long nbNewMemberInTerm = 0;
+        if (dialing != null)
+            nbNewMemberInTerm = userService.countNumberUserBetween(ROLE_CUSTOMER, dialing.getFromDate(), dialing.getToDate());
         return new ResponseEntity<Object>(nbNewMemberInTerm, HttpStatus.OK);
     }
 }
