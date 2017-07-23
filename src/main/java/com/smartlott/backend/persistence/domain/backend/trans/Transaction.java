@@ -22,6 +22,36 @@ public class Transaction extends BaseModel{
     @ManyToOne
     private TransStatus status;
 
+    public double getAmount() {
+        return amount;
+    }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
+    public InvoiceType getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(InvoiceType invoiceType) {
+        this.invoiceType = invoiceType;
+    }
+
+    public TransStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "amount=" + amount +
+                ", invoiceType=" + invoiceType +
+                ", status=" + status +
+                '}';
+    }
 }
